@@ -36,69 +36,73 @@ class _RegistrationUIState extends State<RegistrationUI> {
         textTheme: Theme.of(context).textTheme,
         centerTitle: true,
       ),
-      body: FadedSlideAnimation(
-        Padding(
-          padding: EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              Spacer(),
-              Text(
-                locale.yourPhoneNumberNotRegistered!,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText1!
-                    .copyWith(color: Theme.of(context).disabledColor),
-                textAlign: TextAlign.center,
-              ),
-              Spacer(),
-              EntryField(
-                prefixIcon: Icons.phone_iphone,
-                hint: locale.mobileNumber,
-                initialValue: widget.phoneNumber,
-                readOnly: true,
-              ),
-              SizedBox(height: 20.0),
-              EntryField(
-                controller: _nameController,
-                prefixIcon: Icons.person,
-                hint: locale.fullName,
-              ),
-              SizedBox(height: 20.0),
-              EntryField(
-                controller: _emailController,
-                prefixIcon: Icons.mail,
-                hint: locale.emailAddress,
-              ),
-              SizedBox(height: 20.0),
-              CustomButton(
-                onTap: () => widget.registrationInteractor.register(
-                    widget.phoneNumber,
-                    _nameController.text,
-                    _emailController.text),
-              ),
-              SizedBox(height: 10.0),
-              CustomButton(
-                label: locale.backToSignIn,
-                color: Theme.of(context).scaffoldBackgroundColor,
-                textColor: Theme.of(context).hintColor,
-                onTap: widget.registrationInteractor.goBack,
-              ),
-              Spacer(flex: 5),
-              Text(
-                locale.wellSendAnOTP!,
-                textAlign: TextAlign.center,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText1!
-                    .copyWith(color: Theme.of(context).disabledColor),
-              ),
-              Spacer(),
-            ],
+      body: SingleChildScrollView(
+        child: FadedSlideAnimation(
+          Padding(
+            padding: EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+            //    Spacer(),
+                SizedBox(height: 10.0),
+                Text(
+                  locale.yourPhoneNumberNotRegistered!,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1!
+                      .copyWith(color: Theme.of(context).disabledColor),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 10.0),
+            //    Spacer(),
+                EntryField(
+                  prefixIcon: Icons.phone_iphone,
+                  hint: locale.mobileNumber,
+                  initialValue: widget.phoneNumber,
+                  readOnly: true,
+                ),
+                SizedBox(height: 20.0),
+                EntryField(
+                  controller: _nameController,
+                  prefixIcon: Icons.person,
+                  hint: locale.fullName,
+                ),
+                SizedBox(height: 20.0),
+                EntryField(
+                  controller: _emailController,
+                  prefixIcon: Icons.mail,
+                  hint: locale.emailAddress,
+                ),
+                SizedBox(height: 20.0),
+                CustomButton(
+                  onTap: () => widget.registrationInteractor.register(
+                      widget.phoneNumber,
+                      _nameController.text,
+                      _emailController.text),
+                ),
+                SizedBox(height: 10.0),
+                CustomButton(
+                  label: locale.backToSignIn,
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  textColor: Theme.of(context).hintColor,
+                  onTap: widget.registrationInteractor.goBack,
+                ),
+               // Spacer(flex: 5),
+                Text(
+                  locale.wellSendAnOTP!,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1!
+                      .copyWith(color: Theme.of(context).disabledColor),
+                ),
+                //Spacer(),
+              ],
+            ),
           ),
+          beginOffset: Offset(0, 0.3),
+          endOffset: Offset(0, 0),
+          slideCurve: Curves.linearToEaseOut,
         ),
-        beginOffset: Offset(0, 0.3),
-        endOffset: Offset(0, 0),
-        slideCurve: Curves.linearToEaseOut,
       ),
     );
   }

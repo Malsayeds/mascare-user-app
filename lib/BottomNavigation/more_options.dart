@@ -101,39 +101,44 @@ class _MoreOptionsState extends State<MoreOptions> {
                 physics: NeverScrollableScrollPhysics(),
                 padding: EdgeInsets.all(8.0),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: 1.8, crossAxisCount: 2),
+                    childAspectRatio: 1.7, crossAxisCount: 2),
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: _menu[index].onTap as void Function()?,
                     child: Container(
                       margin: EdgeInsets.symmetric(vertical: 6, horizontal: 6),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),
                         color: Theme.of(context).scaffoldBackgroundColor,
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           FadedScaleAnimation(
                             Text(
                               _menu[index].title!,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.subtitle1,
                             ),
                             durationInMilliseconds: 400,
                           ),
-                          SizedBox(
-                            height: 8,
-                          ),
+
                           Row(
                             children: [
-                              Text(
-                                _menu[index].subtitle!,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle2!
-                                    .copyWith(fontSize: 13),
+                              Container(
+                                width: MediaQuery.of(context).size.width*.3-4,
+                                child: Text(
+                                  _menu[index].subtitle!,
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle2!
+                                      .copyWith(fontSize: 13),
+                                ),
                               ),
                               Spacer(),
                               Icon(

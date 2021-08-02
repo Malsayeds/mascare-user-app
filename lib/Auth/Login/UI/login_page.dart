@@ -26,6 +26,8 @@ class _LoginPageState extends State<LoginPage> implements LoginInteractor {
 
   @override
   void loginWithMobile(String isoCode, String mobileNumber) {
+    print(mobileNumber);
+    print("dddddddddddddddddddddddddddd");
     Navigator.pushNamed(context, LoginRoutes.registration,
         arguments: isoCode + mobileNumber);
   }

@@ -69,60 +69,82 @@ class _CartPageState extends State<CartPage> {
                                 Image.asset(
                                   items[index].img,
                                   height: 75,
+                                  width: MediaQuery.of(context).size.width*.25,
                                 ),
                                 SizedBox(
-                                  width: 15,
+                                  width: MediaQuery.of(context).size.width*.02,
                                 ),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      items[index].name,
-                                      style:
-                                          Theme.of(context).textTheme.subtitle1,
+                                    Container(
+                                      width: MediaQuery.of(context).size.width*.73-24,
+                                      child: Text(
+                                        items[index].name,
+                                        overflow: TextOverflow.ellipsis,
+                                        style:
+                                            Theme.of(context).textTheme.subtitle1,
+                                      ),
                                     ),
                                     SizedBox(
                                       height: 8,
                                     ),
-                                    Text(
-                                      items[index].category,
-                                      style:
-                                          Theme.of(context).textTheme.subtitle2,
+                                    Container(
+                                      width: MediaQuery.of(context).size.width*.73-24,
+                                      child: Text(
+                                        items[index].category,
+                                        style:
+                                            Theme.of(context).textTheme.subtitle2,
+                                      ),
                                     ),
                                     SizedBox(
                                       height: 20,
                                     ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        buildIconButton(
-                                            Icons.remove, index, items, count),
-                                        SizedBox(
-                                          width: 15,
-                                        ),
-                                        Text('${count[index]}',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle1),
-                                        SizedBox(
-                                          width: 15,
-                                        ),
-                                        buildIconButton(
-                                            Icons.add, index, items, count),
-                                        SizedBox(
-                                          width: 40,
-                                        ),
-                                      ],
-                                    ),
+                                   Container(
+                                     width: MediaQuery.of(context).size.width*.73-24,
+                                     child: Row(
+                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                       children: [
+                                         Row(
+                                           mainAxisAlignment:
+                                           MainAxisAlignment.start,
+                                           children: [
+                                             buildIconButton(
+                                                 Icons.remove, index, items, count),
+                                             SizedBox(
+                                               width: 15,
+                                             ),
+                                             Text('${count[index]}',
+                                                 style: Theme.of(context)
+                                                     .textTheme
+                                                     .subtitle1),
+                                             SizedBox(
+                                               width: 15,
+                                             ),
+                                             buildIconButton(
+                                                 Icons.add, index, items, count),
+                                             SizedBox(
+                                               width: 40,
+                                             ),
+                                           ],
+                                         ),
+                                          Row(
+                                            children: [
+                                              Text(items[index].price,
+                                                  textAlign: TextAlign.right,
+                                                  style:
+                                                  Theme.of(context).textTheme.subtitle1),
+                                              SizedBox(width: 10,)
+                                            ],
+                                          )
+                                       ],
+                                     ),
+                                   )
                                   ],
                                 ),
-                                Spacer(),
-                                Text(items[index].price,
-                                    textAlign: TextAlign.right,
-                                    style:
-                                        Theme.of(context).textTheme.subtitle1),
+
+
                               ],
                             ),
                           ),

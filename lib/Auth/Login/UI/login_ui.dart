@@ -54,7 +54,7 @@ class _LoginUIState extends State<LoginUI> {
                   child: Column(
                     children: [
                       SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.655),
+                          height: MediaQuery.of(context).size.height * 0.55),
                       EntryField(
                         hint: locale.enterMobileNumber,
                         prefixIcon: Icons.phone_iphone,

@@ -197,7 +197,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                         ),
                         PositionedDirectional(
                             bottom: 0,
-                            end: 0,
+                            end: -10,
                             child: Row(
                               children: [
                                 IconButton(
@@ -211,9 +211,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                     //     context, PageRoutes.doctorChat);
                                   },
                                 ),
-                                SizedBox(
-                                  width: 15,
-                                ),
+
                                 IconButton(
                                   icon: Icon(
                                     Icons.message,
@@ -226,7 +224,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                   },
                                 ),
                                 SizedBox(
-                                  width: 18,
+                                  width: 10,
                                 ),
                               ],
                             ))
@@ -372,7 +370,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                         ),
                         PositionedDirectional(
                             bottom: 0,
-                            end: 0,
+                            end: -10,
                             child: Row(
                               children: [
                                 IconButton(
@@ -386,9 +384,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                     //     context, PageRoutes.doctorChat);
                                   },
                                 ),
-                                SizedBox(
-                                  width: 15,
-                                ),
+
                                 IconButton(
                                   icon: Icon(
                                     Icons.message,
@@ -401,7 +397,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                   },
                                 ),
                                 SizedBox(
-                                  width: 18,
+                                  width: 10,
                                 ),
                               ],
                             ))

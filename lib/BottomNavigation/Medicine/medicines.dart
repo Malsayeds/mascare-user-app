@@ -111,7 +111,7 @@ class _MedicinesState extends State<Medicines> {
             itemCount: _myItems.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 0.82,
+                childAspectRatio: 0.8,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12),
             itemBuilder: (context, index) {
@@ -152,23 +152,30 @@ class _MedicinesState extends State<Medicines> {
                             ],
                           ),
                           Spacer(),
-                          Text(_myItems[index].name),
-                          SizedBox(height: 5),
-                          Row(
-                            children: [
-                              Text(
-                                '\$ ' + _myItems[index].price,
-                                style: Theme.of(context).textTheme.subtitle1,
-                              ),
-                            ],
-                          ),
+                          Text(_myItems[index].name,textAlign: TextAlign.start,),
+                          SizedBox(height: 25,)
                         ],
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: CustomAddItemButton(),
-                    ),
+
+                       Align(
+                         alignment: Alignment.bottomRight,
+                         child: Row(
+                           children: [
+                             CustomAddItemButton(),
+                             SizedBox(width: MediaQuery.of(context).size.width*.19,),
+                             Row(
+                               children: [
+                                 Text(
+                                   '\$ ' + _myItems[index].price,
+                                   style: Theme.of(context).textTheme.subtitle1,
+                                 ),
+                               ],
+                             ),
+                           ],
+                         ),
+                       ),
+
                   ],
                 ),
               );

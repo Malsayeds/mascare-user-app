@@ -55,6 +55,8 @@ class _AppointmentDetailState extends State<AppointmentDetail> {
                               child: FadedScaleAnimation(
                                 Image.asset(
                                   'assets/Doctors/doc1.png',
+                                  height: MediaQuery.of(context).size.height*.2,
+                                  width: MediaQuery.of(context).size.width*.3,
                                 ),
                                 durationInMilliseconds: 400,
                               ),
@@ -76,7 +78,7 @@ class _AppointmentDetailState extends State<AppointmentDetail> {
                                             .textTheme
                                             .subtitle2!
                                             .copyWith(
-                                                fontSize: 30,
+                                                fontSize: 20,
                                                 fontWeight: FontWeight.w500,
                                                 height: 1.4)),
                                     TextSpan(
@@ -90,7 +92,7 @@ class _AppointmentDetailState extends State<AppointmentDetail> {
                                             .copyWith(
                                                 color: Theme.of(context)
                                                     .disabledColor,
-                                                fontSize: 18,
+                                                fontSize: 16,
                                                 height: 1.6))
                                   ],
                                 ),
@@ -166,14 +168,17 @@ class _AppointmentDetailState extends State<AppointmentDetail> {
                       ),
                       Row(
                         children: [
-                          Text(
-                            'Walter street, Wallington, New York.',
-                            style: Theme.of(context)
-                                .textTheme
-                                .subtitle2!
-                                .copyWith(
-                                    fontSize: 20,
-                                    color: Theme.of(context).disabledColor),
+                          Container(
+                            width: MediaQuery.of(context).size.width*.75,
+                            child: Text(
+                              'Walter street, Wallington, New York.',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle2!
+                                  .copyWith(
+                                      fontSize: 20,
+                                      color: Theme.of(context).disabledColor),
+                            ),
                           ),
                           Spacer(),
                           IconButton(

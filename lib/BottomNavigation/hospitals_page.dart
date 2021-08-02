@@ -235,19 +235,29 @@ class HospitalsList extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        _hospitals[index].name,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1!
-                            .copyWith(fontSize: 20, height: 1.5),
+                      Container(
+                        width: MediaQuery.of(context).size.width / 2-16,
+                        child: Text(
+                          _hospitals[index].name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1!
+                              .copyWith(fontSize: 20, height: 1.5),
+                        ),
                       ),
-                      Text(
-                        _hospitals[index].type,
-                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                            fontSize: 16,
-                            color: Theme.of(context).disabledColor,
-                            height: 1.5),
+                      Container(
+                        width: MediaQuery.of(context).size.width / 2-16,
+                        child: Text(
+                          _hospitals[index].type,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                              fontSize: 16,
+                              color: Theme.of(context).disabledColor,
+                              height: 1.5),
+                        ),
                       ),
                     ],
                   ),
@@ -293,10 +303,15 @@ class HospitalsList extends StatelessWidget {
                     color: Theme.of(context).disabledColor,
                     size: 13,
                   ),
-                  Text(
-                    _hospitals[index].location,
-                    style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                        fontSize: 13, color: Theme.of(context).disabledColor),
+                  Container(
+                    width: MediaQuery.of(context).size.width*.6,
+                    child: Text(
+                      _hospitals[index].location,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                          fontSize: 13, color: Theme.of(context).disabledColor),
+                    ),
                   ),
                   Spacer(),
                   Icon(

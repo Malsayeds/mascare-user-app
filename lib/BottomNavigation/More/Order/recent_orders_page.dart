@@ -164,16 +164,20 @@ class OrderCard extends StatelessWidget {
           if (orderCard.status.toLowerCase() == 'delivered')
             Align(
               alignment: AlignmentDirectional.topEnd,
-              child: TextButton(
-                  onPressed: () =>
-                      Navigator.pushNamed(context, PageRoutes.reviewOrderPage),
-                  child: Text(
-                    locale!.reviewNow!,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText1!
-                        .copyWith(color: Theme.of(context).primaryColor),
-                  )),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextButton(
+                    onPressed: () =>
+                        Navigator.pushNamed(context, PageRoutes.reviewOrderPage),
+                    child: Text(
+                      locale!.reviewNow!,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1!
+                          .copyWith(color: Theme.of(context).primaryColor),
+                    )
+                ),
+              ),
             ),
           Divider(thickness: 6, height: 0),
         ],

@@ -87,17 +87,21 @@ class _VerificationUIState extends State<VerificationUI> {
                     '$_counter ' + locale.secLeft!,
                     style: Theme.of(context).textTheme.subtitle1,
                   ),
-                  CustomButton(
-                      label: locale.resend,
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      textColor: Theme.of(context).hintColor,
-                      padding: 0.0,
-                      onTap: _counter < 1
-                          ? () {
-                              _startTimer();
-                              widget.verificationInteractor.verifyNumber();
-                            }
-                          : null),
+                 Container(
+                   height: MediaQuery.of(context).size.height*.1,
+                   width: MediaQuery.of(context).size.width*.3,
+                   child: CustomButton(
+                        label: locale.resend,
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        textColor: Theme.of(context).hintColor,
+                        padding: 0.0,
+                        onTap: _counter < 1
+                            ? () {
+                                _startTimer();
+                                widget.verificationInteractor.verifyNumber();
+                              }
+                            : null),
+                 ),
                 ],
               ),
               Spacer(flex: 12),

@@ -107,18 +107,40 @@ class _SearchDoctorsState extends State<SearchDoctors> {
                               FadedScaleAnimation(
                                 Image.asset(
                                   searchList[index].image,
-                                  height: 80,
-                                  width: 80,
+                                  height: MediaQuery.of(context).size.height*.15,
+                                  width: MediaQuery.of(context).size.width*.23,
                                 ),
                                 durationInMilliseconds: 400,
                               ),
+                              SizedBox(width: MediaQuery.of(context).size.width*.02,),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(
                                     height: 12,
                                   ),
-                                  RichText(
+                                  Container(
+                                    width: MediaQuery.of(context).size.width*.75,
+                                    child: Text(searchList[index].name ,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1),
+                                  ),
+                                  SizedBox(
+                                    height: 12,
+                                  ),
+                                  Container(
+                                    width: MediaQuery.of(context).size.width*.75,
+                                    child: Text(searchList[index].speciality,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText2!
+                                          .copyWith(
+                                          color: Theme.of(context)
+                                              .disabledColor,
+                                          fontSize: 12),),
+                                  ),
+                               /*   RichText(
                                       text: TextSpan(
                                           style: Theme.of(context)
                                               .textTheme
@@ -134,7 +156,7 @@ class _SearchDoctorsState extends State<SearchDoctors> {
                                         TextSpan(text: locale.at),
                                         TextSpan(
                                             text: searchList[index].hospital),
-                                      ])),
+                                      ])),*/
                                   SizedBox(
                                     height: 15,
                                   ),
@@ -179,7 +201,7 @@ class _SearchDoctorsState extends State<SearchDoctors> {
                                             .copyWith(fontSize: 12),
                                       ),
                                       SizedBox(
-                                        width: 35,
+                                        width: MediaQuery.of(context).size.width*.04,
                                       ),
                                       RatingBar.builder(
                                           itemSize: 12,

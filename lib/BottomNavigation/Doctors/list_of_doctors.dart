@@ -119,8 +119,8 @@ class _DoctorsListState extends State<DoctorsList> {
                               FadedScaleAnimation(
                                 Image.asset(
                                   searchList[index].image,
-                                  height: 80,
-                                  width: 80,
+                                  height: MediaQuery.of(context).size.height*.15,
+                                  width: MediaQuery.of(context).size.width*.2,
                                 ),
                                 durationInMilliseconds: 400,
                               ),
@@ -130,54 +130,79 @@ class _DoctorsListState extends State<DoctorsList> {
                                   SizedBox(
                                     height: 12,
                                   ),
-                                  RichText(
-                                      text: TextSpan(
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subtitle2,
-                                          children: <TextSpan>[
-                                        TextSpan(
-                                            text: searchList[index].name + '\n',
+                                  Container(
+                                    width: MediaQuery.of(context).size.width*.7,
+                                    child: Text(searchList[index].name ,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1),
+                                  ),
+                                  SizedBox(
+                                    height: 12,
+                                  ),
+                                  Container(
+                                    width: MediaQuery.of(context).size.width*.7,
+                                    child: Text(searchList[index].speciality,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText2!
+                                          .copyWith(
+                                          color: Theme.of(context)
+                                              .disabledColor,
+                                          fontSize: 12),),
+                                  ),
+                              /*    Container(
+                                    width: MediaQuery.of(context).size.width*.7,
+
+                                    child: RichText(
+                                        text: TextSpan(
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .subtitle1),
-                                        TextSpan(
-                                          text: searchList[index].speciality,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText2!
-                                              .copyWith(
-                                                  color: Theme.of(context)
-                                                      .disabledColor,
-                                                  fontSize: 12),
-                                        ),
-                                        TextSpan(
-                                          text: locale!.at,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .caption!
-                                              .copyWith(
-                                                  color: kButtonTextColor,
-                                                  fontSize: 10),
-                                        ),
-                                        TextSpan(
-                                          text: searchList[index].hospital,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText2!
-                                              .copyWith(
-                                                  color: Theme.of(context)
-                                                      .disabledColor,
-                                                  fontSize: 12),
-                                        ),
-                                      ])),
+                                                .subtitle2,
+                                            children: <TextSpan>[
+                                          TextSpan(
+                                              text: searchList[index].name + '\n',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle1),
+                                          TextSpan(
+                                            text: searchList[index].speciality,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText2!
+                                                .copyWith(
+                                                    color: Theme.of(context)
+                                                        .disabledColor,
+                                                    fontSize: 12),
+                                          ),
+                                          TextSpan(
+                                            text: locale!.at,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .caption!
+                                                .copyWith(
+                                                    color: kButtonTextColor,
+                                                    fontSize: 10),
+                                          ),
+                                          TextSpan(
+                                            text: searchList[index].hospital,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText2!
+                                                .copyWith(
+                                                    color: Theme.of(context)
+                                                        .disabledColor,
+                                                    fontSize: 12),
+                                          ),
+                                        ])),
+                                  ),*/
                                   SizedBox(
                                     height: 15,
                                   ),
                                   Row(
                                     children: [
                                       Text(
-                                        locale.exp!,
+                                        locale!.exp!,
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle2!
@@ -195,7 +220,7 @@ class _DoctorsListState extends State<DoctorsList> {
                                             .copyWith(fontSize: 12),
                                       ),
                                       SizedBox(
-                                        width: 15,
+                                        width:MediaQuery.of(context).size.width*.025,
                                       ),
                                       Text(
                                         locale.fee!,
@@ -215,7 +240,7 @@ class _DoctorsListState extends State<DoctorsList> {
                                             .copyWith(fontSize: 12),
                                       ),
                                       SizedBox(
-                                        width: 35,
+                                        width: MediaQuery.of(context).size.width*.025,
                                       ),
                                       RatingBar.builder(
                                           itemSize: 12,

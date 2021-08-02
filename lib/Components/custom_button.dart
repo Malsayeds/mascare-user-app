@@ -33,6 +33,7 @@ class CustomButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap as void Function()?,
       child: Container(
+        height: MediaQuery.of(context).size.height*.09,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(radius ?? 8),
           color: color ?? theme.primaryColor,
@@ -43,12 +44,16 @@ class CustomButton extends StatelessWidget {
           children: [
             icon ?? SizedBox.shrink(),
             icon != null ? SizedBox(width: iconGap ?? 20) : SizedBox.shrink(),
-            Text(
-              label ?? locale!.continuee!,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.subtitle1!.copyWith(
-                  color: textColor ?? theme.backgroundColor,
-                  fontSize: textSize ?? 16),
+            Expanded(
+              child: Text(
+                label ?? locale!.continuee!,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.subtitle1!.copyWith(
+                    color: textColor ?? theme.backgroundColor,
+                    fontSize: textSize ?? 16,
+                ),
+              ),
             ),
             trailing != null ? Spacer() : SizedBox.shrink(),
             trailing ?? SizedBox.shrink(),
