@@ -16,10 +16,19 @@ dependencies:
 
   cupertino_icons: ^1.0.3
   percent_indicator: ^3.0.1
+  provider:
+  geocoding:
+  sqflite:
+  shared_preferences:
+  location:
   flutter_rating_bar: ^4.0.0
   flutter_phoenix: ^1.0.0
   flutter_bloc: ^7.0.0
   flutter_datetime_picker: ^1.5.1
+  geocoder:
+  #geolocation:
+  google_maps_flutter:
+  geolocator:
 
   animation_wrappers: ^0.0.4
 

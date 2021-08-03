@@ -1,4 +1,4 @@
-import 'package:doctoworld_user/Auth/login_navigator.dart';
+import 'package:doctoworld_user/Features/Auth/login_navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

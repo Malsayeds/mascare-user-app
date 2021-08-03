@@ -45,7 +45,7 @@ android {
 
     defaultConfig {
         applicationId "com.verbosetech.doctoworld_user"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
