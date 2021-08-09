@@ -20,7 +20,7 @@ class DbHelper{
           "id INTEGER PRIMARY KEY,"
           "name TEXT,"
           "img TEXT,"
-          "description TEXT,"
+          "category TEXT,"
           "price REAL,"
           "quantity INTEGER"
           ")");
@@ -46,7 +46,7 @@ class DbHelper{
     Database? db = await createDatabase();
     return db!.delete('product');
   }
-  Future<int> delete(String id) async{
+  Future<int> delete(int id) async{
     Database? db = await createDatabase();
     return db!.delete('product', where: 'id = ?', whereArgs: [id]);
   }

@@ -31,54 +31,8 @@ class WalletPage extends StatelessWidget {
         textTheme: Theme.of(context).textTheme,
       ),
       body: FadedSlideAnimation(
-        Stack(
+        Column(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(height: 120),
-                Container(
-                  color: Theme.of(context).backgroundColor,
-                  padding:
-                      EdgeInsets.symmetric(vertical: 14.0, horizontal: 20.0),
-                  child: Text(locale.recent!),
-                ),
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 172.0),
-              child: ListView.builder(
-                physics: BouncingScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: 15,
-                padding: EdgeInsets.zero,
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            buildRowChildWallet(theme, 'Well Life Store',
-                                '30 June 2018, 11.59 am'),
-                            Spacer(),
-                            buildRowChildWallet(theme, '\$80.00',
-                                '3 ' + locale.items! + ' | COD',
-                                alignment: CrossAxisAlignment.end),
-                          ],
-                        ),
-                      ),
-                      Divider(
-                        thickness: 6,
-                        color: Theme.of(context).backgroundColor,
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -102,6 +56,49 @@ class WalletPage extends StatelessWidget {
                 ),
               ],
             ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  color: Theme.of(context).backgroundColor,
+                  padding:
+                      EdgeInsets.symmetric(vertical: 14.0, horizontal: 20.0),
+                  child: Text(locale.recent!),
+                ),
+              ],
+            ),
+            Expanded(
+                child: ListView.builder(
+                  itemCount: 15,
+                  padding: EdgeInsets.zero,
+                  itemBuilder: (context, index) {
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              buildRowChildWallet(theme, 'Well Life Store',
+                                  '30 June 2018, 11.59 am'),
+                              Spacer(),
+                              buildRowChildWallet(theme, '\$80.00',
+                                  '3 ' + locale.items! + ' | COD',
+                                  alignment: CrossAxisAlignment.end),
+                            ],
+                          ),
+                        ),
+                        Divider(
+                          thickness: 6,
+                          color: Theme.of(context).backgroundColor,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+
             Positioned.directional(
               textDirection: Directionality.of(context),
               end: 15,

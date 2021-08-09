@@ -221,6 +221,14 @@ Map<String, String> english() {
     'offer1': 'Flat 50% Off \n on first Medicine order',
     'offer2': 'Get free delivery on order\n above \$100',
     'offer3': 'Flat 50% Off \n on first Medicine order',
-    'changeLanguage': 'Change Language'
+    'changeLanguage': 'Change Language',
+    "enterpassword":"Enter Password",
+    "donthaveacount":"Dont Have Account? SignUp",
+    "entetname":"Enter Your Name",
+    "enterpassword":"Enter Your Password",
+    "enteremail":"Enter Your Email",
+    "firstname":"First Name",
+    "lastname":"Last  Name",
+    "logout":"Logout"
   };
 }

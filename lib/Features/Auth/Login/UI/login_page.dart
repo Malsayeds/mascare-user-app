@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import '../../login_navigator.dart';
 import 'login_interactor.dart';
@@ -24,11 +25,14 @@ class _LoginPageState extends State<LoginPage> implements LoginInteractor {
     Navigator.pushNamed(context, LoginRoutes.registration);
   }
 
-  @override
+*/
+/*  @override
   void loginWithMobile(String isoCode, String mobileNumber) {
     print(mobileNumber);
     print("dddddddddddddddddddddddddddd");
     Navigator.pushNamed(context, LoginRoutes.registration,
         arguments: isoCode + mobileNumber);
-  }
+  }*//*
+
 }
+*/

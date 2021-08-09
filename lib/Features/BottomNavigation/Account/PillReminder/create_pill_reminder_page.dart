@@ -58,7 +58,7 @@ class _CreatePillReminderPageState extends State<CreatePillReminderPage> {
                 controller: selectedDaysController,
                 label: locale.selectDays,
                 hint: locale.days,
-                prefixIcon: Icons.event,
+                prefixIcon: Icon(Icons.event,color:Theme.of(context).primaryColor),
                 readOnly: true,
                 onTap: () async {
                   await showModalBottomSheet(
@@ -129,9 +129,9 @@ class _CreatePillReminderPageState extends State<CreatePillReminderPage> {
                 controller: timeController,
                 label: locale.selectTime,
                 hint: locale.time,
-                suffix: Icons.add,
+                suffixIcon: Icons.add,
                 readOnly: true,
-                prefixIcon: Icons.notifications,
+                prefixIcon: Icon(Icons.notifications,color:Theme.of(context).primaryColor),
                 onTap: () {
                   // await showModalBottomSheet(
                   //   context: context,

@@ -1,9 +1,11 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
+import 'package:doctoworld_user/Features/BottomNavigation/Hospitals/SearchHospitals.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../../main.dart';
 import 'Data/data.dart';
 
 class HospitalsHome extends StatefulWidget {
@@ -86,7 +88,7 @@ class _HospitalsBodyState extends State<HospitalsBody> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6),
             child: Text(
-              locale.hello! + ', Sam Smith,',
+              locale.hello! + ', ${Docto.username}',
               style: Theme.of(context).textTheme.bodyText2!.copyWith(
                   fontSize: 20, color: Theme.of(context).disabledColor),
             ),
@@ -109,8 +111,9 @@ class _HospitalsBodyState extends State<HospitalsBody> {
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
             child: TextFormField(
               onTap: () {
-                //Navigator.pushNamed(context, PageRoutes.searchDoctors);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => HospitalSearchScreen()));
               },
+              readOnly: true,
               decoration: InputDecoration(
                   hintText: locale.searchHospital,
                   prefixIcon: Icon(Icons.search),
@@ -218,7 +221,6 @@ class HospitalsList extends StatelessWidget {
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context);
     return ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
       itemCount: _hospitals.length,
       shrinkWrap: true,
       itemBuilder: (context, index) {

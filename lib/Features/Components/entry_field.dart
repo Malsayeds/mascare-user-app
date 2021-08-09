@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class EntryField extends StatelessWidget {
   final String? hint;
-  final IconData? prefixIcon;
+  final Widget? prefixIcon;
   final Color? color;
   final TextEditingController? controller;
   final String? initialValue;
@@ -12,9 +12,13 @@ class EntryField extends StatelessWidget {
   final TextInputType? textInputType;
   final String? label;
   final int? maxLines;
-  final Function? onTap;
-  final IconData? suffix;
-
+  final bool? isDense;
+  final bool? isHidden;
+  final VoidCallback? onTap;
+  final Function(String? text)? onSaved;
+  final String? Function(String? text)? onValidate;
+  final FocusNode?focusNode;
+  final FocusNode?OwnFocusNode;
   EntryField({
     this.hint,
     this.prefixIcon,
@@ -27,8 +31,13 @@ class EntryField extends StatelessWidget {
     this.textInputType,
     this.label,
     this.maxLines,
+    this.isDense,
     this.onTap,
-    this.suffix,
+    this.isHidden,
+    this.onSaved,
+    this.onValidate,
+    this.focusNode,
+    this.OwnFocusNode
   });
 
   @override
@@ -37,55 +46,52 @@ class EntryField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         label != null
-            ? Text('\n' + label! + '\n',
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle2!
-                    .copyWith(color: Theme.of(context).disabledColor))
+            ? Text(
+          '\n' + label! + '\n',
+          style: Theme.of(context).textTheme.subtitle2!.copyWith(
+            color: Theme.of(context).disabledColor,
+          ),
+        )
             : SizedBox.shrink(),
-        Row(
-          children: [
-            Expanded(
-              child: TextFormField(
-                controller: controller,
-                initialValue: initialValue,
-                readOnly: readOnly ?? false,
-                maxLines: maxLines ?? 1,
-                textAlign: textAlign ?? TextAlign.left,
-                keyboardType: textInputType,
-                decoration: InputDecoration(
-                  prefixIcon:
-                      Icon(prefixIcon, color: Theme.of(context).primaryColor),
-                  suffixIcon: Icon(suffixIcon),
-                  hintText: hint,
-                  filled: true,
-                  fillColor: color ?? Theme.of(context).backgroundColor,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(4),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-                onTap: onTap as void Function()?,
-              ),
+        TextFormField(
+          onTap: onTap,
+          focusNode: this.OwnFocusNode,
+          onFieldSubmitted: (value){
+            FocusScope.of(context).requestFocus(this.focusNode);
+          },
+          controller: controller,
+          initialValue: initialValue,
+          readOnly: readOnly ?? false,
+          maxLines: maxLines ?? 1,
+          obscureText: isHidden ?? false,
+          textAlign: textAlign ?? TextAlign.start,
+          keyboardType: textInputType,
+          decoration: InputDecoration(
+            isDense: isDense ?? false,
+            prefixIcon: prefixIcon != null
+                ?
+              prefixIcon
+                : null,
+            suffixIcon: Icon(suffixIcon),
+            hintText: hint,
+            filled: true,
+            fillColor: color ?? Theme.of(context).primaryColorLight,
+            errorStyle: TextStyle(fontWeight: FontWeight.bold),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
             ),
-            if (suffix != null)
-              GestureDetector(
-                onTap: () {},
-                child: Container(
-                  margin: EdgeInsetsDirectional.only(start: 8),
-                  height: 56,
-                  width: 56,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Icon(
-                    suffix,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ),
-              )
-          ],
+            errorBorder: new OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: Colors.red)
+            ),
+            focusedErrorBorder: new OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: Colors.red)
+            ),
+          ),
+          onSaved: onSaved,
+          validator: onValidate,
         ),
       ],
     );

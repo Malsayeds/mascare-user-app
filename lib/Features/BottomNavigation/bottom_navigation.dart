@@ -1,8 +1,11 @@
 import 'package:doctoworld_user/Features/BottomNavigation/doctors_page.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/hospitals_page.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/appointments_page.dart';
+import 'package:doctoworld_user/Features/Location/location_page.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
+import 'package:doctoworld_user/Provider/GlobalProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'medicine_find_page.dart';
 import 'more_options.dart';
@@ -55,7 +58,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
       BottomNavigationBarItem(
         icon: ImageIcon(AssetImage('assets/FooterIcons/ic_more.png')),
         activeIcon: ImageIcon(AssetImage('assets/FooterIcons/ic_moreact.png')),
-        label: locale.more,
+        label: locale.account,
       ),
     ];
     return Scaffold(

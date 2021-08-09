@@ -1,3 +1,5 @@
+/*
+import 'package:doctoworld_user/Features/Auth/Login/UI/login_ui.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/More/change_language_page.dart';
 import 'package:doctoworld_user/Locale/language_cubit.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
@@ -25,7 +27,7 @@ class LoginNavigator extends StatefulWidget {
 
 class _LoginNavigatorState extends State<LoginNavigator> {
   String lang="";
-  setlang()async{
+  Future<void>setlangauge()async{
     late LanguageCubit _languageCubit=BlocProvider.of<LanguageCubit>(context);
     lang=(await StorageData.getValue("lang")==null?"":await StorageData.getValue("lang"))!;
     setState(() {
@@ -41,7 +43,7 @@ class _LoginNavigatorState extends State<LoginNavigator> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    setlang();
+    setlangauge();
   }
   @override
   Widget build(BuildContext context) {
@@ -60,12 +62,13 @@ class _LoginNavigatorState extends State<LoginNavigator> {
           late WidgetBuilder builder;
           switch (settings.name) {
             case LoginRoutes.root:
-              builder = (BuildContext _) => lang==""?ChangeLanguagePage():LoginPage();
+              builder = (BuildContext _) => lang==""?ChangeLanguagePage():LoginUI();
               break;
-            case LoginRoutes.loginRoot:
-              builder = (BuildContext _) => LoginPage();
+         case LoginRoutes.loginRoot:
+              builder = (BuildContext _) => LoginUI();
               break;
-            case LoginRoutes.registration:
+          */
+/*     case LoginRoutes.registration:
               builder = (BuildContext _) =>
                   RegistrationPage(settings.arguments as String?);
               break;
@@ -73,7 +76,8 @@ class _LoginNavigatorState extends State<LoginNavigator> {
               builder = (BuildContext _) => VerificationPage(() {
                     Navigator.pushNamed(context, PageRoutes.bottomNavigation);
                   });
-              break;
+              break;*//*
+
           }
           return MaterialPageRoute(builder: builder, settings: settings);
         },
@@ -84,3 +88,4 @@ class _LoginNavigatorState extends State<LoginNavigator> {
     );
   }
 }
+*/

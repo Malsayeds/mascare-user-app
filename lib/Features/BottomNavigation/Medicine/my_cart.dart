@@ -1,8 +1,10 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
+import 'package:doctoworld_user/Features/Components/DialogMessages.dart';
 import 'package:doctoworld_user/Features/Components/custom_button.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:doctoworld_user/Stroage/DbHelper.dart';
+import 'package:doctoworld_user/Stroage/Model/CartModelLocal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -24,6 +26,8 @@ class _CartPageState extends State<CartPage> {
   List<int> count = [1, 1, 1];
   DbHelper db=new DbHelper();
   List dataLocal=[];
+  int totalquantity=0;
+  double allPrice=0.0;
   loadData() async{
     dataLocal=await db.allProduct();
     setState(() {
@@ -36,6 +40,7 @@ class _CartPageState extends State<CartPage> {
     // TODO: implement initState
     super.initState();
     loadData();
+    getTotal();
   }
   @override
   Widget build(BuildContext context) {
@@ -60,117 +65,192 @@ class _CartPageState extends State<CartPage> {
         centerTitle: true,
       ),
       body: FadedSlideAnimation(
-        Stack(
+        Column(
           children: [
-            ListView(
-              physics: BouncingScrollPhysics(),
-              children: [
-                ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: items.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          SizedBox(
-                            height: 6,
-                          ),
-                          Container(
-                            color: Theme.of(context).scaffoldBackgroundColor,
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 10.0, horizontal: 12),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
+            Expanded(
+              child: ListView(
+                children: [
+                  FutureBuilder(
+                      future: db.allProduct(),
+                      builder: (context, AsyncSnapshot snapshot) {
+                        if (!snapshot.hasData) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                        else{
+                          return snapshot.data.length==0?Container(
+                              padding:EdgeInsets.only(top:MediaQuery.of(context).size.height*.15),child: Center(
+                            child: Column(
                               children: [
-                                Image.asset(
-                                  items[index].img,
-                                  height: 75,
-                                  width: MediaQuery.of(context).size.width*.25,
-                                ),
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width*.02,
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: MediaQuery.of(context).size.width*.73-24,
-                                      child: Text(
-                                        items[index].name,
-                                        overflow: TextOverflow.ellipsis,
-                                        style:
-                                            Theme.of(context).textTheme.subtitle1,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 8,
-                                    ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width*.73-24,
-                                      child: Text(
-                                        items[index].category,
-                                        style:
-                                            Theme.of(context).textTheme.subtitle2,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                   Container(
-                                     width: MediaQuery.of(context).size.width*.73-24,
-                                     child: Row(
-                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                       children: [
-                                         Row(
-                                           mainAxisAlignment:
-                                           MainAxisAlignment.start,
-                                           children: [
-                                             buildIconButton(
-                                                 Icons.remove, index, items, count),
-                                             SizedBox(
-                                               width: 15,
-                                             ),
-                                             Text('${count[index]}',
-                                                 style: Theme.of(context)
-                                                     .textTheme
-                                                     .subtitle1),
-                                             SizedBox(
-                                               width: 15,
-                                             ),
-                                             buildIconButton(
-                                                 Icons.add, index, items, count),
-                                             SizedBox(
-                                               width: 40,
-                                             ),
-                                           ],
-                                         ),
-                                          Row(
-                                            children: [
-                                              Text(items[index].price,
-                                                  textAlign: TextAlign.right,
-                                                  style:
-                                                  Theme.of(context).textTheme.subtitle1),
-                                              SizedBox(width: 10,)
-                                            ],
-                                          )
-                                       ],
-                                     ),
-                                   )
-                                  ],
-                                ),
-
-
+                                Icon(Icons.shopping_cart,size: 150,color: Theme.of(context).primaryColor,),
+                                SizedBox(height: MediaQuery.of(context).size.height*.035,),
+                                Text("No Items In Shopping Cart",style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold,color: Colors.black),),
+                                SizedBox(height: MediaQuery.of(context).size.height*.035,),
                               ],
                             ),
-                          ),
-                        ],
-                      );
-                    }),
-                SizedBox(height: 248),
-              ],
+                          )):
+                          ListView.builder(
+                              primary: false,
+                              itemCount: snapshot.data.length,
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                CartMedelLocal c=new CartMedelLocal.fromMap(snapshot.data[index]);
+                                return Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 6,
+                                    ),
+                                    Container(
+                                      color: Theme.of(context).scaffoldBackgroundColor,
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10.0, horizontal: 12),
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          Image.asset(
+                                            c.img,
+                                            height: MediaQuery.of(context).size.height*.15,
+                                            width: MediaQuery.of(context).size.width*.25,
+                                          ),
+                                          SizedBox(
+                                            width: MediaQuery.of(context).size.width*.02,
+                                          ),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                width: MediaQuery.of(context).size.width*.6-28,
+                                                child: Text(
+                                                  c.name,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style:
+                                                  Theme.of(context).textTheme.subtitle1,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 8,
+                                              ),
+                                              Container(
+                                                width: MediaQuery.of(context).size.width*.6-28,
+                                                child: Text(
+                                                  c.category,
+                                                  style:
+                                                  Theme.of(context).textTheme.subtitle2,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 20,
+                                              ),
+                                              Container(
+                                                width: MediaQuery.of(context).size.width*.6-28,
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                      children: [
+                                                        InkWell(
+                                                          onTap: ()async{
+                                                            CartMedelLocal cartLDBModel = CartMedelLocal({
+                                                              'id':c.id,
+                                                              'name': c.name,
+                                                              'img':  c.img,
+                                                              'price': c.price,
+                                                              'category':c.category,
+                                                              'quantity': c.quantity-1,
+                                                            });
+
+                                                            setState(() {
+                                                              db.updateCourse(cartLDBModel);
+                                                              updateTotal(-1, -c.price);
+                                                            });
+                                                          },
+                                                          child: Container(
+                                                            padding: EdgeInsets.only(left: 10,right: 10),
+                                                            child: Icon(
+                                                                Icons.remove),
+                                                          ),
+                                                        ),
+                                                        SizedBox(width: 5,),
+
+                                                        Text('${c.quantity}',
+                                                            style: Theme.of(context)
+                                                                .textTheme
+                                                                .subtitle1),
+                                                        SizedBox(width: 5,),
+                                                        InkWell(
+                                                            onTap: ()async{
+                                                              CartMedelLocal cartLDBModel = CartMedelLocal({
+                                                                'id':c.id,
+                                                                'name': c.name,
+                                                                'img':  c.img,
+                                                                'price': c.price,
+                                                                'category':c.category,
+                                                                'quantity': c.quantity+1,
+                                                              });
+
+                                                              setState(() {
+                                                                db.updateCourse(cartLDBModel);
+                                                                updateTotal(1, c.price);
+                                                              });
+                                                            },
+                                                            child: Container(
+                                                                padding: EdgeInsets.only(left: 10,right: 10),
+                                                                child: Icon(Icons.add))),
+                                                        SizedBox(
+                                                          width: 40,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          Container(
+                                            height: MediaQuery.of(context).size.height*.15,
+                                            padding: EdgeInsets.only(
+                                              top: MediaQuery.of(context).size.height*.02
+                                            ),
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                InkWell(
+                                                  onTap: (){
+                                                   DeleteFromCart(context, c.id, c.quantity, c.price);
+                                                  },
+                                                  child: Container(
+                                                      padding: EdgeInsets.all(3),
+                                                      child: Icon(Icons.delete,color: Theme.of(context).primaryColor,)),
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Text(c.price.toString(),
+                                                        textAlign: TextAlign.right,
+                                                        style:
+                                                        Theme.of(context).textTheme.subtitle1),
+                                                    SizedBox(width: 10,)
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                          )
+
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              });
+                        }
+                      }),
+                  SizedBox(height: 20),
+                ],
+              ),
             ),
-            Align(
+           dataLocal.length==0?SizedBox():
+           Align(
               alignment: Alignment.bottomCenter,
               child: Container(
                 color: Theme.of(context).scaffoldBackgroundColor,
@@ -241,7 +321,7 @@ class _CartPageState extends State<CartPage> {
                           horizontal: 12.0, vertical: 8),
                       child: Column(
                         children: [
-                          buildAmountRow(context, locale.subTotal!, '18.0'),
+                          buildAmountRow(context, locale.subTotal!, allPrice.toString()),
                           buildAmountRow(
                               context, locale.promoCodeApplied!, '-2.0'),
                           buildAmountRow(context, locale.serviceCharge!, '4.0'),
@@ -280,7 +360,102 @@ class _CartPageState extends State<CartPage> {
       ),
     );
   }
+  getTotal() async {
+    //totalquantity=0;
+    //allPrice=0.0;
+    List product=await db.allProduct();
+    for(int i=0;i<product.length;i++){
+      CartMedelLocal c=new CartMedelLocal.fromMap(product[i]);
+      totalquantity=totalquantity+int.parse(c.quantity.toString());
+      allPrice=allPrice+double.parse((c.price*c.quantity).toString());
+      print(totalquantity);
+      print("qqqqqqqqqqqqqqqq");
+      setState(() {
+      });
+    }
+    print(totalquantity);
+    print("00000000000000000000000");
+  }
+  DeleteFromCart(BuildContext context,id,int quantity,double price) {
+    double totalPrice=price*quantity;
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => Dialog(
+          child:  Container(
+            padding: EdgeInsets.only(
+                left: 10,
+                right: 10
+            ),
+            height: 110.0,
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.black12,width: 2.0)
+            ),
+            child: Stack(children: <Widget>[
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center
+                ,crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(alignment: Alignment.center,child: Text("Are You Sure Delete",style: TextStyle(color:Colors.black,fontSize: 16),textAlign: TextAlign.center,)),
+                  SizedBox(height: 25,),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        GestureDetector(
+                          child: Container(
+                            decoration:BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color:Theme.of(context).accentColor
+                            ),
+                            height: MediaQuery.of(context).size.height*.035,
+                            width: MediaQuery.of(context).size.width*.27,
+                            alignment: Alignment.center,
+                            child:   Text("Cancel",style: TextStyle(color:Colors.white,fontSize: 12),),
+                          ),
+                          onTap: (){
+                            Navigator.pop(context);
+                          },
+                        ),
+                        GestureDetector(
+                          child: Container(
+                            decoration:BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color:Theme.of(context).primaryColor
+                            ),
+                            height: MediaQuery.of(context).size.height*.035,
+                            width: MediaQuery.of(context).size.width*.27,
+                            alignment: Alignment.center,
+                            child:   Text("Confirm",style: TextStyle(color:Colors.white,fontSize: 12),),
+                          ),
+                          onTap: () async {
+                            print(totalPrice*quantity);
+                            setState(() {
+                              db.delete(id);
+                            });
+                            loadData();
+                            updateTotal(-quantity, -totalPrice);
+                            Navigator.pop(context);
 
+                          },
+                        ),
+
+                      ],
+                    ),
+                  )
+                ],
+              ),
+
+
+            ],),
+          ),
+        ));
+  }
+  updateTotal(int quantity,double price){
+    totalquantity+=quantity;
+    allPrice+=price;
+    setState(() {
+    });
+  }
   Padding buildAmountRow(BuildContext context, String title, String amount) {
     var locale = AppLocalizations.of(context)!;
     return Padding(
@@ -312,7 +487,6 @@ class _CartPageState extends State<CartPage> {
       ),
     );
   }
-
   GestureDetector buildIconButton(IconData icon, int index, items, count) {
     return GestureDetector(
       onTap: () {
@@ -331,7 +505,6 @@ class _CartPageState extends State<CartPage> {
       ),
     );
   }
-
   Widget _prescriptionRequired(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
     return AlertDialog(
@@ -401,5 +574,6 @@ class _CartPageState extends State<CartPage> {
       ),
     );
   }
+
 }
 //done

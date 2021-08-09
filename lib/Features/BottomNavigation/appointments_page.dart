@@ -196,29 +196,29 @@ class _AppointmentPageState extends State<AppointmentPage> {
                               onPressed: () {}),
                         ),
                         PositionedDirectional(
-                            bottom: 0,
-                            end: -10,
+                            bottom: 7,
+                            end: 5,
                             child: Row(
                               children: [
-                                IconButton(
-                                  icon: Icon(
+                                InkWell(
+                                  child: Icon(
                                     Icons.phone,
                                     color: Theme.of(context).primaryColor,
                                     size: 16,
                                   ),
-                                  onPressed: () {
+                                  onTap: () {
                                     // Navigator.pushNamed(
                                     //     context, PageRoutes.doctorChat);
                                   },
                                 ),
-
-                                IconButton(
-                                  icon: Icon(
+                                SizedBox(width: 13,),
+                                InkWell(
+                                  child: Icon(
                                     Icons.message,
                                     color: Theme.of(context).primaryColor,
                                     size: 16,
                                   ),
-                                  onPressed: () {
+                                  onTap: () {
                                     Navigator.pushNamed(
                                         context, PageRoutes.doctorChat);
                                   },
@@ -358,40 +358,29 @@ class _AppointmentPageState extends State<AppointmentPage> {
                           ),
                         ),
                         PositionedDirectional(
-                          top: 0,
-                          end: -5,
-                          child: IconButton(
-                              icon: Icon(
-                                Icons.more_vert,
-                                size: 16,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                              onPressed: () {}),
-                        ),
-                        PositionedDirectional(
-                            bottom: 0,
-                            end: -10,
+                            bottom: 7,
+                            end: 5,
                             child: Row(
                               children: [
-                                IconButton(
-                                  icon: Icon(
+                                InkWell(
+                                  child: Icon(
                                     Icons.phone,
                                     color: Theme.of(context).primaryColor,
                                     size: 16,
                                   ),
-                                  onPressed: () {
+                                  onTap: () {
                                     // Navigator.pushNamed(
                                     //     context, PageRoutes.doctorChat);
                                   },
                                 ),
-
-                                IconButton(
-                                  icon: Icon(
+                                SizedBox(width: 13,),
+                                InkWell(
+                                  child: Icon(
                                     Icons.message,
                                     color: Theme.of(context).primaryColor,
                                     size: 16,
                                   ),
-                                  onPressed: () {
+                                  onTap: () {
                                     Navigator.pushNamed(
                                         context, PageRoutes.doctorChat);
                                   },
@@ -400,7 +389,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                   width: 10,
                                 ),
                               ],
-                            ))
+                            )),
                       ],
                     ),
                     Divider(

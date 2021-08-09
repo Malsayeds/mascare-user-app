@@ -21,6 +21,8 @@ dependencies:
   sqflite:
   shared_preferences:
   location:
+  http:
+  #smooth_star_rating:
   flutter_rating_bar: ^4.0.0
   flutter_phoenix: ^1.0.0
   flutter_bloc: ^7.0.0

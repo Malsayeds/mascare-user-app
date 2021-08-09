@@ -1,11 +1,16 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/Data/data.dart';
+import 'package:doctoworld_user/Features/BottomNavigation/Medicine/SearchMedicine.dart';
+import 'package:doctoworld_user/Features/Components/CustomCartIcon.dart';
 import 'package:doctoworld_user/Features/Components/entry_field.dart';
 import 'package:doctoworld_user/Features/Components/title_row.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
+import 'package:doctoworld_user/Provider/GlobalProvider.dart';
+import 'package:doctoworld_user/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
+import 'package:provider/provider.dart';
 
 class MedicinePage extends StatelessWidget {
   @override
@@ -20,6 +25,11 @@ class FindMedicine extends StatefulWidget {
 }
 
 class _FindMedicineState extends State<FindMedicine> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
@@ -60,32 +70,7 @@ class _FindMedicineState extends State<FindMedicine> {
           }).toList(),
         ),
         actions: <Widget>[
-          Stack(
-            children: [
-              IconButton(
-                icon: Icon(Icons.shopping_cart),
-                onPressed: () {
-                  Navigator.pushNamed(context, PageRoutes.myCartPage);
-                },
-              ),
-              Positioned.directional(
-                textDirection: Directionality.of(context),
-                top: 8,
-                end: 12,
-                child: CircleAvatar(
-                  backgroundColor: Colors.red,
-                  radius: 5.5,
-                  child: Center(
-                      child: Text(
-                    '1',
-                    style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        fontSize: 9),
-                  )),
-                ),
-              )
-            ],
-          ),
+          CustomCartIcon()
         ],
       ),
       body: ListView(
@@ -94,7 +79,7 @@ class _FindMedicineState extends State<FindMedicine> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6),
             child: Text(
-              locale.hello! + ', Sam Smith,',
+              locale.hello! + ', ${Docto.username}',
               style: Theme.of(context).textTheme.subtitle2,
             ),
           ),
@@ -112,14 +97,20 @@ class _FindMedicineState extends State<FindMedicine> {
             ),
           ),
           FadedScaleAnimation(
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-              child: EntryField(
-                hint: locale.searchMedicines,
-                prefixIcon: Icons.search,
+             Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+                child: EntryField(
+                  onTap: (){
+                      print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MedicineSearchScreen()));
+                  },
+                  readOnly: true,
+                  hint: locale.searchMedicines,
+                  prefixIcon: Icon(Icons.search,color:Theme.of(context).primaryColor)
+                ),
               ),
-            ),
+
             durationInMilliseconds: 300,
           ),
           TitleRow(

@@ -4,7 +4,6 @@ import 'package:doctoworld_user/Features/Components/custom_button.dart';
 import 'package:doctoworld_user/Features/Components/entry_field.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
 import 'package:doctoworld_user/Provider/LocationProvider.dart';
-import 'package:doctoworld_user/Provider/locationCore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
@@ -16,6 +15,7 @@ import 'package:provider/provider.dart';
 import 'address_type_button.dart';
 
 TextEditingController _addressController = TextEditingController();
+
 
 class LocationPage extends StatelessWidget {
   @override

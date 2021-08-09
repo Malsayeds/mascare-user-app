@@ -1,10 +1,13 @@
 import 'package:animation_wrappers/Animations/faded_scale_animation.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
+import 'package:doctoworld_user/Features/Components/CustomCartIcon.dart';
 import 'package:doctoworld_user/Features/Components/custom_add_item_button.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
+import 'package:doctoworld_user/Provider/GlobalProvider.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MedicinesPage extends StatefulWidget {
   @override
@@ -20,32 +23,7 @@ class _MedicinesPageState extends State<MedicinesPage> {
           textTheme: Theme.of(context).textTheme,
           centerTitle: true,
           actions: [
-            Stack(
-              children: [
-                IconButton(
-                  icon: Icon(Icons.shopping_cart),
-                  onPressed: () {
-                    Navigator.pushNamed(context, PageRoutes.myCartPage);
-                  },
-                ),
-                Positioned.directional(
-                  textDirection: Directionality.of(context),
-                  top: 8,
-                  end: 12,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.red,
-                    radius: 5.5,
-                    child: Center(
-                        child: Text(
-                      '1',
-                      style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                          fontSize: 9),
-                    )),
-                  ),
-                )
-              ],
-            )
+          CustomCartIcon()
           ],
         ),
         body: FadedSlideAnimation(
@@ -158,23 +136,25 @@ class _MedicinesState extends State<Medicines> {
                       ),
                     ),
 
-                       Align(
-                         alignment: Alignment.bottomRight,
-                         child: Row(
-                           children: [
-                             CustomAddItemButton(),
-                             SizedBox(width: MediaQuery.of(context).size.width*.19,),
-                             Row(
+                    Align(
+                             alignment: Alignment.bottomRight,
+                             child: Row(
                                children: [
-                                 Text(
-                                   '\$ ' + _myItems[index].price,
-                                   style: Theme.of(context).textTheme.subtitle1,
+                                 CustomAddItemButton(),
+                                 SizedBox(width: MediaQuery.of(context).size.width*.19,),
+                                 Row(
+                                   children: [
+                                     Text(
+                                       '\$ ' + _myItems[index].price,
+                                       style: Theme.of(context).textTheme.subtitle1,
+                                     ),
+                                   ],
                                  ),
                                ],
                              ),
-                           ],
-                         ),
-                       ),
+                           ),
+
+
 
                   ],
                 ),

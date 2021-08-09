@@ -1,7 +1,7 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
 import 'package:doctoworld_user/Models/order_card_model.dart';
-import 'package:doctoworld_user/Features/BottomNavigation/More/Order/order_info.dart';
+import 'package:doctoworld_user/Features/BottomNavigation/Account/Order/order_info.dart';
 import 'package:doctoworld_user/Theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:doctoworld_user/Routes/routes.dart';

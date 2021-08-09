@@ -1,3 +1,5 @@
+import 'package:doctoworld_user/Features/Auth/Login/UI/login_ui.dart';
+import 'package:doctoworld_user/Features/Auth/Registration/UI/registration_ui.dart';
 import 'package:doctoworld_user/Features/Auth/login_navigator.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/Doctors/appointment_booked.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/Doctors/book_appointment.dart';
@@ -19,14 +21,14 @@ import 'package:doctoworld_user/Features/BottomNavigation/Medicine/reviews_page.
 import 'package:doctoworld_user/Features/BottomNavigation/Medicine/select_payment_method.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/Medicine/seller_profile.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/Medicine/shop_by_category_page.dart';
-import 'package:doctoworld_user/Features/BottomNavigation/More/add_money.dart';
-import 'package:doctoworld_user/Features/BottomNavigation/More/change_language_page.dart';
-import 'package:doctoworld_user/Features/BottomNavigation/More/faq_page.dart';
-import 'package:doctoworld_user/Features/BottomNavigation/More/saved_addresses_page.dart';
-import 'package:doctoworld_user/Features/BottomNavigation/More/saved_page.dart';
-import 'package:doctoworld_user/Features/BottomNavigation/More/support_page.dart';
-import 'package:doctoworld_user/Features/BottomNavigation/More/tnc.dart';
-import 'package:doctoworld_user/Features/BottomNavigation/More/wallet_page.dart';
+import 'package:doctoworld_user/Features/BottomNavigation/Account/add_money.dart';
+import 'package:doctoworld_user/Features/BottomNavigation/Account/change_language_page.dart';
+import 'package:doctoworld_user/Features/BottomNavigation/Account/faq_page.dart';
+import 'package:doctoworld_user/Features/BottomNavigation/Account/saved_addresses_page.dart';
+import 'package:doctoworld_user/Features/BottomNavigation/Account/saved_page.dart';
+import 'package:doctoworld_user/Features/BottomNavigation/Account/support_page.dart';
+import 'package:doctoworld_user/Features/BottomNavigation/Account/tnc.dart';
+import 'package:doctoworld_user/Features/BottomNavigation/Account/wallet_page.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/appointments_page.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/bottom_navigation.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/hospitals_page.dart';
@@ -36,13 +38,13 @@ import 'package:doctoworld_user/Features/Location/location_page.dart';
 import 'package:doctoworld_user/Features/Pages/appointment_detail.dart';
 import 'package:doctoworld_user/Features/Pages/chat_with_doctor.dart';
 import 'package:doctoworld_user/Features/Pages/give_feedback.dart';
-import 'package:doctoworld_user/Features/BottomNavigation/More/PillReminder/create_pill_reminder_page.dart';
-import 'package:doctoworld_user/Features/BottomNavigation/More/PillReminder/pill_reminder_page.dart';
-import 'package:doctoworld_user/Features/BottomNavigation/More/Order/recent_orders_page.dart';
-import 'package:doctoworld_user/Features/BottomNavigation/More/Order/review_order_page.dart';
-import 'package:doctoworld_user/Features/BottomNavigation/More/Order/order_info.dart';
-import 'package:doctoworld_user/Features/BottomNavigation/More/Order/order_tracking_page.dart';
-import 'package:doctoworld_user/Features/BottomNavigation/More/Order/chat_screen.dart';
+import 'package:doctoworld_user/Features/BottomNavigation/Account/PillReminder/create_pill_reminder_page.dart';
+import 'package:doctoworld_user/Features/BottomNavigation/Account/PillReminder/pill_reminder_page.dart';
+import 'package:doctoworld_user/Features/BottomNavigation/Account/Order/recent_orders_page.dart';
+import 'package:doctoworld_user/Features/BottomNavigation/Account/Order/review_order_page.dart';
+import 'package:doctoworld_user/Features/BottomNavigation/Account/Order/order_info.dart';
+import 'package:doctoworld_user/Features/BottomNavigation/Account/Order/order_tracking_page.dart';
+import 'package:doctoworld_user/Features/BottomNavigation/Account/Order/chat_screen.dart';
 import 'package:flutter/material.dart';
 
 class PageRoutes {
@@ -92,6 +94,8 @@ class PageRoutes {
   static const String appointmentPage = 'appointments_page';
   static const String languagePage = 'language_page';
   static const String loginNavigator = 'loginNavigator';
+  static const String register = 'register';
+  static const String login = 'login';
 
   // static const String trial = 'trial';
 
@@ -141,8 +145,10 @@ class PageRoutes {
       orderInfoPage: (context) => OrderInfoPage(),
       doctorMapView: (context) => DoctorMapView(),
       appointmentPage: (context) => AppointmentPage(),
-      languagePage: (context) => ChangeLanguagePage(false),
-      loginNavigator: (context) => LoginNavigator(),
+      languagePage: (context) => ChangeLanguagePage(true),
+     // loginNavigator: (context) => LoginNavigator(),
+      register: (context) => RegisterScreen(),
+      login: (context) => LoginScreen(),
 
       // trial: (context) => Trail(),
     };

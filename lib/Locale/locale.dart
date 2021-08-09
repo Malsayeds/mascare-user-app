@@ -86,6 +86,9 @@ class AppLocalizations {
   String? get weveSentAnOTP {
     return _localizedValues[locale.languageCode]!['weveSentAnOTP'];
   }
+  String? get donthaveacount {
+    return _localizedValues[locale.languageCode]!['donthaveacount'];
+  }
 
   String? get enter4DigitOTP {
     return _localizedValues[locale.languageCode]!['enter4DigitOTP'];
@@ -893,6 +896,24 @@ class AppLocalizations {
 
   String? get writeYourFeedback {
     return _localizedValues[locale.languageCode]!['writeYourFeedback'];
+  }
+  String? get enterpassword {
+    return _localizedValues[locale.languageCode]!['enterpassword'];
+  }
+  String? get entername {
+    return _localizedValues[locale.languageCode]!['entetname'];
+  }
+  String? get enteremail {
+    return _localizedValues[locale.languageCode]!['enteremail'];
+  }
+  String? get firstname {
+    return _localizedValues[locale.languageCode]!['firstname'];
+  }
+  String? get lastname {
+    return _localizedValues[locale.languageCode]!['lastname'];
+  }
+  String? get logout {
+    return _localizedValues[locale.languageCode]!['logout'];
   }
 }
 

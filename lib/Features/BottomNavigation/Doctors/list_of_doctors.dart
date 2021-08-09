@@ -124,6 +124,7 @@ class _DoctorsListState extends State<DoctorsList> {
                                 ),
                                 durationInMilliseconds: 400,
                               ),
+                              SizedBox(width: MediaQuery.of(context).size.width*.015,),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [

@@ -2,6 +2,7 @@ import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:doctoworld_user/Features/Auth/login_navigator.dart';
 import 'package:doctoworld_user/Locale/language_cubit.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
+import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:doctoworld_user/Stroage/StorageData.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ChangeLanguagePage extends StatefulWidget {
   final bool fromRoot;
 
-  ChangeLanguagePage([this.fromRoot = true]);
+  ChangeLanguagePage([this.fromRoot = false]);
 
   @override
   _ChangeLanguagePageState createState() => _ChangeLanguagePageState();
@@ -70,7 +71,7 @@ class _ChangeLanguagePageState extends State<ChangeLanguagePage> {
                         _languageCubit.selectSwahiliLanguage();
                       }
                       if (widget.fromRoot) {
-                        Navigator.pushNamed(context, LoginRoutes.loginRoot);
+                        Navigator.pushNamed(context, PageRoutes.login);
                       } else {
                         Navigator.pop(context);
                       }

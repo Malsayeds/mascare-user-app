@@ -1,8 +1,10 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
+import 'package:doctoworld_user/Features/Components/CustomCartIcon.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:flutter/material.dart';
 
+import '../../main.dart';
 import 'Data/data.dart';
 
 class DoctorsHome extends StatefulWidget {
@@ -54,32 +56,7 @@ class _DoctorsHomeState extends State<DoctorsHome> {
             }).toList(),
           ),
           actions: <Widget>[
-            Stack(
-              children: [
-                IconButton(
-                  icon: Icon(Icons.shopping_cart),
-                  onPressed: () {
-                    Navigator.pushNamed(context, PageRoutes.myCartPage);
-                  },
-                ),
-                Positioned.directional(
-                  textDirection: Directionality.of(context),
-                  top: 8,
-                  end: 12,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.red,
-                    radius: 5.5,
-                    child: Center(
-                        child: Text(
-                      '1',
-                      style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                          fontSize: 9),
-                    )),
-                  ),
-                )
-              ],
-            ),
+            CustomCartIcon()
           ],
         ),
         body: DoctorsBody());
@@ -102,7 +79,7 @@ class _DoctorsBodyState extends State<DoctorsBody> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6),
             child: Text(
-              locale.hello! + ', Sam Smith,',
+              locale.hello! + ', ${Docto.username}',
               style: Theme.of(context).textTheme.subtitle2,
             ),
           ),
@@ -125,6 +102,7 @@ class _DoctorsBodyState extends State<DoctorsBody> {
               onTap: () {
                 Navigator.pushNamed(context, PageRoutes.searchDoctors);
               },
+              readOnly: true,
               decoration: InputDecoration(
                   hintText: locale.searchDoctors,
                   prefixIcon: Icon(Icons.search),

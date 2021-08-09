@@ -1,13 +1,25 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
+import 'package:doctoworld_user/Provider/Auth/ProfileProvider.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class MoreOptions extends StatefulWidget {
+import 'Account/change_language_page.dart';
+class MoreOptions extends StatelessWidget{
   @override
-  _MoreOptionsState createState() => _MoreOptionsState();
+  Widget build(BuildContext context) {
+  return ChangeNotifierProvider(
+      create: (context) => ProfileProvider(), child: More());
+  }
+}
+
+class More extends StatefulWidget {
+  @override
+  _MoreState createState() => _MoreState();
 }
 
 class MenuTile {
@@ -18,9 +30,20 @@ class MenuTile {
   MenuTile(this.title, this.subtitle, this.iconData, this.onTap);
 }
 
-class _MoreOptionsState extends State<MoreOptions> {
+class _MoreState extends State<More> {
+loadData() async {
+  SharedPreferences pref =await SharedPreferences.getInstance();
+  Provider.of<ProfileProvider>(context, listen: false).GetProfileServices(pref.getString("token")!);
+}
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadData();
+  }
   @override
   Widget build(BuildContext context) {
+    final profileProvider= Provider.of<ProfileProvider>(context, listen: true);
     var locale = AppLocalizations.of(context)!;
     List<MenuTile> _menu = [
       MenuTile(locale.wallet, locale.quickPayment, Icons.account_balance_wallet,
@@ -43,7 +66,10 @@ class _MoreOptionsState extends State<MoreOptions> {
       }),
       MenuTile(locale.changeLanguage, locale.changeLanguage, Icons.language,
           () {
-        Navigator.pushNamed(context, PageRoutes.languagePage);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ChangeLanguagePage(false)),
+            );
       }),
       MenuTile(locale.contactUs, locale.letUsHelpYou, Icons.message_sharp, () {
         Navigator.pushNamed(context, PageRoutes.supportPage);
@@ -54,6 +80,9 @@ class _MoreOptionsState extends State<MoreOptions> {
       MenuTile(locale.faqs, locale.quickAnswer, Icons.announcement, () {
         Navigator.pushNamed(context, PageRoutes.faqPage);
       }),
+      MenuTile(locale.logout, locale.logout, Icons.logout, () {
+         logout();
+      }),
     ];
     return Scaffold(
       appBar: AppBar(
@@ -62,7 +91,7 @@ class _MoreOptionsState extends State<MoreOptions> {
         textTheme: Theme.of(context).textTheme,
         centerTitle: true,
       ),
-      body: ListView(
+      body: profileProvider.getProfileInfo["id"]==""?Center(child: CircularProgressIndicator(),):ListView(
         physics: BouncingScrollPhysics(),
         children: [
           Padding(
@@ -77,19 +106,17 @@ class _MoreOptionsState extends State<MoreOptions> {
                 SizedBox(
                   width: 15,
                 ),
-                RichText(
-                    text: TextSpan(children: <TextSpan>[
-                  TextSpan(
-                      text: "Samantha\nSmith\n",
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle1!
-                          .copyWith(fontSize: 20, height: 2)),
-                  TextSpan(
-                      text: '+1 987 654 3210',
-                      style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                          color: Theme.of(context).disabledColor, height: 2)),
-                ]))
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text( profileProvider.getProfileInfo["first_name"]+" "+profileProvider.getProfileInfo["last_name"],
+                    style:Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 20, height: 2)) ,
+                    Text(profileProvider.getProfileInfo["phone"],style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                        color: Theme.of(context).disabledColor, height: 2)
+                    )
+                ],
+                 )
+
               ],
             ),
           ),
@@ -158,4 +185,10 @@ class _MoreOptionsState extends State<MoreOptions> {
       ),
     );
   }
+  void logout()async{
+  SharedPreferences pref=await SharedPreferences.getInstance();
+     pref.remove("user_id");
+     pref.remove("token");
+     Navigator.pushNamedAndRemoveUntil(context, "login", (route) => false);
+   }
 }
