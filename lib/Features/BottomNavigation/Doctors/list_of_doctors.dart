@@ -1,20 +1,31 @@
 import 'dart:core';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
+import 'package:doctoworld_user/Provider/Doctor/DoctorSpecialistProvider.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:doctoworld_user/Theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-
-class DoctorsPage extends StatefulWidget {
+import 'package:provider/provider.dart';
+class DoctorsPage extends StatelessWidget{
   @override
-  _DoctorsPageState createState() => _DoctorsPageState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+        create: (context) => DoctorSpeialistProvider(), child: Doctorspage2());
+  }
 }
 
-class _DoctorsPageState extends State<DoctorsPage> {
+class Doctorspage2 extends StatefulWidget {
+
+  @override
+  _Doctorspage2State createState() => _Doctorspage2State();
+}
+
+class _Doctorspage2State extends State<Doctorspage2> {
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
+  //  var doctorSpeialistProvider=    Provider.of<DoctorSpeialistProvider>(context, listen: false);
     return Scaffold(
         appBar: AppBar(
           title: Text(locale.cardio!),
@@ -47,10 +58,16 @@ class _DoctorsPageState extends State<DoctorsPage> {
         body: DoctorsList());
   }
 }
-
-class DoctorsList extends StatefulWidget {
+class DoctorsList extends StatelessWidget{
   @override
-  _DoctorsListState createState() => _DoctorsListState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+        create: (context) => DoctorSpeialistProvider(), child: DoctorsListScreen());
+  }
+}
+class DoctorsListScreen extends StatefulWidget {
+  @override
+  _DoctorsListScreenState createState() => _DoctorsListScreenState();
 }
 
 class SearchDoctorTile {
@@ -66,10 +83,19 @@ class SearchDoctorTile {
       this.experience, this.fee, this.reviews);
 }
 
-class _DoctorsListState extends State<DoctorsList> {
+class _DoctorsListScreenState extends State<DoctorsListScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Provider.of<DoctorSpeialistProvider>(context, listen: false).getDoctorBySpecialist();
+  }
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context);
+    var doctorSpeialistProvider=    Provider.of<DoctorSpeialistProvider>(context, listen: true);
+    print(doctorSpeialistProvider.doctors.length);
+    print("lengthtttttttttttttttttttttttttttttttttttttttttttttt");
     List<SearchDoctorTile> searchList = [
       SearchDoctorTile('assets/Doctors/doc1.png', 'Dr. Joseph Williamson',
           'Cardiac Surgeon', 'Apple Hospital', '22', '30', '152'),
@@ -89,7 +115,7 @@ class _DoctorsListState extends State<DoctorsList> {
           'Cardiac Surgeon', 'Lismuth Hospital', '22', '30', '438'),
     ];
     return Scaffold(
-      body: FadedSlideAnimation(
+      body: doctorSpeialistProvider.doctors.length==0?Center(child: CircularProgressIndicator(),):FadedSlideAnimation(
         Container(
           child: ListView(
             padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
@@ -104,7 +130,7 @@ class _DoctorsListState extends State<DoctorsList> {
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: searchList.length,
+                itemCount: doctorSpeialistProvider.doctors.length,
                 itemBuilder: (context, index) {
                   return Column(
                     children: [
@@ -117,10 +143,14 @@ class _DoctorsListState extends State<DoctorsList> {
                           child: Row(
                             children: [
                               FadedScaleAnimation(
-                                Image.asset(
-                                  searchList[index].image,
-                                  height: MediaQuery.of(context).size.height*.15,
-                                  width: MediaQuery.of(context).size.width*.2,
+                                ClipRRect(
+                                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                                  child: Image.network(
+                                    doctorSpeialistProvider.doctors[index].doctor.img,
+                                    height: MediaQuery.of(context).size.height*.15,
+                                    width: MediaQuery.of(context).size.width*.2,
+                                    fit: BoxFit.fill,
+                                  ),
                                 ),
                                 durationInMilliseconds: 400,
                               ),
@@ -133,7 +163,7 @@ class _DoctorsListState extends State<DoctorsList> {
                                   ),
                                   Container(
                                     width: MediaQuery.of(context).size.width*.7,
-                                    child: Text(searchList[index].name ,
+                                    child: Text(doctorSpeialistProvider.doctors[index].doctor.name ,
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1),
@@ -143,7 +173,7 @@ class _DoctorsListState extends State<DoctorsList> {
                                   ),
                                   Container(
                                     width: MediaQuery.of(context).size.width*.7,
-                                    child: Text(searchList[index].speciality,
+                                    child: Text(doctorSpeialistProvider.SelectedSpecialist,
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyText2!
@@ -213,7 +243,7 @@ class _DoctorsListState extends State<DoctorsList> {
                                                 fontSize: 12),
                                       ),
                                       Text(
-                                        searchList[index].experience +
+                                        doctorSpeialistProvider.doctors[index].doctor.exp +
                                             locale.years!,
                                         style: Theme.of(context)
                                             .textTheme
@@ -234,7 +264,7 @@ class _DoctorsListState extends State<DoctorsList> {
                                                 fontSize: 12),
                                       ),
                                       Text(
-                                        '\$' + searchList[index].fee,
+                                        '\$' + doctorSpeialistProvider.doctors[index].doctor.fees.toString(),
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1!
@@ -247,7 +277,7 @@ class _DoctorsListState extends State<DoctorsList> {
                                           itemSize: 12,
                                           initialRating: 4,
                                           direction: Axis.horizontal,
-                                          itemCount: 5,
+                                          itemCount: doctorSpeialistProvider.doctors[index].review.round(),
                                           itemBuilder: (context, _) => Icon(
                                                 Icons.star,
                                                 color: Colors.amber,
@@ -259,7 +289,7 @@ class _DoctorsListState extends State<DoctorsList> {
                                         width: 4,
                                       ),
                                       Text(
-                                        '(${searchList[index].reviews})',
+                                        '(${doctorSpeialistProvider.doctors[index].totalRatedPeople})',
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle2!

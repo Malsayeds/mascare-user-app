@@ -111,7 +111,7 @@ class _SetLocationState extends State<SetLocation> {
                       style: Theme.of(context).textTheme.caption,
                     ),
                   ),
-                  Spacer(),
+                /*  Spacer(),
                   isCard
                       ? InkWell(
                           child: Icon(
@@ -125,7 +125,7 @@ class _SetLocationState extends State<SetLocation> {
                             });
                           },
                         )
-                      : SizedBox.shrink()
+                      : SizedBox.shrink()*/
                 ],
               ),
             ),

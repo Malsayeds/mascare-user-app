@@ -1,21 +1,37 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:doctoworld_user/Features/Components/CustomCartIcon.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
+import 'package:doctoworld_user/Provider/Doctor/DoctorSpecialistProvider.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../main.dart';
 import 'Data/data.dart';
-
-class DoctorsHome extends StatefulWidget {
+class DoctorsHome extends StatelessWidget{
   @override
-  _DoctorsHomeState createState() => _DoctorsHomeState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+        create: (context) => DoctorSpeialistProvider(), child: DoctorScreesn());
+  }
 }
 
-class _DoctorsHomeState extends State<DoctorsHome> {
+class DoctorScreesn extends StatefulWidget {
+  @override
+  _DoctorScreesnState createState() => _DoctorScreesnState();
+}
+
+class _DoctorScreesnState extends State<DoctorScreesn> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Provider.of<DoctorSpeialistProvider>(context, listen: false).getDoctorSpecialist();
+  }
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
+    var doctorSpeialistProvider=    Provider.of<DoctorSpeialistProvider>(context, listen: true);
     String? value = 'Wallington';
 
     return Scaffold(
@@ -59,7 +75,7 @@ class _DoctorsHomeState extends State<DoctorsHome> {
             CustomCartIcon()
           ],
         ),
-        body: DoctorsBody());
+        body:doctorSpeialistProvider.doctorSpeiaList.length==0?Center(child: CircularProgressIndicator(),) :DoctorsBody());
   }
 }
 
@@ -72,6 +88,7 @@ class _DoctorsBodyState extends State<DoctorsBody> {
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
+    var doctorSpeialistProvider=    Provider.of<DoctorSpeialistProvider>(context, listen: true);
     return Scaffold(
       body: ListView(
         physics: BouncingScrollPhysics(),
@@ -147,23 +164,40 @@ class _DoctorsBodyState extends State<DoctorsBody> {
                 shrinkWrap: true,
                 physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
-                itemCount: doctorCategories.length,
+                itemCount: doctorSpeialistProvider.doctorSpeiaList.length,
                 itemBuilder: (context, index) {
                   return InkWell(
-                    onTap: () {
-                      Navigator.pushNamed(context, PageRoutes.searchDoctors);
+                    onTap: () async{
+                      doctorSpeialistProvider.SetSelectedSpecialist(doctorSpeialistProvider.doctorSpeiaList[index].id,doctorSpeialistProvider.doctorSpeiaList[index].name);
+                      //await doctorSpeialistProvider.getDoctorBySpecialist();
+                      Navigator.pushNamed(context, PageRoutes.listOfDoctorsPage);
+
                     },
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 10),
-                      child: FadedScaleAnimation(
-                        Image.asset(
-                          doctorCategories[index],
-                          // height: 100,
-                          width: 95,
-                          fit: BoxFit.fill,
+                    child: Row(
+                      children: [
+                        Container(
+                         // padding: EdgeInsets.only(left: 10),
+                          height: 123.3,
+                          width: MediaQuery.of(context).size.width*.3,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              color: Theme.of(context).primaryColor
+                          ),
+                          child: FadedScaleAnimation(
+                            Column(
+                              children: [
+                                SizedBox(height: 15,),
+                                Container(
+                                    width: MediaQuery.of(context).size.width*.3,
+                                    alignment: Alignment.center,
+                                    child: Text(doctorSpeialistProvider.doctorSpeiaList[index].name,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 16),)),
+                              ],
+                            ),
+                            durationInMilliseconds: 300,
+                          ),
                         ),
-                        durationInMilliseconds: 300,
-                      ),
+                        SizedBox(width: 10,)
+                      ],
                     ),
                   );
                 }),
@@ -214,7 +248,7 @@ class _DoctorsBodyState extends State<DoctorsBody> {
           ListView.builder(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: specialities.length,
+            itemCount: doctorSpeialistProvider.doctorSpeiaList.length,
             itemBuilder: (context, index) {
               return Padding(
                 padding:
@@ -222,7 +256,7 @@ class _DoctorsBodyState extends State<DoctorsBody> {
                 child: Row(
                   children: [
                     Text(
-                      specialities[index],
+                      doctorSpeialistProvider.doctorSpeiaList[index].name,
                       style: Theme.of(context)
                           .textTheme
                           .bodyText2!

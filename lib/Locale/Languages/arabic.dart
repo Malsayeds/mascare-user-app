@@ -223,6 +223,7 @@ Map<String, String> arabic() {
     "enteremail":"ادخل البريد الالكتروني",
     "firstname":"الاسم الاول",
     "lastname":"الاسم الاخير",
-    "logout":"تسجيل الخروج"
+    "logout":"تسجيل الخروج",
+    "enterage":"ادخل عمرك"
   };
 }

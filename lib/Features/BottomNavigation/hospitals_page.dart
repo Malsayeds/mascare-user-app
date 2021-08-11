@@ -1,19 +1,33 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/Hospitals/SearchHospitals.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
+import 'package:doctoworld_user/Provider/Hospital/HospitalProvider.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 import '../../main.dart';
 import 'Data/data.dart';
-
-class HospitalsHome extends StatefulWidget {
+class HospitalsHome extends StatelessWidget{
   @override
-  _HospitalsHomeState createState() => _HospitalsHomeState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+        create: (context) => HospitalProvider(), child: HospitalsScreen());
+  }
+}
+class HospitalsScreen extends StatefulWidget {
+  @override
+  _HospitalsScreenState createState() => _HospitalsScreenState();
 }
 
-class _HospitalsHomeState extends State<HospitalsHome> {
+class _HospitalsScreenState extends State<HospitalsScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Provider.of<HospitalProvider>(context, listen: false).getHospitals();
+  }
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
@@ -220,8 +234,9 @@ class HospitalsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context);
+    var hospitalProvider=    Provider.of<HospitalProvider>(context, listen: true);
     return ListView.builder(
-      itemCount: _hospitals.length,
+      itemCount: hospitalProvider.hospitalslist.length,
       shrinkWrap: true,
       itemBuilder: (context, index) {
         return Column(

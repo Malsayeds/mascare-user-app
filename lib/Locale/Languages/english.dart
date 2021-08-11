@@ -229,6 +229,7 @@ Map<String, String> english() {
     "enteremail":"Enter Your Email",
     "firstname":"First Name",
     "lastname":"Last  Name",
-    "logout":"Logout"
+    "logout":"Logout",
+    "enterage":"Enter Your Age"
   };
 }

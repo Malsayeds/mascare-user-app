@@ -9,6 +9,7 @@ import 'package:doctoworld_user/Stroage/StorageData.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../main.dart';
 import 'registration_interactor.dart';
 class RegisterScreen extends StatelessWidget {
   @override
@@ -31,10 +32,12 @@ class RegistrationUI extends StatefulWidget {
 class _RegistrationUIState extends State<RegistrationUI> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _firstController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
   final TextEditingController _lastController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   FocusNode emailNode=new FocusNode();
+  FocusNode ageNode=new FocusNode();
   FocusNode passwordNode=new FocusNode();
   FocusNode lastNode=new FocusNode();
   FocusNode phoneNode=new FocusNode();
@@ -54,7 +57,7 @@ class _RegistrationUIState extends State<RegistrationUI> {
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
-    final registerProvider= Provider.of<RegisterProvider>(context, listen: false);
+    final registerProvider= Provider.of<RegisterProvider>(context, listen: true);
     return Scaffold(
       appBar: AppBar(
         title: Text(locale.registerNow!),
@@ -100,7 +103,7 @@ class _RegistrationUIState extends State<RegistrationUI> {
                          prefixIcon: Icon(Icons.person,color:Theme.of(context).primaryColor),
                          hint: locale.lastname,
                        ),
-                       SizedBox(height: 20.0),
+                      SizedBox(height: 20.0),
                        EntryField(
                          textInputType: TextInputType.phone,
                          OwnFocusNode: phoneNode,
@@ -117,10 +120,22 @@ class _RegistrationUIState extends State<RegistrationUI> {
                          textInputType: TextInputType.emailAddress,
                          onValidate: validateEmail,
                          OwnFocusNode: emailNode,
-                         focusNode: passwordNode,
+                         focusNode: ageNode,
                          controller: _emailController,
                          prefixIcon: Icon(Icons.mail,color:Theme.of(context).primaryColor),
                          hint: locale.emailAddress,
+                       ),
+                       SizedBox(height: 20.0),
+                       EntryField(
+                         textInputType: TextInputType.phone,
+                         OwnFocusNode: ageNode,
+                         onValidate: validateAge,
+                         focusNode: passwordNode,
+                         prefixIcon: Icon(Icons.person,color:Theme.of(context).primaryColor),
+                         hint: locale.enterage,
+                         controller: _ageController,
+                         //initialValue: widget.phoneNumber,
+                         readOnly: false,
                        ),
                        SizedBox(height: 20.0),
                        EntryField(
@@ -146,11 +161,16 @@ class _RegistrationUIState extends State<RegistrationUI> {
                       setState(() {
                         loader=true;
                       });
-                        await registerProvider.RegisterServices(_firstController.text,_lastController.text,_emailController.text,_passwordController.text, _phoneController.text);
-                        if(registerProvider.RegisterInfo["token"]!=null){
+                        await registerProvider.RegisterServices(_firstController.text.toString()+_lastController.text.toString(),_emailController.text,_passwordController.text,_ageController.text,_phoneController.text);
+                        print(registerProvider.RegisterInfo);
+                        print("000000000000000000000000000000000000000000000");
+                        if(registerProvider.RegisterInfo["user"]["token"]!=null){
                           StorageData.storeValue("token", registerProvider.RegisterInfo["token"].toString());
                           StorageData.storeValue("user_id", registerProvider.RegisterInfo["user"]["id"].toString());
                           StorageData.storeValue("user_name", _firstController.text+" "+_lastController.text);
+                          setState(() {
+                            Docto.username=_firstController.text+" "+_lastController.text;
+                          });
                           Navigator.pushNamed(context, PageRoutes.bottomNavigation);
                         }
                         else{
@@ -213,6 +233,13 @@ class _RegistrationUIState extends State<RegistrationUI> {
     var locale = AppLocalizations.of(context)!;
     if(value!.isEmpty){
       return locale.enterMobileNumber;
+    }
+    return null;
+  }
+  String? validateAge(String? value){
+    var locale = AppLocalizations.of(context)!;
+    if(value!.isEmpty){
+      return locale.enterage;
     }
     return null;
   }

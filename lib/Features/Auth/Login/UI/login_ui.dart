@@ -9,6 +9,7 @@ import 'package:doctoworld_user/Stroage/StorageData.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import '../../../../main.dart';
 import 'login_interactor.dart';
 class LoginScreen extends StatelessWidget {
   @override
@@ -106,16 +107,18 @@ class _LoginUIState extends State<LoginUI> {
                                   loader=true;
                                 });
                               await loginProvider.LoginServices(_emailController.text, _passwordController.text);
-                              print(loginProvider.LoginInfo["token"].toString());
-                               if(loginProvider.LoginInfo["token"]!=null){
-                                 print("ssssssssssssssssssssssssssssssssssssssssssssssssssssss");
-                                 StorageData.storeValue("token", loginProvider.LoginInfo["token"].toString());
+                              print(loginProvider.LoginInfo["access_token"].toString());
+                               if(loginProvider.LoginInfo["access_token"]!=null){
+                                 StorageData.storeValue("token", loginProvider.LoginInfo["access_token"].toString());
                                  StorageData.storeValue("user_id", loginProvider.LoginInfo["user"]["id"].toString());
-                                 StorageData.storeValue("user_name", loginProvider.LoginInfo["user"]["first_name"]+" "+loginProvider.LoginInfo["user"]["last_name"]);
+                                 StorageData.storeValue("user_name", loginProvider.LoginInfo["user"]["name"]);
+                                 setState(() {
+                                   Docto.username=loginProvider.LoginInfo["user"]["name"];
+                                 });
                                  Navigator.pushNamed(context, PageRoutes.bottomNavigation);
                                }
                                else{
-                                 DialogMessages.ErrorMessage(context,loginProvider.LoginInfo["error"].toString());
+                                 DialogMessages.ErrorMessage(context,loginProvider.LoginInfo["message"].toString());
                                  setState(() {
                                    loader=false;
                                  });
