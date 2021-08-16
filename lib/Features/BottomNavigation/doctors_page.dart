@@ -1,7 +1,8 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:doctoworld_user/Features/Components/CustomCartIcon.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
-import 'package:doctoworld_user/Provider/Doctor/DoctorSpecialistProvider.dart';
+import 'package:doctoworld_user/Provider/Config.dart';
+import 'package:doctoworld_user/Provider/Doctor/DoctorProvider.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,8 +12,7 @@ import 'Data/data.dart';
 class DoctorsHome extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => DoctorSpeialistProvider(), child: DoctorScreesn());
+    return  DoctorScreesn();
   }
 }
 
@@ -26,12 +26,13 @@ class _DoctorScreesnState extends State<DoctorScreesn> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<DoctorSpeialistProvider>(context, listen: false).getDoctorSpecialist();
+    Provider.of<DoctorProvider>(context, listen: false).getDoctorSpecialist();
+    Provider.of<DoctorProvider>(context, listen: false).getDoctorAdds();
   }
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
-    var doctorSpeialistProvider=    Provider.of<DoctorSpeialistProvider>(context, listen: true);
+    var doctorSpeialistProvider=    Provider.of<DoctorProvider>(context, listen: true);
     String? value = 'Wallington';
 
     return Scaffold(
@@ -88,7 +89,7 @@ class _DoctorsBodyState extends State<DoctorsBody> {
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
-    var doctorSpeialistProvider=    Provider.of<DoctorSpeialistProvider>(context, listen: true);
+    var doctorProvider=    Provider.of<DoctorProvider>(context, listen: true);
     return Scaffold(
       body: ListView(
         physics: BouncingScrollPhysics(),
@@ -164,12 +165,12 @@ class _DoctorsBodyState extends State<DoctorsBody> {
                 shrinkWrap: true,
                 physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
-                itemCount: doctorSpeialistProvider.doctorSpeiaList.length,
+                itemCount: doctorProvider.doctorSpeiaList.length,
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: () async{
-                      doctorSpeialistProvider.SetSelectedSpecialist(doctorSpeialistProvider.doctorSpeiaList[index].id,doctorSpeialistProvider.doctorSpeiaList[index].name);
-                      //await doctorSpeialistProvider.getDoctorBySpecialist();
+                      doctorProvider.SetSelectedSpecialist(doctorProvider.doctorSpeiaList[index].id,doctorProvider.doctorSpeiaList[index].name);
+                      //await doctorSpeialistProvider.getDoctorBySpecialist(doctorSpeialistProvider.doctorSpeiaList[index].id);
                       Navigator.pushNamed(context, PageRoutes.listOfDoctorsPage);
 
                     },
@@ -181,7 +182,14 @@ class _DoctorsBodyState extends State<DoctorsBody> {
                           width: MediaQuery.of(context).size.width*.3,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.all(Radius.circular(10)),
-                              color: Theme.of(context).primaryColor
+                              color: Theme.of(context).primaryColor,
+                              image: doctorProvider.doctorSpeiaList[index].media.length>0?
+                              DecorationImage(
+                                  image: NetworkImage(doctorProvider.doctorSpeiaList[index].media[0].url),
+                                  fit: BoxFit.contain):
+                              DecorationImage(
+                                  image: NetworkImage(Config.doctor_defualt_image),
+                                  fit: BoxFit.contain)
                           ),
                           child: FadedScaleAnimation(
                             Column(
@@ -190,7 +198,7 @@ class _DoctorsBodyState extends State<DoctorsBody> {
                                 Container(
                                     width: MediaQuery.of(context).size.width*.3,
                                     alignment: Alignment.center,
-                                    child: Text(doctorSpeialistProvider.doctorSpeiaList[index].name,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 16),)),
+                                    child: Text(doctorProvider.doctorSpeiaList[index].name,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 16),)),
                               ],
                             ),
                             durationInMilliseconds: 300,
@@ -221,14 +229,18 @@ class _DoctorsBodyState extends State<DoctorsBody> {
                 shrinkWrap: true,
                 physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
-                itemCount: doctorBanners.length,
+                itemCount: doctorProvider.addsList.length,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: EdgeInsets.only(left: 16),
                     child: FadedScaleAnimation(
-                      Image.asset(
-                        doctorBanners[index],
-                        width: 250,
+                      ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        child: Image.network(
+                          doctorProvider.addsList[index].image,
+                          width: 250,
+                          fit: BoxFit.fill,
+                        ),
                       ),
                       durationInMilliseconds: 300,
                     ),
@@ -248,7 +260,7 @@ class _DoctorsBodyState extends State<DoctorsBody> {
           ListView.builder(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: doctorSpeialistProvider.doctorSpeiaList.length,
+            itemCount: doctorProvider.doctorSpeiaList.length,
             itemBuilder: (context, index) {
               return Padding(
                 padding:
@@ -256,7 +268,7 @@ class _DoctorsBodyState extends State<DoctorsBody> {
                 child: Row(
                   children: [
                     Text(
-                      doctorSpeialistProvider.doctorSpeiaList[index].name,
+                      doctorProvider.doctorSpeiaList[index].name,
                       style: Theme.of(context)
                           .textTheme
                           .bodyText2!

@@ -1,5 +1,8 @@
 import 'dart:ui';
 import 'package:animation_wrappers/animation_wrappers.dart';
+import 'package:doctoworld_user/Features/Components/DialogMessages.dart';
+import 'package:doctoworld_user/Provider/Config.dart';
+import 'package:doctoworld_user/Provider/Doctor/DoctorProvider.dart';
 import 'package:doctoworld_user/Theme/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,20 +10,69 @@ import 'package:flutter/rendering.dart';
 import 'package:doctoworld_user/Features/Components/custom_button.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
-
-class BookAppointment extends StatefulWidget {
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+class BookAppointment extends StatelessWidget {
   @override
-  _BookAppointmentState createState() => _BookAppointmentState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+        create: (context) => DoctorProvider(), child: BookAppointmentScreen());
+  }
 }
 
-class _BookAppointmentState extends State<BookAppointment> {
+class BookAppointmentScreen extends StatefulWidget {
+  @override
+  _BookAppointmentScreenState createState() => _BookAppointmentScreenState();
+}
+
+class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
+  TextEditingController noteController=new TextEditingController();
+  bool loading=true;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadDoctorInfo();
+    getDays();
+
+  }
+  Future<void>loadDoctorInfo()async{
+    var doctorProvider=Provider.of<DoctorProvider>(context, listen: false);
+    await doctorProvider.addavailable(1, DateFormat('yyyy-MM-dd').format(DateTime.now()));
+    await  Provider.of<DoctorProvider>(context, listen: false).getDoctInfo(1);
+    if(doctorProvider.times.availableTimes.length>0);
+    {
+      setState(() {
+        SelectedTime=doctorProvider.times.availableTimes[0];
+      });
+    }
+    setState(() {
+      loading=false;
+    });
+
+  }
+   List<daysModel> days=[];
+  String month="";
+  String year="";
+ late String SelectedTime;
+ late String SelectedDate;
+  getDays(){
+   for(int i=0;i<31-DateTime.now().day;i++){
+     var date = DateTime.now().add(Duration(days: i));
+     daysModel d=new daysModel(date: DateFormat('d').format(date), day: DateFormat('EEEE').format(date),apiDate: DateFormat('yyyy-MM-dd').format(date));
+     days.add(d);
+   }
+   setState(() {
+     month=DateFormat('MMM').format(DateTime.now());
+     SelectedDate=DateFormat('yyyy-MM-dd').format(DateTime.now());
+     year=DateTime.now().year.toString();
+   });
+  }
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
+    var doctorProvider= Provider.of<DoctorProvider>(context, listen: true);
     var width = MediaQuery.of(context).size.width;
-    final List<String> day = ['WED', 'THU', 'FRI', 'SAT', 'SUN', 'MON'];
-    final List<String> date = ['12', '13', '14', '15', '16', '17'];
-    final List<String> time = ['09:00 am', '09:30 am', '10:00 am'];
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -39,7 +91,7 @@ class _BookAppointmentState extends State<BookAppointment> {
           //onPressed: Navigator.pop(),
         ),
       ),
-      body: FadedSlideAnimation(
+      body: loading?Center(child: CircularProgressIndicator.adaptive(),):FadedSlideAnimation(
         Stack(
           children: [
             Container(
@@ -52,8 +104,8 @@ class _BookAppointmentState extends State<BookAppointment> {
                       Expanded(
                         child: Container(
                           child: FadedScaleAnimation(
-                            Image.asset(
-                              'assets/Doctors/doc1.png',
+                            Image.network(
+                              doctorProvider.doctorInfo.singleDoctor.user.image==null?Config.doctor_defualt_image:doctorProvider.doctorInfo.singleDoctor.user.image,
                               width: MediaQuery.of(context).size.width*.5,
                             ),
                             durationInMilliseconds: 400,
@@ -71,7 +123,7 @@ class _BookAppointmentState extends State<BookAppointment> {
                               style: Theme.of(context).textTheme.subtitle2,
                               children: [
                                 TextSpan(
-                                    text: 'Dr.\nJoseph\nWilliamson\n\n',
+                                    text: '${doctorProvider.doctorInfo.singleDoctor.user.name}\n\n',
                                     style: Theme.of(context)
                                         .textTheme
                                         .subtitle2!
@@ -80,9 +132,9 @@ class _BookAppointmentState extends State<BookAppointment> {
                                             fontWeight: FontWeight.w500,
                                             height: 1.4)),
                                 TextSpan(
-                                    text: 'Cardiac Surgeon \n' +
+                                    text: '${doctorProvider.doctorInfo.singleDoctor.specifications[0].name} \n' /*+
                                         locale.at! +
-                                        'Apple Hospital',
+                                        '${doctorProvider.doctorInfo.singleDoctor.about}',*/,
                                     style: Theme.of(context)
                                         .textTheme
                                         .subtitle2!
@@ -111,7 +163,7 @@ class _BookAppointmentState extends State<BookAppointment> {
                       ),
                       Spacer(flex: 1),
                       Text(
-                        'June 2020',
+                        '${month} ${year}',
                         style: Theme.of(context)
                             .textTheme
                             .subtitle2!
@@ -128,47 +180,55 @@ class _BookAppointmentState extends State<BookAppointment> {
                     child: ListView.builder(
                         physics: BouncingScrollPhysics(),
                         scrollDirection: Axis.horizontal,
-                        itemCount: day.length,
+                        itemCount: days.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
-                          return Padding(
-                            padding: EdgeInsets.only(right: 10),
-                            child: Container(
-                              width: width / 8,
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).backgroundColor,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(5),
-                                ),
-                              ),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text(
-                                    day[index],
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyText2!
-                                        .copyWith(
-                                            color:
-                                                Theme.of(context).disabledColor,
-                                            fontSize: 12,
-                                            height: 2),
+                          return InkWell(
+                            onTap: (){
+                              doctorProvider.addavailable(1, days[index].apiDate);
+                              setState(() {
+                                SelectedDate=days[index].apiDate;
+                              });
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.only(right: 10),
+                              child: Container(
+                                width: width / 8,
+                                decoration: BoxDecoration(
+                                  color: SelectedDate==days[index].apiDate?Theme.of(context).primaryColor:Theme.of(context).backgroundColor,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(5),
                                   ),
-                                  Text(
-                                    date[index],
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyText2!
-                                        .copyWith(
-                                          color: kMainTextColor,
-                                          fontSize: 23,
-                                          fontWeight: FontWeight.bold,
-                                          height: 1.4,
-                                        ),
-                                  )
-                                ],
+                                ),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text(
+                                     days[index].day.substring(0,3),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText2!
+                                          .copyWith(
+                                              color:
+                                              SelectedDate==days[index].apiDate?Colors.white: Theme.of(context).disabledColor,
+                                              fontSize: 12,
+                                              height: 2),
+                                    ),
+                                    Text(
+                                      days[index].date,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText2!
+                                          .copyWith(
+                                            color: kMainTextColor,
+                                            fontSize: 23,
+                                            fontWeight: FontWeight.bold,
+                                            height: 1.4,
+                                          ),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                           );
@@ -194,31 +254,38 @@ class _BookAppointmentState extends State<BookAppointment> {
                     child: ListView.builder(
                         physics: BouncingScrollPhysics(),
                         scrollDirection: Axis.horizontal,
-                        itemCount: time.length,
+                        itemCount: doctorProvider.times.availableTimes.length,
                         shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: EdgeInsets.only(right: 10),
-                            child: Container(
-                              width: width / 3.5,
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).backgroundColor,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(5),
+                        itemBuilder: (context, i) {
+                          return InkWell(
+                            onTap: (){
+                              setState(() {
+                                SelectedTime=doctorProvider.times.availableTimes[i];
+                              });
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.only(right: 10),
+                              child: Container(
+                                width: width / 3.5,
+                                decoration: BoxDecoration(
+                                  color:SelectedTime==doctorProvider.times.availableTimes[i]?Theme.of(context).primaryColor: Theme.of(context).backgroundColor,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(5),
+                                  ),
                                 ),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  time[index],
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText2!
-                                      .copyWith(
-                                        color: kMainTextColor,
-                                        fontSize: 23,
-                                        fontWeight: FontWeight.w500,
-                                        height: 1.4,
-                                      ),
+                                child: Center(
+                                  child: Text(
+                                    doctorProvider.times.availableTimes[i].substring(0,5),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText2!
+                                        .copyWith(
+                                          color:SelectedTime==doctorProvider.times.availableTimes[i]?Colors.white: kMainTextColor,
+                                          fontSize: 23,
+                                          fontWeight: FontWeight.w500,
+                                          height: 1.4,
+                                        ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -243,6 +310,7 @@ class _BookAppointmentState extends State<BookAppointment> {
                     height: 15,
                   ),
                   TextFormField(
+                    controller: noteController,
                     decoration: InputDecoration(
                         hintText: 'eg. Heart pain, Body ache, etc.',
                         filled: true,
@@ -260,8 +328,12 @@ class _BookAppointmentState extends State<BookAppointment> {
             Align(
               alignment: Alignment.bottomCenter,
               child: CustomButton(
-                onTap: () {
+                onTap: ()async {
+                 await  doctorProvider.addAppointMent("1", "10:30:00", "2021-08-16", "9", noteController.text);
+                   if(doctorProvider.appointInfo["singleAppointment"]!=null)
                   Navigator.pushNamed(context, PageRoutes.appointmentBooked);
+                   else
+                     DialogMessages.ErrorMessage(context, "Un Available AppointMent");
                 },
                 label: locale.confirmAppointment,
                 radius: 0,
@@ -275,4 +347,10 @@ class _BookAppointmentState extends State<BookAppointment> {
       ),
     );
   }
+}
+class daysModel{
+  final String date;
+  final String day;
+  String apiDate;
+  daysModel({required this.date,required this.day,required this.apiDate});
 }

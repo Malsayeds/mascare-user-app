@@ -1,12 +1,22 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
+import 'package:doctoworld_user/Provider/Config.dart';
+import 'package:doctoworld_user/Provider/Doctor/DoctorProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:doctoworld_user/Theme/colors.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
-
-class AppointmentPage extends StatefulWidget {
+import 'package:provider/provider.dart';
+class AppointmentPage extends StatelessWidget{
   @override
-  _AppointmentPageState createState() => _AppointmentPageState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+        create: (context) => DoctorProvider(), child: AppointmentScreen());
+  }
+}
+
+class AppointmentScreen extends StatefulWidget {
+  @override
+  _AppointmentScreenState createState() => _AppointmentScreenState();
 }
 
 class Appointments {
@@ -22,26 +32,24 @@ class Appointments {
       this.time);
 }
 
-class _AppointmentPageState extends State<AppointmentPage> {
+class _AppointmentScreenState extends State<AppointmentScreen> {
+  bool loading=true;
+  loadData() async {
+   await  Provider.of<DoctorProvider>(context, listen: false).getMyAppointMent();
+    setState(() {
+      loading=false;
+    });
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadData();
+  }
   @override
   Widget build(BuildContext context) {
+    final doctorProvider= Provider.of<DoctorProvider>(context, listen: true);
     var locale = AppLocalizations.of(context)!;
-    List<Appointments> upcomingAppointments = [
-      Appointments('assets/Doctors/doc1.png', 'Dr. Joseph Williamson',
-          'Cardiac Surgeon', 'Apple Hospital', '12 June 2020', '12:00 pm'),
-      Appointments('assets/Doctors/doc2.png', 'Dr. Anglina Taylor',
-          'Cardiac Surgeon', 'Operum Clinics', '14 June 2020', '2:30 pm'),
-    ];
-    List<Appointments> pastAppointments = [
-      Appointments('assets/Doctors/doc3.png', 'Dr. Anthony Peterson',
-          'Cardiac Surgeon', 'Opus Hospital', '28 May 2020', '3:00 pm'),
-      Appointments('assets/Doctors/doc4.png', 'Dr. Elina George',
-          'Cardiac Surgeon', 'Lismuth Hospital', '11 May 2020', '2:30 pm'),
-      Appointments('assets/Doctors/doc1.png', 'Dr. Joseph Williamson',
-          'Cardiac Surgeon', 'Apple Hospital', '26 April 2020', '10:00 am'),
-      Appointments('assets/Doctors/doc2.png', 'Dr. Anglina Taylor',
-          'Cardiac Surgeon', 'Operum Clinics', '22 April 2020', '11:00 am'),
-    ];
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -54,7 +62,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
         ),
         centerTitle: true,
       ),
-      body: Container(
+      body:loading?Center(child: CircularProgressIndicator.adaptive(),): Container(
         child: ListView(
           //padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
           physics: BouncingScrollPhysics(),
@@ -73,10 +81,13 @@ class _AppointmentPageState extends State<AppointmentPage> {
               height: 6,
               color: Theme.of(context).backgroundColor,
             ),
+            doctorProvider.myAppointment.commingAppointments.length==0?Container(
+                height: 100,
+                child: Center(child: Text("No Upcommint Appointment",style: Theme.of(context).textTheme.subtitle1,),)):
             ListView.builder(
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: upcomingAppointments.length,
+              itemCount: doctorProvider.myAppointment.commingAppointments.length,
               itemBuilder: (context, index) {
                 return Column(
                   children: [
@@ -93,9 +104,11 @@ class _AppointmentPageState extends State<AppointmentPage> {
                             child: Row(
                               children: [
                                 FadedScaleAnimation(
-                                  Image.asset(
-                                    upcomingAppointments[index].image,
-                                    scale: 2.5,
+                                  Image.network(
+                                    doctorProvider.myAppointment.commingAppointments[index].doctor.user.image==null?Config.doctor_defualt_image:doctorProvider.myAppointment.commingAppointments[index].doctor.user.image,
+                                    width: MediaQuery.of(context).size.width*.25,
+                                    height: MediaQuery.of(context).size.height*.17,
+                                    fit: BoxFit.fill,
                                   ),
                                   durationInMilliseconds: 400,
                                 ),
@@ -109,21 +122,31 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                       height: 20,
                                     ),
                                     Text(
-                                      upcomingAppointments[index].name,
+                                      doctorProvider.myAppointment.commingAppointments[index].doctor.user.name,
                                       style: Theme.of(context)
                                           .textTheme
                                           .subtitle1!
                                           .copyWith(height: 1.5, fontSize: 16),
                                     ),
-                                    RichText(
+                                    Container(
+                                      width: MediaQuery.of(context).size.width*.65,
+                                      child: Text( doctorProvider.myAppointment.commingAppointments[index].doctor.bio,   style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText2!
+                                          .copyWith(
+                                          color: Theme.of(context)
+                                              .disabledColor,
+                                          fontSize: 12,
+                                          height: 1.5),),
+                                    ),
+                                  /*  RichText(
                                         text: TextSpan(
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .subtitle2,
                                             children: <TextSpan>[
                                           TextSpan(
-                                            text: upcomingAppointments[index]
-                                                .speciality,
+                                            text: doctorProvider.myAppointment.commingAppointments[index].doctor.bio,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyText2!
@@ -133,7 +156,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                                     fontSize: 12,
                                                     height: 1.5),
                                           ),
-                                          TextSpan(
+                                    *//*      TextSpan(
                                             text: locale.at,
                                             style: Theme.of(context)
                                                 .textTheme
@@ -154,15 +177,15 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                                         .disabledColor,
                                                     fontSize: 12,
                                                     height: 1.5),
-                                          ),
-                                        ])),
+                                          ),*//*
+                                        ])),*/
                                     SizedBox(
                                       height: 18,
                                     ),
                                     Row(
                                       children: [
                                         Text(
-                                          upcomingAppointments[index].date +
+                                          doctorProvider.myAppointment.commingAppointments[index].date.toString().substring(0,10) +
                                               ' | ',
                                           style: Theme.of(context)
                                               .textTheme
@@ -170,7 +193,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                               .copyWith(fontSize: 13),
                                         ),
                                         Text(
-                                          upcomingAppointments[index].time,
+                                          doctorProvider.myAppointment.commingAppointments[index].time.toString().substring(0,5),
                                           style: Theme.of(context)
                                               .textTheme
                                               .subtitle1!
@@ -247,10 +270,12 @@ class _AppointmentPageState extends State<AppointmentPage> {
                   style: Theme.of(context).textTheme.bodyText2!.copyWith(
                       fontSize: 20, color: Theme.of(context).disabledColor)),
             ),
-            ListView.builder(
+            doctorProvider.myAppointment.pastAppointments.length==0?Container(
+                height: 100,
+                child: Center(child: Text("No Past Appointment",style: Theme.of(context).textTheme.subtitle1,),)):ListView.builder(
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: pastAppointments.length,
+              itemCount: doctorProvider.myAppointment.pastAppointments.length,
               itemBuilder: (context, index) {
                 return Column(
                   children: [
@@ -267,9 +292,11 @@ class _AppointmentPageState extends State<AppointmentPage> {
                             child: Row(
                               children: [
                                 FadedScaleAnimation(
-                                  Image.asset(
-                                    pastAppointments[index].image,
-                                    scale: 2.5,
+                                  Image.network(
+                                    doctorProvider.myAppointment.pastAppointments[index].doctor.user.image==null?Config.doctor_defualt_image:doctorProvider.myAppointment.commingAppointments[index].doctor.user.image,
+                                    width: MediaQuery.of(context).size.width*.25,
+                                    height: MediaQuery.of(context).size.height*.17,
+                                    fit: BoxFit.fill,
                                   ),
                                   durationInMilliseconds: 400,
                                 ),
@@ -283,13 +310,24 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                       height: 20,
                                     ),
                                     Text(
-                                      pastAppointments[index].name,
+                                      doctorProvider.myAppointment.pastAppointments[index].doctor.user.name,
                                       style: Theme.of(context)
                                           .textTheme
                                           .subtitle1!
                                           .copyWith(height: 1.5, fontSize: 16),
                                     ),
-                                    RichText(
+                                    Container(
+                                      width: MediaQuery.of(context).size.width*.65,
+                                      child: Text( doctorProvider.myAppointment.commingAppointments[index].doctor.bio,   style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText2!
+                                          .copyWith(
+                                          color: Theme.of(context)
+                                              .disabledColor,
+                                          fontSize: 12,
+                                          height: 1.5),),
+                                    ),
+                               /*     RichText(
                                         text: TextSpan(
                                             style: Theme.of(context)
                                                 .textTheme
@@ -329,21 +367,21 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                                     fontSize: 12,
                                                     height: 1.5),
                                           ),
-                                        ])),
+                                        ])),*/
                                     SizedBox(
                                       height: 16,
                                     ),
                                     Row(
                                       children: [
                                         Text(
-                                          pastAppointments[index].date + ' | ',
+                                          doctorProvider.myAppointment.commingAppointments[index].date.toString().substring(0,11) + ' | ',
                                           style: Theme.of(context)
                                               .textTheme
                                               .subtitle1!
                                               .copyWith(fontSize: 13),
                                         ),
                                         Text(
-                                          pastAppointments[index].time,
+                                          doctorProvider.myAppointment.commingAppointments[index].time.toString().substring(0,5),
                                           style: Theme.of(context)
                                               .textTheme
                                               .subtitle1!

@@ -1,17 +1,19 @@
 import 'dart:core';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
-import 'package:doctoworld_user/Provider/Doctor/DoctorSpecialistProvider.dart';
+import 'package:doctoworld_user/Provider/Config.dart';
+import 'package:doctoworld_user/Provider/Doctor/DoctorProvider.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:doctoworld_user/Theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
-class DoctorsPage extends StatelessWidget{
+
+class DoctorsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        create: (context) => DoctorSpeialistProvider(), child: Doctorspage2());
+        create: (context) => DoctorProvider(), child: Doctorspage2());
   }
 }
 
@@ -25,11 +27,13 @@ class _Doctorspage2State extends State<Doctorspage2> {
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
-  //  var doctorSpeialistProvider=    Provider.of<DoctorSpeialistProvider>(context, listen: false);
+    //  var doctorSpeialistProvider=    Provider.of<DoctorSpeialistProvider>(context, listen: false);
     return Scaffold(
         appBar: AppBar(
           title: Text(locale.cardio!),
-          textTheme: Theme.of(context).textTheme,
+          textTheme: Theme
+              .of(context)
+              .textTheme,
           actions: [
             Stack(
               children: [
@@ -37,14 +41,18 @@ class _Doctorspage2State extends State<Doctorspage2> {
                   children: [
                     IconButton(
                       icon: Icon(Icons.sort),
-                      color: Theme.of(context).disabledColor,
+                      color: Theme
+                          .of(context)
+                          .disabledColor,
                       onPressed: () {
                         Navigator.pushNamed(context, PageRoutes.sortFilterPage);
                       },
                     ),
                     IconButton(
                       icon: Icon(Icons.map),
-                      color: Theme.of(context).disabledColor,
+                      color: Theme
+                          .of(context)
+                          .disabledColor,
                       onPressed: () {
                         Navigator.pushNamed(context, PageRoutes.doctorMapView);
                       },
@@ -58,13 +66,14 @@ class _Doctorspage2State extends State<Doctorspage2> {
         body: DoctorsList());
   }
 }
-class DoctorsList extends StatelessWidget{
+
+class DoctorsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => DoctorSpeialistProvider(), child: DoctorsListScreen());
+    return DoctorsListScreen();
   }
 }
+
 class DoctorsListScreen extends StatefulWidget {
   @override
   _DoctorsListScreenState createState() => _DoctorsListScreenState();
@@ -84,38 +93,105 @@ class SearchDoctorTile {
 }
 
 class _DoctorsListScreenState extends State<DoctorsListScreen> {
+  bool isLoading = false;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<DoctorSpeialistProvider>(context, listen: false).getDoctorBySpecialist();
+    getDoctorSpecialist();
   }
+
+  Future<void> getDoctorSpecialist() async {
+    setState(() {
+      isLoading = true;
+    });
+    await Provider.of<DoctorProvider>(context, listen: false)
+        .getDoctorBySpecialist(4);
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context);
-    var doctorSpeialistProvider=    Provider.of<DoctorSpeialistProvider>(context, listen: true);
+    var doctorSpeialistProvider = Provider.of<DoctorProvider>(
+        context, listen: true);
     print(doctorSpeialistProvider.doctors.length);
     print("lengthtttttttttttttttttttttttttttttttttttttttttttttt");
     List<SearchDoctorTile> searchList = [
-      SearchDoctorTile('assets/Doctors/doc1.png', 'Dr. Joseph Williamson',
-          'Cardiac Surgeon', 'Apple Hospital', '22', '30', '152'),
-      SearchDoctorTile('assets/Doctors/doc2.png', 'Dr. Anglina Taylor',
-          'Cardiac Surgeon', 'Operum Clinics', '22', '30', '201'),
-      SearchDoctorTile('assets/Doctors/doc3.png', 'Dr. Anthony Peterson',
-          'Cardiac Surgeon', 'Opus Hospital', '22', '30', '135'),
-      SearchDoctorTile('assets/Doctors/doc4.png', 'Dr. Elina George',
-          'Cardiac Surgeon', 'Lismuth Hospital', '22', '30', '438'),
-      SearchDoctorTile('assets/Doctors/doc1.png', 'Dr. Joseph Williamson',
-          'Cardiac Surgeon', 'Apple Hospital', '22', '30', '152'),
-      SearchDoctorTile('assets/Doctors/doc2.png', 'Dr. Anglina Taylor',
-          'Cardiac Surgeon', 'Operum Clinics', '22', '30', '201'),
-      SearchDoctorTile('assets/Doctors/doc3.png', 'Dr. Anthony Peterson',
-          'Cardiac Surgeon', 'Opus Hospital', '22', '30', '135'),
-      SearchDoctorTile('assets/Doctors/doc4.png', 'Dr. Elina George',
-          'Cardiac Surgeon', 'Lismuth Hospital', '22', '30', '438'),
+      SearchDoctorTile(
+          'assets/Doctors/doc1.png',
+          'Dr. Joseph Williamson',
+          'Cardiac Surgeon',
+          'Apple Hospital',
+          '22',
+          '30',
+          '152'),
+      SearchDoctorTile(
+          'assets/Doctors/doc2.png',
+          'Dr. Anglina Taylor',
+          'Cardiac Surgeon',
+          'Operum Clinics',
+          '22',
+          '30',
+          '201'),
+      SearchDoctorTile(
+          'assets/Doctors/doc3.png',
+          'Dr. Anthony Peterson',
+          'Cardiac Surgeon',
+          'Opus Hospital',
+          '22',
+          '30',
+          '135'),
+      SearchDoctorTile(
+          'assets/Doctors/doc4.png',
+          'Dr. Elina George',
+          'Cardiac Surgeon',
+          'Lismuth Hospital',
+          '22',
+          '30',
+          '438'),
+      SearchDoctorTile(
+          'assets/Doctors/doc1.png',
+          'Dr. Joseph Williamson',
+          'Cardiac Surgeon',
+          'Apple Hospital',
+          '22',
+          '30',
+          '152'),
+      SearchDoctorTile(
+          'assets/Doctors/doc2.png',
+          'Dr. Anglina Taylor',
+          'Cardiac Surgeon',
+          'Operum Clinics',
+          '22',
+          '30',
+          '201'),
+      SearchDoctorTile(
+          'assets/Doctors/doc3.png',
+          'Dr. Anthony Peterson',
+          'Cardiac Surgeon',
+          'Opus Hospital',
+          '22',
+          '30',
+          '135'),
+      SearchDoctorTile(
+          'assets/Doctors/doc4.png',
+          'Dr. Elina George',
+          'Cardiac Surgeon',
+          'Lismuth Hospital',
+          '22',
+          '30',
+          '438'),
     ];
     return Scaffold(
-      body: doctorSpeialistProvider.doctors.length==0?Center(child: CircularProgressIndicator(),):FadedSlideAnimation(
+      body: isLoading ? Center(
+        child: CircularProgressIndicator.adaptive(),) : doctorSpeialistProvider
+          .doctors.isEmpty ? Center(
+        child: Text('No Data'),
+      ) : FadedSlideAnimation(
         Container(
           child: ListView(
             padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
@@ -125,7 +201,9 @@ class _DoctorsListScreenState extends State<DoctorsListScreen> {
               Divider(
                 thickness: 6,
                 height: 6,
-                color: Theme.of(context).backgroundColor,
+                color: Theme
+                    .of(context)
+                    .backgroundColor,
               ),
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
@@ -144,17 +222,30 @@ class _DoctorsListScreenState extends State<DoctorsListScreen> {
                             children: [
                               FadedScaleAnimation(
                                 ClipRRect(
-                                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(10)),
                                   child: Image.network(
-                                    doctorSpeialistProvider.doctors[index].doctor.img,
-                                    height: MediaQuery.of(context).size.height*.15,
-                                    width: MediaQuery.of(context).size.width*.2,
+                                    doctorSpeialistProvider.doctors[index].user
+                                        .image =="" ? Config.doctor_defualt_image
+                                        : doctorSpeialistProvider.doctors[index]
+                                        .user.image,
+                                    height: MediaQuery
+                                        .of(context)
+                                        .size
+                                        .height * .15,
+                                    width: MediaQuery
+                                        .of(context)
+                                        .size
+                                        .width * .2,
                                     fit: BoxFit.fill,
                                   ),
                                 ),
                                 durationInMilliseconds: 400,
                               ),
-                              SizedBox(width: MediaQuery.of(context).size.width*.015,),
+                              SizedBox(width: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width * .015,),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -162,9 +253,15 @@ class _DoctorsListScreenState extends State<DoctorsListScreen> {
                                     height: 12,
                                   ),
                                   Container(
-                                    width: MediaQuery.of(context).size.width*.7,
-                                    child: Text(doctorSpeialistProvider.doctors[index].doctor.name ,
-                                        style: Theme.of(context)
+                                    width: MediaQuery
+                                        .of(context)
+                                        .size
+                                        .width * .7,
+                                    child: Text(
+                                        doctorSpeialistProvider.doctors[index]
+                                            .user.name,
+                                        style: Theme
+                                            .of(context)
                                             .textTheme
                                             .subtitle1),
                                   ),
@@ -172,17 +269,23 @@ class _DoctorsListScreenState extends State<DoctorsListScreen> {
                                     height: 12,
                                   ),
                                   Container(
-                                    width: MediaQuery.of(context).size.width*.7,
-                                    child: Text(doctorSpeialistProvider.SelectedSpecialist,
-                                      style: Theme.of(context)
+                                    width: MediaQuery
+                                        .of(context)
+                                        .size
+                                        .width * .7,
+                                    child: Text(doctorSpeialistProvider
+                                        .SelectedSpecialist,
+                                      style: Theme
+                                          .of(context)
                                           .textTheme
                                           .bodyText2!
                                           .copyWith(
-                                          color: Theme.of(context)
+                                          color: Theme
+                                              .of(context)
                                               .disabledColor,
                                           fontSize: 12),),
                                   ),
-                              /*    Container(
+                                  /*    Container(
                                     width: MediaQuery.of(context).size.width*.7,
 
                                     child: RichText(
@@ -234,51 +337,67 @@ class _DoctorsListScreenState extends State<DoctorsListScreen> {
                                     children: [
                                       Text(
                                         locale!.exp!,
-                                        style: Theme.of(context)
+                                        style: Theme
+                                            .of(context)
                                             .textTheme
                                             .subtitle2!
                                             .copyWith(
-                                                color: Theme.of(context)
-                                                    .disabledColor,
-                                                fontSize: 12),
+                                            color: Theme
+                                                .of(context)
+                                                .disabledColor,
+                                            fontSize: 12),
                                       ),
                                       Text(
-                                        doctorSpeialistProvider.doctors[index].doctor.exp +
+                                        doctorSpeialistProvider.doctors[index]
+                                            .exprience +
                                             locale.years!,
-                                        style: Theme.of(context)
+                                        style: Theme
+                                            .of(context)
                                             .textTheme
                                             .subtitle1!
                                             .copyWith(fontSize: 12),
                                       ),
                                       SizedBox(
-                                        width:MediaQuery.of(context).size.width*.025,
+                                        width: MediaQuery
+                                            .of(context)
+                                            .size
+                                            .width * .025,
                                       ),
                                       Text(
                                         locale.fee!,
-                                        style: Theme.of(context)
+                                        style: Theme
+                                            .of(context)
                                             .textTheme
                                             .subtitle2!
                                             .copyWith(
-                                                color: Theme.of(context)
-                                                    .disabledColor,
-                                                fontSize: 12),
+                                            color: Theme
+                                                .of(context)
+                                                .disabledColor,
+                                            fontSize: 12),
                                       ),
                                       Text(
-                                        '\$' + doctorSpeialistProvider.doctors[index].doctor.fees.toString(),
-                                        style: Theme.of(context)
+                                        '\$' + doctorSpeialistProvider
+                                            .doctors[index].fees.toString(),
+                                        style: Theme
+                                            .of(context)
                                             .textTheme
                                             .subtitle1!
                                             .copyWith(fontSize: 12),
                                       ),
                                       SizedBox(
-                                        width: MediaQuery.of(context).size.width*.025,
+                                        width: MediaQuery
+                                            .of(context)
+                                            .size
+                                            .width * .025,
                                       ),
                                       RatingBar.builder(
                                           itemSize: 12,
                                           initialRating: 4,
                                           direction: Axis.horizontal,
-                                          itemCount: doctorSpeialistProvider.doctors[index].review.round(),
-                                          itemBuilder: (context, _) => Icon(
+                                          itemCount: doctorSpeialistProvider
+                                              .doctors[index].reviewsAvgRate.round(),
+                                          itemBuilder: (context, _) =>
+                                              Icon(
                                                 Icons.star,
                                                 color: Colors.amber,
                                               ),
@@ -289,14 +408,17 @@ class _DoctorsListScreenState extends State<DoctorsListScreen> {
                                         width: 4,
                                       ),
                                       Text(
-                                        '(${doctorSpeialistProvider.doctors[index].totalRatedPeople})',
-                                        style: Theme.of(context)
+                                        '(${doctorSpeialistProvider
+                                            .doctors[index].reviewsCount})',
+                                        style: Theme
+                                            .of(context)
                                             .textTheme
                                             .subtitle2!
                                             .copyWith(
-                                                fontSize: 10,
-                                                color: Theme.of(context)
-                                                    .disabledColor),
+                                            fontSize: 10,
+                                            color: Theme
+                                                .of(context)
+                                                .disabledColor),
                                       )
                                     ],
                                   ),
@@ -309,7 +431,9 @@ class _DoctorsListScreenState extends State<DoctorsListScreen> {
                       Divider(
                         height: 6,
                         thickness: 6,
-                        color: Theme.of(context).backgroundColor,
+                        color: Theme
+                            .of(context)
+                            .backgroundColor,
                       ),
                     ],
                   );

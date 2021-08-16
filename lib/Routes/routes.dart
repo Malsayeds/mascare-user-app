@@ -102,7 +102,7 @@ class PageRoutes {
   Map<String, WidgetBuilder> routes() {
     return {
       findMedicinesPage: (context) => MedicinePage(),
-      bottomNavigation: (context) => BottomNavigation(),
+      bottomNavigation: (context) => BottomNavigation(index: 0,),
       shopByCategory: (context) => ShopByCategoryPage(),
       medicines: (context) => MedicinesPage(),
       reviewsPage: (context) => ReviewPage(),
@@ -119,7 +119,7 @@ class PageRoutes {
       doctorInfo: (context) => DoctorInfo(),
       doctorReviewPage: (context) => DoctorReviewPage(),
       bookAppointment: (context) => BookAppointment(),
-      appointmentBooked: (context) => AppointmentBooked(),
+      appointmentBooked: (context) => BottomNavigation(index: 3,),
       giveFeedback: (context) => GiveFeedback(),
       hospitalsHome: (context) => HospitalsHome(),
       hospitalMapView: (context) => HospitalMapView(),

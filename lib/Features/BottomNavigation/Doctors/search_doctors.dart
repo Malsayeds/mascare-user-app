@@ -1,10 +1,13 @@
 import 'dart:core';
 
 import 'package:animation_wrappers/animation_wrappers.dart';
+import 'package:doctoworld_user/Provider/Config.dart';
+import 'package:doctoworld_user/Provider/Doctor/DoctorProvider.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
+import 'package:provider/provider.dart';
 
 class SearchDoctors extends StatefulWidget {
   @override
@@ -28,6 +31,7 @@ class _SearchDoctorsState extends State<SearchDoctors> {
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
+    var doctorProvider=Provider.of<DoctorProvider>(context, listen: true);
     List<SearchDoctorTile> searchList = [
       SearchDoctorTile('assets/Doctors/doc1.png', 'Dr. Joseph Williamson',
           'Cardiac Surgeon', 'Apple Hospital', '22', '30', '152'),
@@ -56,6 +60,9 @@ class _SearchDoctorsState extends State<SearchDoctors> {
               padding: const EdgeInsets.only(top: 20.0, left: 14, right: 14),
               child: TextFormField(
                 initialValue: 'Surgeon',
+                onChanged: (val){
+                  doctorProvider.seachDoctor(val);
+                },
                 decoration: InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -82,17 +89,20 @@ class _SearchDoctorsState extends State<SearchDoctors> {
               padding: EdgeInsets.symmetric(horizontal: 12, vertical: 20),
               margin: EdgeInsets.only(top: 15),
               child: Text(
-                '27 ' + locale.resultsFound!,
+                '${doctorProvider.searchDoctorList.length} ' + locale.resultsFound!,
                 style: Theme.of(context)
                     .textTheme
                     .bodyText1!
                     .copyWith(color: Theme.of(context).disabledColor),
               ),
             ),
-            ListView.builder(
+            doctorProvider.searchDoctorList.length==0?Container(
+              height: 100,
+              child: Center(child: Text("No Data",style: Theme.of(context).textTheme.subtitle1,),),
+            )   :ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: searchList.length,
+                itemCount: doctorProvider.searchDoctorList.length,
                 itemBuilder: (context, index) {
                   return Column(
                     children: [
@@ -105,8 +115,8 @@ class _SearchDoctorsState extends State<SearchDoctors> {
                           child: Row(
                             children: [
                               FadedScaleAnimation(
-                                Image.asset(
-                                  searchList[index].image,
+                                Image.network(
+                                  doctorProvider.searchDoctorList[index].image==null?Config.doctor_defualt_image:doctorProvider.searchDoctorList[index].image,
                                   height: MediaQuery.of(context).size.height*.15,
                                   width: MediaQuery.of(context).size.width*.21,
                                 ),
@@ -121,7 +131,7 @@ class _SearchDoctorsState extends State<SearchDoctors> {
                                   ),
                                   Container(
                                     width: MediaQuery.of(context).size.width*.75,
-                                    child: Text(searchList[index].name ,
+                                    child: Text(doctorProvider.searchDoctorList[index].name ,
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1),
@@ -131,7 +141,7 @@ class _SearchDoctorsState extends State<SearchDoctors> {
                                   ),
                                   Container(
                                     width: MediaQuery.of(context).size.width*.75,
-                                    child: Text(searchList[index].speciality,
+                                    child: Text(doctorProvider.searchDoctorList[index].doctor.bio,
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyText2!
@@ -173,7 +183,7 @@ class _SearchDoctorsState extends State<SearchDoctors> {
                                                 fontSize: 12),
                                       ),
                                       Text(
-                                        searchList[index].experience +
+                                        doctorProvider.searchDoctorList[index].doctor.experience +
                                             locale.years!,
                                         style: Theme.of(context)
                                             .textTheme
@@ -181,7 +191,7 @@ class _SearchDoctorsState extends State<SearchDoctors> {
                                             .copyWith(fontSize: 12),
                                       ),
                                       SizedBox(
-                                        width: 15,
+                                        width: 10,
                                       ),
                                       Text(
                                         locale.fee!,
@@ -194,14 +204,14 @@ class _SearchDoctorsState extends State<SearchDoctors> {
                                                 fontSize: 12),
                                       ),
                                       Text(
-                                        '\$' + searchList[index].fee,
+                                        '\$' +  doctorProvider.searchDoctorList[index].doctor.fees,
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1!
                                             .copyWith(fontSize: 12),
                                       ),
                                       SizedBox(
-                                        width: MediaQuery.of(context).size.width*.04,
+                                        width: MediaQuery.of(context).size.width*.02,
                                       ),
                                       RatingBar.builder(
                                           itemSize: 12,

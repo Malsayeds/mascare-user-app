@@ -7,7 +7,7 @@ class ContactProvider with ChangeNotifier {
   late Map<String,dynamic>contactInfo={"message":''};
 
   Future<void> contactServices(String email,String message) async{
-    String url=Config.base_url+"/v1/doctor/contact-support";
+    String url=Config.base_url+"/doctor/contact-support";
     print(url);
     var body={
       "email" : email,

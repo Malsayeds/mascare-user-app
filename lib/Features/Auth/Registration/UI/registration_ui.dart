@@ -164,8 +164,8 @@ class _RegistrationUIState extends State<RegistrationUI> {
                         await registerProvider.RegisterServices(_firstController.text.toString()+_lastController.text.toString(),_emailController.text,_passwordController.text,_ageController.text,_phoneController.text);
                         print(registerProvider.RegisterInfo);
                         print("000000000000000000000000000000000000000000000");
-                        if(registerProvider.RegisterInfo["user"]["token"]!=null){
-                          StorageData.storeValue("token", registerProvider.RegisterInfo["token"].toString());
+                        if(registerProvider.RegisterInfo["access_token"]!=null){
+                          StorageData.storeValue("token", registerProvider.RegisterInfo["access_token"].toString());
                           StorageData.storeValue("user_id", registerProvider.RegisterInfo["user"]["id"].toString());
                           StorageData.storeValue("user_name", _firstController.text+" "+_lastController.text);
                           setState(() {

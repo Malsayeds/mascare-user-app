@@ -6,10 +6,11 @@ class TermsCondionProvider with ChangeNotifier {
   late Map<String,dynamic>termsCondionInfo={"data":""};
 
   Future<void> termsCondionServices() async{
-    String url=Config.base_url+"/v1/general/terms_conditions";
+    String url=Config.base_url+"/general/terms_conditions";
     var header=await Config.getHeader();
     try{
       final responce=await http.get(Uri.parse(url),headers: header);
+      print(responce.body);
       if(responce.body.isNotEmpty)
       {
         termsCondionInfo=json.decode(responce.body);

@@ -13,7 +13,7 @@ class RegisterProvider with ChangeNotifier {
       "name" : name,
       "email":email,
       "password":password,
-      "password_confirmation":password,
+    // "password_confirmation":password,
       "age":age,
       "contact_number": contact_number
     };

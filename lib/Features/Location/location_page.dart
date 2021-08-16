@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:animation_wrappers/animation_wrappers.dart';
+import 'package:doctoworld_user/Features/Components/DialogMessages.dart';
 import 'package:doctoworld_user/Features/Components/custom_button.dart';
 import 'package:doctoworld_user/Features/Components/entry_field.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
@@ -61,17 +62,25 @@ class _SetLocationState extends State<SetLocation> {
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
+    final locationProvider = Provider.of<LocationProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text(locale.cancel!),
         textTheme: Theme.of(context).textTheme,
+        leading: InkWell(child: Icon(Icons.arrow_back),
+          onTap: (){
+            Navigator.pop(context);
+          },
+        ),
         actions: [
-          CustomButton(
+  /*        CustomButton(
             textColor: Theme.of(context).primaryColor,
             color: Theme.of(context).scaffoldBackgroundColor,
             textSize: 22,
-          ),
+
+          ),*/
         ],
+
       ),
       body: FadedSlideAnimation(
         Column(
@@ -136,7 +145,13 @@ class _SetLocationState extends State<SetLocation> {
                   isCard = true;
                 });
               } else {
-                Navigator.pop(context);
+                 locationProvider.addAddress(_SaveAddressCardState.SelectedAddress,_addressController.text,"1",locationProvider.long, locationProvider.lat);
+                 locationProvider.getAddresses();
+                 DialogMessages.SuccessMessage(context, "Address  Has Been Added");
+                 setState(() {
+                   isCard=false;
+                 });
+               // Navigator.pop(context);
               }
             }),
           ],
@@ -157,15 +172,24 @@ enum AddressType {
 
 AddressType selectedAddress = AddressType.Other;
 
+
 class SaveAddressCard extends StatefulWidget {
   @override
   _SaveAddressCardState createState() => _SaveAddressCardState();
 }
 
 class _SaveAddressCardState extends State<SaveAddressCard> {
+  static String SelectedAddress="";
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _addressController.text=Provider.of<LocationProvider>(context, listen: false).address;
+  }
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
+    final locationProvider = Provider.of<LocationProvider>(context, listen: true);
     return Padding(
       padding: EdgeInsets.all(16.0),
       child: FadedSlideAnimation(
@@ -185,6 +209,7 @@ class _SaveAddressCardState extends State<SaveAddressCard> {
                   onPressed: () {
                     setState(() {
                       selectedAddress = AddressType.Home;
+                      SelectedAddress="Home";
                     });
                   },
                   isSelected: selectedAddress == AddressType.Home,
@@ -195,6 +220,7 @@ class _SaveAddressCardState extends State<SaveAddressCard> {
                   onPressed: () {
                     setState(() {
                       selectedAddress = AddressType.Office;
+                      SelectedAddress="Office";
                     });
                   },
                   isSelected: selectedAddress == AddressType.Office,
@@ -205,6 +231,7 @@ class _SaveAddressCardState extends State<SaveAddressCard> {
                   onPressed: () {
                     setState(() {
                       selectedAddress = AddressType.Other;
+                      SelectedAddress="Other";
                     });
                   },
                   isSelected: selectedAddress == AddressType.Other,

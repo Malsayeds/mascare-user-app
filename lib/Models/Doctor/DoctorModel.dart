@@ -4,74 +4,110 @@
 
 import 'dart:convert';
 
-DoctorModel doctorModelFromJson(String str) => DoctorModel.fromJson(json.decode(str));
+List<DoctorModel> doctorModelFromJson(String str) => List<DoctorModel>.from(json.decode(str).map((x) => DoctorModel.fromJson(x)));
 
-String doctorModelToJson(DoctorModel data) => json.encode(data.toJson());
+String doctorModelToJson(List<DoctorModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class DoctorModel {
   DoctorModel({
-    required this.doctorDetail,
+    required this.id,
+    required this.bio,
+    required this.exprience,
+    required this.contactNumber,
+    required this.qualtification,
+    required this.fees,
+    this.detailedAddress,
+    this.about,
+    required this.createdAt,
+    required this.updatedAt,
+    this.deletedAt,
+    required this.userId,
+    required this.areaId,
+    required this.reviewsCount,
+    required this.reviewsAvgRate,
+    required this.user,
   });
 
-  List<DoctorDetail> doctorDetail;
+  int id;
+  String bio;
+  String exprience;
+  String contactNumber;
+  String qualtification;
+  String fees;
+  dynamic detailedAddress;
+  dynamic about;
+  DateTime createdAt;
+  DateTime updatedAt;
+  dynamic deletedAt;
+  int userId;
+  int areaId;
+  int reviewsCount;
+  double reviewsAvgRate;
+  User user;
 
   factory DoctorModel.fromJson(Map<String, dynamic> json) => DoctorModel(
-    doctorDetail: List<DoctorDetail>.from(json["DoctorDetail"].map((x) => DoctorDetail.fromJson(x))),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "DoctorDetail": List<dynamic>.from(doctorDetail.map((x) => x.toJson())),
-  };
-}
-
-class DoctorDetail {
-  DoctorDetail({
-    required this.doctor,
-    required this.review,
-    required this.totalRatedPeople,
-  });
-
-  Doctor doctor;
-  double review;
-  int totalRatedPeople;
-
-  factory DoctorDetail.fromJson(Map<String, dynamic> json) => DoctorDetail(
-    doctor: Doctor.fromJson(json["doctor"]),
-    review: json["review"].toDouble(),
-    totalRatedPeople: json["total_rated_people"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "doctor": doctor.toJson(),
-    "review": review,
-    "total_rated_people": totalRatedPeople,
-  };
-}
-
-class Doctor {
-  Doctor({
-    required this.name,
-    required this.fees,
-    required this.exp,
-    required this.img,
-  });
-
-  String name;
-  int fees;
-  String exp;
-  String img;
-
-  factory Doctor.fromJson(Map<String, dynamic> json) => Doctor(
-    name: json["name"],
+    id: json["id"],
+    bio: json["bio"]??"",
+    exprience: json["exprience"]??"",
+    contactNumber: json["contact_number"]??"",
+    qualtification: json["qualtification"]??"",
     fees: json["fees"],
-    exp: json["exp"],
-    img: json["img"],
+    detailedAddress: json["detailed_address"]??"",
+    about: json["about"]??"",
+    createdAt: DateTime.parse(json["created_at"]),
+    updatedAt: DateTime.parse(json["updated_at"]),
+    deletedAt: json["deleted_at"],
+    userId: json["user_id"],
+    areaId: json["area_id"]??"",
+    reviewsCount: json["reviews_count"],
+    reviewsAvgRate: json["reviews_avg_rate"].toDouble(),
+    user: User.fromJson(json["user"]),
   );
 
   Map<String, dynamic> toJson() => {
-    "name": name,
+    "id": id,
+    "bio": bio,
+    "exprience": exprience,
+    "contact_number": contactNumber,
+    "qualtification": qualtification,
     "fees": fees,
-    "exp": exp,
-    "img": img,
+    "detailed_address": detailedAddress,
+    "about": about,
+    "created_at": createdAt.toIso8601String(),
+    "updated_at": updatedAt.toIso8601String(),
+    "deleted_at": deletedAt,
+    "user_id": userId,
+    "area_id": areaId,
+    "reviews_count": reviewsCount,
+    "reviews_avg_rate": reviewsAvgRate,
+    "user": user.toJson(),
+  };
+}
+
+class User {
+  User({
+    required this.id,
+    required this.name,
+    this.image,
+    required this.email,
+  });
+
+  int id;
+  String name;
+  dynamic image;
+  String email;
+
+  factory User.fromJson(Map<String, dynamic> json) => User(
+    id: json["id"],
+    name: json["name"]??"",
+    image: json["image"]??"",
+    email: json["email"]??"",
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "name": name,
+    "image": image,
+    "email": email,
   };
 }

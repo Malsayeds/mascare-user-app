@@ -1,8 +1,10 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:doctoworld_user/Features/Components/custom_button.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
+import 'package:doctoworld_user/Provider/LocationProvider.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Address {
   final IconData icon;
@@ -11,11 +13,11 @@ class Address {
 
   Address(this.icon, this.addressType, this.address);
 }
-
 class SavedAddressesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return ChangeNotifierProvider(
+        create: (context) => LocationProvider(), child: Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.savedAddresses!),
           textTheme: Theme.of(context).textTheme,
@@ -26,8 +28,9 @@ class SavedAddressesPage extends StatelessWidget {
           beginOffset: Offset(0, 0.3),
           endOffset: Offset(0, 0),
           slideCurve: Curves.linearToEaseOut,
-        ));
+        )));
   }
+
 }
 
 class SavedAddresses extends StatefulWidget {
@@ -39,58 +42,53 @@ class _SavedAddressesState extends State<SavedAddresses> {
   @override
   void initState() {
     super.initState();
+    Provider.of<LocationProvider>(context, listen: false).getAddresses();
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<Address> listOfAddressTypes = [
-      Address(Icons.home, AppLocalizations.of(context)!.home,
-          '1024, Central Residency, Hemilton Park,\nNew York, USA'),
-      Address(Icons.business, AppLocalizations.of(context)!.office,
-          '1024, Central Residency, Hemilton Park,\nNew York, USA'),
-      Address(Icons.assistant, AppLocalizations.of(context)!.other,
-          'Flat Num 114, First Floor, Central Residency, USA'),
-    ];
+    final locationProvider = Provider.of<LocationProvider>(context, listen: true);
     return Container(
       color: Theme.of(context).dividerColor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          ListView.builder(
-              itemCount: listOfAddressTypes.length,
-              shrinkWrap: true,
-              itemBuilder: (BuildContext context, int index) {
-                return Padding(
-                  padding: EdgeInsets.only(top: 6.0),
-                  child: ListTile(
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                    tileColor: Theme.of(context).scaffoldBackgroundColor,
-                    leading: Icon(
-                      listOfAddressTypes[index].icon,
-                      color: Theme.of(context).primaryColor,
-                      size: 28,
+          Expanded(
+            child: ListView.builder(
+                itemCount: locationProvider.addresseslist.length,
+                shrinkWrap: true,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    margin: EdgeInsets.only(top: 6.0),color: Colors.white,
+                    child: ListTile(
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      tileColor: Theme.of(context).scaffoldBackgroundColor,
+                      leading: Icon(
+                        locationProvider.addresseslist[index].name=="Home"?Icons.home:locationProvider.addresseslist[index].name=="Office"?Icons.business:Icons.assistant,
+                        color: Theme.of(context).primaryColor,
+                        size: 28,
+                      ),
+                      title: Padding(
+                        padding: EdgeInsets.only(bottom: 8.0),
+                        child: Text(locationProvider.addresseslist[index].name!),
+                      ),
+                      subtitle: Text(
+                        locationProvider.addresseslist[index].detailedAddress!,
+                        style: Theme.of(context)
+                            .textTheme
+                            .caption!
+                            .copyWith(fontSize: 11.7),
+                      ),
                     ),
-                    title: Padding(
-                      padding: EdgeInsets.only(bottom: 8.0),
-                      child: Text(listOfAddressTypes[index].addressType!),
-                    ),
-                    subtitle: Text(
-                      listOfAddressTypes[index].address,
-                      style: Theme.of(context)
-                          .textTheme
-                          .caption!
-                          .copyWith(fontSize: 11.7),
-                    ),
-                  ),
-                );
-              }),
-          Spacer(),
+                  );
+                }),
+          ),
           CustomButton(
-            icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
+            icon: Icon(Icons.add, color: Colors.white),
             label: AppLocalizations.of(context)!.addNewAddress,
-            textColor: Theme.of(context).primaryColor,
-            color: Theme.of(context).scaffoldBackgroundColor,
+            textColor: Colors.white,
+            color: Theme.of(context).primaryColor,
             onTap: () => Navigator.pushNamed(context, PageRoutes.locationPage),
           ),
         ],

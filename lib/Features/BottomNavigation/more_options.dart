@@ -109,9 +109,9 @@ loadData() async {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text( profileProvider.getProfileInfo["first_name"]+" "+profileProvider.getProfileInfo["last_name"],
+                  Text(profileProvider.getProfileInfo["user"]["name"],
                     style:Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 20, height: 2)) ,
-                    Text(profileProvider.getProfileInfo["phone"],style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                    Text(profileProvider.getProfileInfo["profile"]["contact_number"],style: Theme.of(context).textTheme.subtitle2!.copyWith(
                         color: Theme.of(context).disabledColor, height: 2)
                     )
                 ],

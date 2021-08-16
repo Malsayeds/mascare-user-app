@@ -7,7 +7,7 @@ import 'package:http/http.dart'as http;
 class FaqsProvider with ChangeNotifier {
    List<FaqsDetail>FaqsList=[];
   Future<void>faqsServices()async {
-    var url="${Config.base_url}/v1/general/faqs?app_type=user";
+    var url="${Config.base_url}/general/faqs?app_type=user";
     print(url);
     var header=await Config.getHeader();
     print(header);

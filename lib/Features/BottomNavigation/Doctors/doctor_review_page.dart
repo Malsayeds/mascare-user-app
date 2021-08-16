@@ -76,7 +76,7 @@ class _DoctorReviewPageState extends State<DoctorReviewPage> {
                         width: 4,
                       ),
                       Text(
-                        '4.5',
+                        '4.8',
                         style: Theme.of(context)
                             .textTheme
                             .bodyText1!

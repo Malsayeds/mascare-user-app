@@ -2,6 +2,7 @@ import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/Hospitals/SearchHospitals.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
 import 'package:doctoworld_user/Provider/Hospital/HospitalProvider.dart';
+import 'package:doctoworld_user/Provider/LocationProvider.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -21,16 +22,18 @@ class HospitalsScreen extends StatefulWidget {
   _HospitalsScreenState createState() => _HospitalsScreenState();
 }
 
-class _HospitalsScreenState extends State<HospitalsScreen> {
+class _HospitalsScreenState extends State<HospitalsScreen>{
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<HospitalProvider>(context, listen: false).getHospitals();
+    Provider.of<HospitalProvider>(context, listen: false).getHospitals(30,30);
+    Provider.of<LocationProvider>(context, listen: false).getAddresses();
   }
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
+    var locationProvider=    Provider.of<LocationProvider>(context, listen: true);
     String? value = 'Wallington';
 
     return Scaffold(
@@ -237,6 +240,7 @@ class HospitalsList extends StatelessWidget {
     var hospitalProvider=    Provider.of<HospitalProvider>(context, listen: true);
     return ListView.builder(
       itemCount: hospitalProvider.hospitalslist.length,
+      padding: EdgeInsets.only( bottom: 30),
       shrinkWrap: true,
       itemBuilder: (context, index) {
         return Column(
@@ -255,7 +259,7 @@ class HospitalsList extends StatelessWidget {
                       Container(
                         width: MediaQuery.of(context).size.width / 2-16,
                         child: Text(
-                          _hospitals[index].name,
+                          hospitalProvider.hospitalslist[index].name,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context)
@@ -267,7 +271,7 @@ class HospitalsList extends StatelessWidget {
                       Container(
                         width: MediaQuery.of(context).size.width / 2-16,
                         child: Text(
-                          _hospitals[index].type,
+                          hospitalProvider.hospitalslist[index].type,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.subtitle1!.copyWith(
@@ -286,8 +290,8 @@ class HospitalsList extends StatelessWidget {
                       shrinkWrap: true,
                       physics: BouncingScrollPhysics(),
                       scrollDirection: Axis.horizontal,
-                      itemCount: doctorCategories.length,
-                      itemBuilder: (context, index) {
+                      itemCount: hospitalProvider.hospitalslist[index].specifications.length,
+                      itemBuilder: (context, i) {
                         return InkWell(
                           onTap: () {
                             //  Navigator.pushNamed(context, PageRoutes.medicines);
@@ -295,12 +299,33 @@ class HospitalsList extends StatelessWidget {
                           child: Padding(
                             padding: EdgeInsets.only(left: 5),
                             child: FadedScaleAnimation(
-                              Image.asset(
-                                doctorCategories[index],
-                                // height: 100,
-                                width: 90,
-                                fit: BoxFit.fill,
-                              ),
+                                  Container(
+                                    height: 50,
+                                    // padding: EdgeInsets.only(left: 10),
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                        color: Theme.of(context).primaryColor,
+                                        image: DecorationImage(
+                                            image: NetworkImage(hospitalProvider.hospitalslist[index].specifications[i].media[0].url),
+                                            fit: BoxFit.contain)
+                                    ),
+                                    child: FadedScaleAnimation(
+                                      Column(
+                                        children: [
+                                          Container(
+                                              height: 50,
+                                              width: 100,
+                                              padding: EdgeInsets.only(left: 3,right: 3),
+                                              //width: MediaQuery.of(context).size.width*.3,
+                                              alignment: Alignment.center,
+                                              child: Text(hospitalProvider.hospitalslist[index].specifications[i].name,overflow: TextOverflow.fade,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 12),)),
+                                        ],
+                                      ),
+                                      durationInMilliseconds: 300,
+                                    ),
+                                  ),
+
                               durationInMilliseconds: 300,
                             ),
                           ),
@@ -322,8 +347,8 @@ class HospitalsList extends StatelessWidget {
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width*.6,
-                    child: Text(
-                      _hospitals[index].location,
+                    child: Text(" "+
+                      hospitalProvider.hospitalslist[index].area.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.bodyText2!.copyWith(

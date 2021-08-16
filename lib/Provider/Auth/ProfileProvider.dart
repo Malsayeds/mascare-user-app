@@ -7,11 +7,9 @@ class ProfileProvider with ChangeNotifier{
   late Map<String,dynamic>getProfileInfo={"id":""};
   late Map<String,dynamic>updateProfileInfo;
   Future<void> GetProfileServices(String token) async{
-    String url=Config.base_url+"/v1/profile";
+    String url=Config.base_url+"/profile";
     print(url);
-    var header={
-      "Authorization":"Bearer "+token,
-    };
+    var header=await Config.getHeader();
     print(header);
     try{
       final responce=await http.get(Uri.parse(url),headers: header);

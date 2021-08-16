@@ -9,8 +9,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart'as http;
 class HospitalProvider with ChangeNotifier {
   List<HospitalsModel>hospitalslist=[];
-  Future<void>getHospitals()async {
-    var url=Config.base_url+"/hospitals";
+  Future<void>getHospitals(double long,double lat)async {
+    var url=Config.base_url+"/hospitals"/*?lng=$long&lat=$lat*/;
     print(url);
     var header=await Config.getHeader();
     try

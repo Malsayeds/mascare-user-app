@@ -11,12 +11,15 @@ import 'medicine_find_page.dart';
 import 'more_options.dart';
 
 class BottomNavigation extends StatefulWidget {
+  final int index;
+  BottomNavigation({required this.index});
   @override
-  _BottomNavigationState createState() => _BottomNavigationState();
+  _BottomNavigationState createState() => _BottomNavigationState(currentIndex: this.index);
 }
 
 class _BottomNavigationState extends State<BottomNavigation> {
-  int _currentIndex = 0;
+  int currentIndex ;
+  _BottomNavigationState({required this.currentIndex});
   double start = 0;
 
   final List<Widget> _children = [
@@ -29,6 +32,9 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   @override
   Widget build(BuildContext context) {
+    start = MediaQuery.of(context).size.width *
+        currentIndex /
+        _children.length;
     var locale = AppLocalizations.of(context)!;
     final List<BottomNavigationBarItem> _bottomBarItems = [
       BottomNavigationBarItem(
@@ -64,7 +70,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          _children[_currentIndex],
+          _children[currentIndex],
           AnimatedPositionedDirectional(
             bottom: 0,
             start: start,
@@ -78,7 +84,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
+        currentIndex: currentIndex,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 20.0,
         type: BottomNavigationBarType.fixed,
@@ -90,7 +96,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
         items: _bottomBarItems,
         onTap: (int index) {
           setState(() {
-            _currentIndex = index;
+            currentIndex = index;
             start = MediaQuery.of(context).size.width *
                 index /
                 _bottomBarItems.length;

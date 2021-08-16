@@ -1,4 +1,6 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
+import 'package:doctoworld_user/Provider/Config.dart';
+import 'package:doctoworld_user/Provider/Doctor/DoctorProvider.dart';
 import 'package:doctoworld_user/Theme/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,16 +8,39 @@ import 'package:flutter/rendering.dart';
 import 'package:doctoworld_user/Features/Components/custom_button.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
-
-class DoctorInfo extends StatefulWidget {
+import 'package:provider/provider.dart';
+class DoctorInfo extends StatelessWidget {
   @override
-  _DoctorInfoState createState() => _DoctorInfoState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+        create: (context) => DoctorProvider(), child: DoctorInfoScreen());
+  }
 }
 
-class _DoctorInfoState extends State<DoctorInfo> {
+class DoctorInfoScreen extends StatefulWidget {
+  @override
+  _DoctorInfoScreenState createState() => _DoctorInfoScreenState();
+}
+
+class _DoctorInfoScreenState extends State<DoctorInfoScreen> {
+  bool loading =true;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadDoctorInfo();
+
+  }
+  Future<void>loadDoctorInfo()async{
+  await  Provider.of<DoctorProvider>(context, listen: false).getDoctInfo(1);
+  setState(() {
+    loading=false;
+  });
+  }
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
+    var doctorProvider=Provider.of<DoctorProvider>(context, listen: true);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -35,7 +60,7 @@ class _DoctorInfoState extends State<DoctorInfo> {
           )
         ],
       ),
-      body: FadedSlideAnimation(
+      body:loading?Center(child: CircularProgressIndicator.adaptive(),): FadedSlideAnimation(
         Stack(
           children: [
             Container(
@@ -54,8 +79,8 @@ class _DoctorInfoState extends State<DoctorInfo> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20.0),
                               child: FadedScaleAnimation(
-                                Image.asset(
-                                  'assets/Doctors/doc1.png',
+                                Image.network(
+                                  doctorProvider.doctorInfo.singleDoctor.user.image==null?Config.doctor_defualt_image:doctorProvider.doctorInfo.singleDoctor.user.image,
                                   width: MediaQuery.of(context).size.width*.5,
                                 ),
                                 durationInMilliseconds: 400,
@@ -83,7 +108,7 @@ class _DoctorInfoState extends State<DoctorInfo> {
                                                   fontSize: 13,
                                                 )),
                                         TextSpan(
-                                            text: '18' + locale.years!,
+                                            text: doctorProvider.doctorInfo.singleDoctor.experience + locale.years!,
                                             style: TextStyle(height: 1.4))
                                       ]),
                                 ),
@@ -105,7 +130,7 @@ class _DoctorInfoState extends State<DoctorInfo> {
                                                         .disabledColor,
                                                     fontSize: 13)),
                                         TextSpan(
-                                            text: '\$28',
+                                            text: '\$${doctorProvider.doctorInfo.singleDoctor.fees}',
                                             style: TextStyle(height: 1.4))
                                       ]),
                                 ),
@@ -125,13 +150,13 @@ class _DoctorInfoState extends State<DoctorInfo> {
                                         Theme.of(context).textTheme.subtitle2,
                                     children: [
                                       TextSpan(
-                                          text: 'Dr.\nJoseph\nWilliamson\n\n',
+                                          text: '${doctorProvider.doctorInfo.singleDoctor.user.name}\n\n',
                                           style: Theme.of(context)
                                               .textTheme
                                               .subtitle2!
                                               .copyWith(fontSize: 26)),
                                       TextSpan(
-                                          text: locale.cardiacSurgeon,
+                                          text: "${doctorProvider.doctorInfo.singleDoctor.specifications[0].name}",
                                           style: Theme.of(context)
                                               .textTheme
                                               .subtitle2!
@@ -174,7 +199,7 @@ class _DoctorInfoState extends State<DoctorInfo> {
                                           width: 2,
                                         ),
                                         Text(
-                                          '4.5',
+                                          doctorProvider.doctorInfo.singleDoctor.reviewsAvgRate.round().toString(),
                                           style: Theme.of(context)
                                               .textTheme
                                               .subtitle1!
@@ -186,7 +211,7 @@ class _DoctorInfoState extends State<DoctorInfo> {
                                           width: 4,
                                         ),
                                         Text(
-                                          '(124)',
+                                          '(${doctorProvider.doctorInfo.singleDoctor.reviewsCount})',
                                           style: Theme.of(context)
                                               .textTheme
                                               .subtitle1!
@@ -210,7 +235,7 @@ class _DoctorInfoState extends State<DoctorInfo> {
                                   SizedBox(
                                     height: 20,
                                   ),
-                                  Row(
+                          /*        Row(
                                     children: [
                                       Text(
                                         locale.availability!,
@@ -250,7 +275,7 @@ class _DoctorInfoState extends State<DoctorInfo> {
                                                   .subtitle2!
                                                   .copyWith(fontSize: 14))
                                         ]),
-                                  ),
+                                  ),*/
                                 ],
                               )
                             ],
@@ -279,25 +304,21 @@ class _DoctorInfoState extends State<DoctorInfo> {
                         SizedBox(
                           height: 20,
                         ),
-                        ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          title: Text('Apple Hopsital'),
-                          subtitle: Text('JJ Towers, Johnson street, Hemilton'),
-                          trailing: Icon(
-                            Icons.arrow_forward_ios,
-                            size: 18,
-                          ),
-                        ),
-                        ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          title: Text('Seven Star Clinic'),
-                          subtitle:
-                              Text('Hemilton Bridge City Point, Hemilton'),
-                          trailing: Icon(
-                            Icons.arrow_forward_ios,
-                            size: 18,
-                          ),
-                        ),
+                        ListView.builder(
+                           shrinkWrap: true,
+                            primary: false,
+                            itemCount: doctorProvider.doctorInfo.hotspitals.length,
+                            itemBuilder: (context,i){
+                          return ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: Text(doctorProvider.doctorInfo.hotspitals[i].hospital.name),
+                            subtitle: Text(doctorProvider.doctorInfo.hotspitals[i].hospital.description),
+                            trailing: Icon(
+                              Icons.arrow_forward_ios,
+                              size: 18,
+                            ),
+                          );
+                        }),
                         Text(
                           '+1 ' + locale.more!,
                           style: Theme.of(context).textTheme.bodyText1!.copyWith(
@@ -328,41 +349,19 @@ class _DoctorInfoState extends State<DoctorInfo> {
                         SizedBox(
                           height: 20,
                         ),
-                        Text(
-                          'Hypertension Treatment',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText2!
-                              .copyWith(fontSize: 18, height: 2),
-                        ),
-                        Text(
-                          'COPD Treatment',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText2!
-                              .copyWith(fontSize: 18, height: 2),
-                        ),
-                        Text(
-                          'Diabetes Management',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText2!
-                              .copyWith(fontSize: 18, height: 2),
-                        ),
-                        Text(
-                          'ECG',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText2!
-                              .copyWith(fontSize: 18, height: 2),
-                        ),
-                        Text(
-                          'Obesity Treatment',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText2!
-                              .copyWith(fontSize: 18, height: 2),
-                        ),
+                        ListView.builder(
+                        shrinkWrap: true,primary: false,
+                        itemCount: doctorProvider.doctorInfo.services.length
+                        ,itemBuilder: (context,indexx){
+                          return Text(
+                            doctorProvider.doctorInfo.services[indexx].service[0].name,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText2!
+                                .copyWith(fontSize: 18, height: 2),
+                          );
+                        }),
+
                         Text(
                           '+5 ' + locale.more!,
                           style: Theme.of(context).textTheme.bodyText1!.copyWith(
@@ -392,41 +391,18 @@ class _DoctorInfoState extends State<DoctorInfo> {
                         SizedBox(
                           height: 20,
                         ),
-                        Text(
-                          'General Physician',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText2!
-                              .copyWith(fontSize: 18, height: 2),
-                        ),
-                        Text(
-                          'Family Physician',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText2!
-                              .copyWith(fontSize: 18, height: 2),
-                        ),
-                        Text(
-                          'Cardiologist',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText2!
-                              .copyWith(fontSize: 18, height: 2),
-                        ),
-                        Text(
-                          'Consultant Physician',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText2!
-                              .copyWith(fontSize: 18, height: 2),
-                        ),
-                        Text(
-                          'Diabetologist',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText2!
-                              .copyWith(fontSize: 18, height: 2),
-                        ),
+                       ListView.builder(
+                         shrinkWrap: true,primary: false,
+                         itemCount: doctorProvider.doctorInfo.singleDoctor.specifications.length,
+                           itemBuilder: (context,index){
+                           return   Text(
+                             doctorProvider.doctorInfo.singleDoctor.specifications[index].name,
+                            style: Theme.of(context)
+                               .textTheme
+                               .bodyText2!
+                               .copyWith(fontSize: 18, height: 2),
+                         );
+                       }),
                         Text(
                           '+1 ' + locale.more!,
                           style: Theme.of(context).textTheme.bodyText1!.copyWith(

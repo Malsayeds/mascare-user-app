@@ -164,7 +164,7 @@ class _DoctorMapViewState extends State<DoctorMapView> {
                                                     .subtitle2,
                                                 children: <TextSpan>[
                                               TextSpan(
-                                                  text: searchList[index].name +
+                                                  text: searchList[index].name +"00"+
                                                       '\n',
                                                   style: Theme.of(context)
                                                       .textTheme

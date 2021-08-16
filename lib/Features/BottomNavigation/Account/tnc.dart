@@ -39,7 +39,7 @@ class _TnCPageState extends State<TnCScreen> {
               padding:
                   const EdgeInsets.symmetric(horizontal: 25.0, vertical: 18),
               child: Text(
-                termsProvider.termsCondionInfo["data"][0]["body"],
+                termsProvider.termsCondionInfo["body"],
                 style: Theme.of(context)
                     .textTheme
                     .bodyText1!
