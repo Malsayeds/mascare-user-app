@@ -329,9 +329,10 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
               alignment: Alignment.bottomCenter,
               child: CustomButton(
                 onTap: ()async {
-                 await  doctorProvider.addAppointMent("1", "10:30:00", "2021-08-16", "9", noteController.text);
+                 await  doctorProvider.addAppointMent("1", SelectedTime, SelectedDate, doctorProvider.times.availableTimeId, noteController.text);
                    if(doctorProvider.appointInfo["singleAppointment"]!=null)
-                  Navigator.pushNamed(context, PageRoutes.appointmentBooked);
+                 // Navigator.pushNamed(context, PageRoutes.appointmentBooked);
+                     Navigator.pushNamedAndRemoveUntil(context, "appointment_booked", (route) => false);
                    else
                      DialogMessages.ErrorMessage(context, "Un Available AppointMent");
                 },

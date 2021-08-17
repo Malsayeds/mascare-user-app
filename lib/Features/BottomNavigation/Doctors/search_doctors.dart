@@ -116,7 +116,7 @@ class _SearchDoctorsState extends State<SearchDoctors> {
                             children: [
                               FadedScaleAnimation(
                                 Image.network(
-                                  doctorProvider.searchDoctorList[index].image==null?Config.doctor_defualt_image:doctorProvider.searchDoctorList[index].image,
+                                  doctorProvider.searchDoctorList[index].user.image==null?Config.doctor_defualt_image:doctorProvider.searchDoctorList[index].user.image,
                                   height: MediaQuery.of(context).size.height*.15,
                                   width: MediaQuery.of(context).size.width*.21,
                                 ),
@@ -131,7 +131,7 @@ class _SearchDoctorsState extends State<SearchDoctors> {
                                   ),
                                   Container(
                                     width: MediaQuery.of(context).size.width*.75,
-                                    child: Text(doctorProvider.searchDoctorList[index].name ,
+                                    child: Text(doctorProvider.searchDoctorList[index].user.name ,
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1),
@@ -141,7 +141,7 @@ class _SearchDoctorsState extends State<SearchDoctors> {
                                   ),
                                   Container(
                                     width: MediaQuery.of(context).size.width*.75,
-                                    child: Text(doctorProvider.searchDoctorList[index].doctor.bio,
+                                    child: Text(doctorProvider.searchDoctorList[index].bio,
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyText2!
@@ -183,7 +183,7 @@ class _SearchDoctorsState extends State<SearchDoctors> {
                                                 fontSize: 12),
                                       ),
                                       Text(
-                                        doctorProvider.searchDoctorList[index].doctor.experience +
+                                        doctorProvider.searchDoctorList[index].experience +
                                             locale.years!,
                                         style: Theme.of(context)
                                             .textTheme
@@ -204,7 +204,7 @@ class _SearchDoctorsState extends State<SearchDoctors> {
                                                 fontSize: 12),
                                       ),
                                       Text(
-                                        '\$' +  doctorProvider.searchDoctorList[index].doctor.fees,
+                                        '\$' +  doctorProvider.searchDoctorList[index].fees,
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1!
@@ -215,7 +215,7 @@ class _SearchDoctorsState extends State<SearchDoctors> {
                                       ),
                                       RatingBar.builder(
                                           itemSize: 12,
-                                          initialRating: 4,
+                                          initialRating: doctorProvider.searchDoctorList[index].reviewsAvgRate,
                                           direction: Axis.horizontal,
                                           itemCount: 5,
                                           itemBuilder: (context, _) => Icon(
@@ -229,7 +229,7 @@ class _SearchDoctorsState extends State<SearchDoctors> {
                                         width: 4,
                                       ),
                                       Text(
-                                        '(${searchList[index].reviews})',
+                                        '(${ doctorProvider.searchDoctorList[index].reviewsCount})',
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle2!

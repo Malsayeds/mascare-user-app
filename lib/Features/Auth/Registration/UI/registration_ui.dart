@@ -171,7 +171,8 @@ class _RegistrationUIState extends State<RegistrationUI> {
                           setState(() {
                             Docto.username=_firstController.text+" "+_lastController.text;
                           });
-                          Navigator.pushNamed(context, PageRoutes.bottomNavigation);
+                          //Navigator.pushNamed(context, PageRoutes.bottomNavigation);
+                          Navigator.pushNamedAndRemoveUntil(context, "bottom_navigation", (route) => false);
                         }
                         else{
                           DialogMessages.ErrorMessage(context,registerProvider.RegisterInfo["error"].toString());

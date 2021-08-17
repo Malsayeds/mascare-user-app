@@ -1,12 +1,28 @@
 import 'package:doctoworld_user/Features/Components/custom_button.dart';
+import 'package:doctoworld_user/Features/PublicFunction.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
+import 'package:doctoworld_user/Models/Hospitals/HospitalsModel.dart';
+import 'package:doctoworld_user/Provider/Config.dart';
+import 'package:doctoworld_user/Provider/Hospital/HospitalProvider.dart';
 import 'package:doctoworld_user/Theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-
-class Departments extends StatefulWidget {
+import 'package:provider/provider.dart';
+class Departments extends StatelessWidget {
+  HospitalsModel hospitalsModel;
+  Departments({required this.hospitalsModel});
   @override
-  _DepartmentsState createState() => _DepartmentsState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+        create: (context) => HospitalProvider(), child: DepartmentScreeen(hospitalsModel: this.hospitalsModel,));
+  }
+}
+
+class DepartmentScreeen extends StatefulWidget {
+  HospitalsModel hospitalsModel;
+  DepartmentScreeen({required this.hospitalsModel});
+  @override
+  _DepartmentScreeenState createState() => _DepartmentScreeenState(hospitalsModel: this.hospitalsModel);
 }
 
 class SearchDoctorTile {
@@ -22,34 +38,15 @@ class SearchDoctorTile {
       this.experience, this.fee, this.reviews);
 }
 
-class _DepartmentsState extends State<Departments> {
-  List<double> _isActive = [
-    0,
-    250,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-  ];
+class _DepartmentScreeenState extends State<DepartmentScreeen> {
+  HospitalsModel hospitalsModel;
+  _DepartmentScreeenState({required this.hospitalsModel});
+int selectedId=-1;
+
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
-    List<String> _departmentList = [
-      'Oncology Department',
-      'Cardiology Department',
-      'Oncology Department',
-      'Oncology Department',
-      'Oncology Department',
-      'Oncology Department'
-    ];
+    var hospitalProvider=Provider.of<HospitalProvider>(context, listen: true);
     List<SearchDoctorTile> searchList = [
       SearchDoctorTile('assets/Doctors/doc1.png', 'Dr. Joseph Williamson',
           'Cardiac Surgeon', 'Apple Hospital', '22', '30', '152'),
@@ -73,7 +70,7 @@ class _DepartmentsState extends State<Departments> {
         children: [
           ListView.builder(
               physics: NeverScrollableScrollPhysics(),
-              itemCount: _departmentList.length,
+              itemCount: hospitalsModel.specifications.length,
               itemBuilder: (context, index) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -84,12 +81,20 @@ class _DepartmentsState extends State<Departments> {
                     ),
                     ListTile(
                       onTap: () {
-                        setState(() {
-                          _isActive[index] = _isActive[index] == 0 ? 250 : 0;
-                        });
+                        if( selectedId==hospitalsModel.specifications[index].id){
+                          setState(() {
+                            selectedId=-1;
+                          });
+                        }
+                        else{
+                          hospitalProvider.getDoctorBySpecificationId(hospitalsModel.specifications[index].id);
+                          setState(() {
+                            selectedId=hospitalsModel.specifications[index].id;
+                          });
+                        }
                       },
                       title: Text(
-                        _departmentList[index],
+                        hospitalsModel.specifications[index].name,
                         style: Theme.of(context)
                             .textTheme
                             .bodyText1!
@@ -101,10 +106,10 @@ class _DepartmentsState extends State<Departments> {
                       ),
                       dense: true,
                     ),
-                    AnimatedContainer(
+                    selectedId==hospitalsModel.specifications[index].id?
+                AnimatedContainer(
                       duration: Duration(milliseconds: 300),
                       padding: EdgeInsets.only(top: 4),
-                      height: _isActive[index],
                       child: Container(
                         child: ListView(
                           padding:
@@ -115,7 +120,7 @@ class _DepartmentsState extends State<Departments> {
                             ListView.builder(
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
-                              itemCount: searchList.length,
+                              itemCount: hospitalProvider.doctorsList.length,
                               itemBuilder: (context, index) {
                                 return Column(
                                   children: [
@@ -128,8 +133,8 @@ class _DepartmentsState extends State<Departments> {
                                         },
                                         child: Row(
                                           children: [
-                                            Image.asset(
-                                              searchList[index].image,
+                                            Image.network(
+                                              hospitalProvider.doctorsList[index].user.image==""?Config.doctor_defualt_image: hospitalProvider.doctorsList[index].user.image,
                                               height: 80,
                                               width: 80,
                                             ),
@@ -138,7 +143,7 @@ class _DepartmentsState extends State<Departments> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 SizedBox(
-                                                  height: 12,
+                                                  height: 5,
                                                 ),
                                                 RichText(
                                                     text: TextSpan(
@@ -148,16 +153,15 @@ class _DepartmentsState extends State<Departments> {
                                                         children: <TextSpan>[
                                                       TextSpan(
                                                           text:
-                                                              searchList[index]
+                                                          hospitalProvider.doctorsList[index].user
                                                                       .name +
                                                                   '\n',
                                                           style:
                                                               Theme.of(context)
                                                                   .textTheme
                                                                   .subtitle1),
-                                                      TextSpan(
-                                                        text: searchList[index]
-                                                            .speciality,
+                                                /*      TextSpan(
+                                                        text: "",
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .bodyText2!
@@ -166,8 +170,8 @@ class _DepartmentsState extends State<Departments> {
                                                                         context)
                                                                     .disabledColor,
                                                                 fontSize: 12),
-                                                      ),
-                                                      TextSpan(
+                                                      ),*/
+                                                 /*     TextSpan(
                                                         text: locale.at,
                                                         style: Theme.of(context)
                                                             .textTheme
@@ -188,10 +192,21 @@ class _DepartmentsState extends State<Departments> {
                                                                         context)
                                                                     .disabledColor,
                                                                 fontSize: 12),
-                                                      ),
+                                                      ),*/
                                                     ])),
+                                                Container(
+                                                  width: MediaQuery.of(context).size.width*.7,
+                                                  child: Text(hospitalProvider.doctorsList[index].bio,maxLines: 2,style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyText2!
+                                                      .copyWith(
+                                                      color: Theme.of(
+                                                          context)
+                                                          .disabledColor,
+                                                      fontSize: 12),),
+                                                ),
                                                 SizedBox(
-                                                  height: 15,
+                                                  height: 5,
                                                 ),
                                                 Row(
                                                   children: [
@@ -207,8 +222,7 @@ class _DepartmentsState extends State<Departments> {
                                                               fontSize: 12),
                                                     ),
                                                     Text(
-                                                      searchList[index]
-                                                              .experience +
+                                                      hospitalProvider.doctorsList[index].exprience +
                                                           locale.years!,
                                                       style: Theme.of(context)
                                                           .textTheme
@@ -217,7 +231,7 @@ class _DepartmentsState extends State<Departments> {
                                                               fontSize: 12),
                                                     ),
                                                     SizedBox(
-                                                      width: 15,
+                                                      width: 10,
                                                     ),
                                                     Text(
                                                       locale.fee!,
@@ -232,7 +246,7 @@ class _DepartmentsState extends State<Departments> {
                                                     ),
                                                     Text(
                                                       '\$' +
-                                                          searchList[index].fee,
+                                                          hospitalProvider.doctorsList[index].fees,
                                                       style: Theme.of(context)
                                                           .textTheme
                                                           .subtitle1!
@@ -240,14 +254,14 @@ class _DepartmentsState extends State<Departments> {
                                                               fontSize: 12),
                                                     ),
                                                     SizedBox(
-                                                      width: 35,
+                                                      width: 15,
                                                     ),
                                                     RatingBar.builder(
                                                         itemSize: 12,
                                                         initialRating: 4,
                                                         direction:
                                                             Axis.horizontal,
-                                                        itemCount: 5,
+                                                        itemCount: hospitalProvider.doctorsList[index].reviewsAvgRate.round(),
                                                         itemBuilder: (context,
                                                                 _) =>
                                                             Icon(
@@ -263,7 +277,7 @@ class _DepartmentsState extends State<Departments> {
                                                       width: 4,
                                                     ),
                                                     Text(
-                                                      '(${searchList[index].reviews})',
+                                                      '(${hospitalProvider.doctorsList[index].reviewsCount})',
                                                       style: Theme.of(context)
                                                           .textTheme
                                                           .subtitle2!
@@ -288,7 +302,7 @@ class _DepartmentsState extends State<Departments> {
                           ],
                         ),
                       ),
-                    ),
+                    ):SizedBox(),
                   ],
                 );
               }),
@@ -296,7 +310,7 @@ class _DepartmentsState extends State<Departments> {
             alignment: Alignment.bottomCenter,
             child: CustomButton(
               onTap: () {
-                //Navigator.pushNamed(context, PageRoutes.bookAppointment);
+                PublicFunction.makingPhoneCall(hospitalsModel.phone);
               },
               icon: Icon(
                 Icons.call,

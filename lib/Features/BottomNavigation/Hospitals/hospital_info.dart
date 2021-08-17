@@ -1,5 +1,6 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
+import 'package:doctoworld_user/Models/Hospitals/HospitalsModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -9,11 +10,15 @@ import 'about_tab.dart';
 import 'departments_tab.dart';
 
 class HospitalInfo extends StatefulWidget {
+  HospitalsModel hospitalsModel;
+  HospitalInfo({required this.hospitalsModel});
   @override
-  _HospitalInfoState createState() => _HospitalInfoState();
+  _HospitalInfoState createState() => _HospitalInfoState(hospitalsModel: this.hospitalsModel);
 }
 
 class _HospitalInfoState extends State<HospitalInfo> {
+  HospitalsModel hospitalsModel;
+  _HospitalInfoState({required this.hospitalsModel});
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context);
@@ -32,9 +37,9 @@ class _HospitalInfoState extends State<HospitalInfo> {
                 pinned: true,
                 flexibleSpace: FlexibleSpaceBar(
                   background: FadedScaleAnimation(
-                    Image.asset(
-                      'assets/img_hospital.png',
-                      fit: BoxFit.cover,
+                    Image.network(
+                      hospitalsModel.media[0].url,
+                      fit: BoxFit.fill,
                     ),
                     durationInMilliseconds: 400,
                   ),
@@ -55,7 +60,7 @@ class _HospitalInfoState extends State<HospitalInfo> {
                         .bodyText1!
                         .copyWith(fontSize: 18),
                     isScrollable: true,
-                    labelPadding: EdgeInsetsDirectional.only(end: 20, top: 10),
+                    labelPadding: EdgeInsetsDirectional.only(end: 20, top: 5),
                     tabs: [
                       Tab(text: locale!.about),
                       Tab(text: locale.departments),
@@ -68,13 +73,13 @@ class _HospitalInfoState extends State<HospitalInfo> {
           },
           body: TabBarView(children: [
             FadedSlideAnimation(
-              About(),
+              About(hospitalsModel: this.hospitalsModel,),
               beginOffset: Offset(0, 0.3),
               endOffset: Offset(0, 0),
               slideCurve: Curves.linearToEaseOut,
             ),
             FadedSlideAnimation(
-              Departments(),
+              Departments(hospitalsModel: this.hospitalsModel,),
               beginOffset: Offset(0, 0.3),
               endOffset: Offset(0, 0),
               slideCurve: Curves.linearToEaseOut,
@@ -101,7 +106,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return new Container(
       color: Colors.white,
-      padding: EdgeInsets.only(left: 20, top: 10),
+      padding: EdgeInsets.only(left: 20, top: 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

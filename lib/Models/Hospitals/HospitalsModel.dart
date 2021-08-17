@@ -11,17 +11,19 @@ String hospitalsModelToJson(List<HospitalsModel> data) => json.encode(List<dynam
 class HospitalsModel {
   HospitalsModel({
     required this.id,
-    required  this.name,
+    required this.name,
     required this.type,
-    required  this.description,
-    required  this.phone,
-    required  this.createdAt,
+    required this.description,
+    required this.phone,
+    required this.createdAt,
     required  this.updatedAt,
-    this.deletedAt,
+    required  this.deletedAt,
     required  this.areaId,
-    required  this.logo,
-    required  this.area,
+    this.lng,
+    this.lat,
+    required this.logo,
     required  this.specifications,
+    required  this.area,
     required  this.media,
   });
 
@@ -34,9 +36,11 @@ class HospitalsModel {
   DateTime updatedAt;
   dynamic deletedAt;
   int areaId;
+  dynamic lng;
+  dynamic lat;
   Logo logo;
-  Area area;
   List<Specification> specifications;
+  Area area;
   List<Logo> media;
 
   factory HospitalsModel.fromJson(Map<String, dynamic> json) => HospitalsModel(
@@ -49,9 +53,11 @@ class HospitalsModel {
     updatedAt: DateTime.parse(json["updated_at"]),
     deletedAt: json["deleted_at"],
     areaId: json["area_id"],
+    lng: json["lng"],
+    lat: json["lat"],
     logo: Logo.fromJson(json["logo"]),
-    area: Area.fromJson(json["area"]),
     specifications: List<Specification>.from(json["specifications"].map((x) => Specification.fromJson(x))),
+    area: Area.fromJson(json["area"]),
     media: List<Logo>.from(json["media"].map((x) => Logo.fromJson(x))),
   );
 
@@ -65,9 +71,11 @@ class HospitalsModel {
     "updated_at": updatedAt.toIso8601String(),
     "deleted_at": deletedAt,
     "area_id": areaId,
+    "lng": lng,
+    "lat": lat,
     "logo": logo.toJson(),
-    "area": area.toJson(),
     "specifications": List<dynamic>.from(specifications.map((x) => x.toJson())),
+    "area": area.toJson(),
     "media": List<dynamic>.from(media.map((x) => x.toJson())),
   };
 }
@@ -75,10 +83,10 @@ class HospitalsModel {
 class Area {
   Area({
     required  this.id,
-    required  this.name,
+    required this.name,
     required  this.createdAt,
     required  this.updatedAt,
-    required  this.deletedAt,
+    this.deletedAt,
     required  this.cityId,
   });
 
@@ -111,35 +119,35 @@ class Area {
 class Logo {
   Logo({
     required  this.id,
-    required  this.modelType,
-    required  this.modelId,
+    required   this.modelType,
+    required   this.modelId,
     required   this.uuid,
     required  this.collectionName,
-    required  this.name,
-    required  this.fileName,
-    required  this.mimeType,
-    required  this.disk,
+    required   this.name,
+    required   this.fileName,
+    required   this.mimeType,
+    required   this.disk,
     required  this.conversionsDisk,
     required  this.size,
     required  this.manipulations,
-    required  this.customProperties,
-    required   this.responsiveImages,
-    required   this.orderColumn,
-    required   this.createdAt,
-    required   this.updatedAt,
+    required this.customProperties,
+    required  this.responsiveImages,
+    required this.orderColumn,
+    required this.createdAt,
+    required  this.updatedAt,
     required  this.url,
     required  this.thumbnail,
-    required   this.preview,
+    required  this.preview,
   });
 
   int id;
-  String modelType;
+  var modelType;
   int modelId;
   String uuid;
-  String collectionName;
+  var collectionName;
   String name;
   String fileName;
-  String mimeType;
+  var mimeType;
   String disk;
   String conversionsDisk;
   int size;
@@ -202,7 +210,7 @@ class Logo {
 
 class CustomProperties {
   CustomProperties({
-    required  this.generatedConversions,
+    required this.generatedConversions,
   });
 
   GeneratedConversions generatedConversions;
@@ -218,7 +226,7 @@ class CustomProperties {
 
 class GeneratedConversions {
   GeneratedConversions({
-    required  this.thumb,
+    required this.thumb,
     required  this.preview,
   });
 
@@ -236,16 +244,18 @@ class GeneratedConversions {
   };
 }
 
+
+
 class Specification {
   Specification({
     required  this.id,
-    required  this.name,
-    required   this.createdAt,
-    required   this.updatedAt,
-    required   this.deletedAt,
-    required   this.icon,
-    required   this.pivot,
-    required  this.media,
+    required this.name,
+    required this.createdAt,
+    required this.updatedAt,
+    this.deletedAt,
+    required  this.icon,
+    required  this.pivot,
+    required this.media,
   });
 
   int id;
@@ -299,3 +309,4 @@ class Pivot {
     "specification_id": specificationId,
   };
 }
+

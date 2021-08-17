@@ -1,5 +1,6 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:doctoworld_user/Features/Components/CustomCartIcon.dart';
+import 'package:doctoworld_user/Features/PublicFunction.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
 import 'package:doctoworld_user/Provider/Config.dart';
 import 'package:doctoworld_user/Provider/Doctor/DoctorProvider.dart';
@@ -231,18 +232,23 @@ class _DoctorsBodyState extends State<DoctorsBody> {
                 scrollDirection: Axis.horizontal,
                 itemCount: doctorProvider.addsList.length,
                 itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.only(left: 16),
-                    child: FadedScaleAnimation(
-                      ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        child: Image.network(
-                          doctorProvider.addsList[index].image,
-                          width: 250,
-                          fit: BoxFit.fill,
+                  return InkWell(
+                    onTap: (){
+                      PublicFunction.launchURL(doctorProvider.addsList[index].link);
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 16),
+                      child: FadedScaleAnimation(
+                        ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          child: Image.network(
+                            doctorProvider.addsList[index].image,
+                            width: 250,
+                            fit: BoxFit.fill,
+                          ),
                         ),
+                        durationInMilliseconds: 300,
                       ),
-                      durationInMilliseconds: 300,
                     ),
                   );
                 }),

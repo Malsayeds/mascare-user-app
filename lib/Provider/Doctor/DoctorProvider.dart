@@ -113,7 +113,7 @@ late MyAppointmentModel myAppointment;
       print(e.toString());
     }
   }
-  Future<void> addAppointMent(String doctor_id,String time,String date,String available_time_id,String notes) async{
+  Future<void> addAppointMent(String doctor_id,String time,String date,int available_time_id,String notes) async{
     String url=Config.base_url+"/single-appointments";
     print(url);
     print(url);
@@ -121,7 +121,7 @@ late MyAppointmentModel myAppointment;
       "doctor_id" : doctor_id,
       "time" : time,
       "date":date,
-      "available_time_id":available_time_id,
+      "available_time_id":available_time_id.toString(),
       "notes":notes
     };
     print(body);

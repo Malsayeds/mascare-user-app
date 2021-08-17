@@ -19,6 +19,7 @@ dependencies:
   provider:
   geocoding:
   sqflite:
+  url_launcher:
   intl:
   shared_preferences:
   location:

@@ -1,5 +1,7 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/Hospitals/SearchHospitals.dart';
+import 'package:doctoworld_user/Features/BottomNavigation/Hospitals/hospital_info.dart';
+import 'package:doctoworld_user/Features/PublicFunction.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
 import 'package:doctoworld_user/Provider/Hospital/HospitalProvider.dart';
 import 'package:doctoworld_user/Provider/LocationProvider.dart';
@@ -219,21 +221,6 @@ class _HospitalsBodyState extends State<HospitalsBody> {
 }
 
 class HospitalsList extends StatelessWidget {
-  final List<HospitalDetail> _hospitals = [
-    HospitalDetail('assets/ProfilePics/dp1.png', 'Apple Hospital',
-        'General Hospital', 'Walter street, Wallington, New York.'),
-    HospitalDetail('assets/ProfilePics/dp1.png', 'City Light Eye Care',
-        'General Hospital', 'Jespora Bridge, Wallington, New York.'),
-    HospitalDetail('assets/ProfilePics/dp1.png', 'Silver Soul Hospital',
-        'General Hospital', 'Walter street, Wallington, New York.'),
-    HospitalDetail('assets/ProfilePics/dp1.png', 'Apple Hospital',
-        'General Hospital', 'Walter street, Wallington, New York.'),
-    HospitalDetail('assets/ProfilePics/dp1.png', 'City Light Eye Care',
-        'General Hospital', 'Jespora Bridge, Wallington, New York.'),
-    HospitalDetail('assets/ProfilePics/dp1.png', 'Silver Soul Hospital',
-        'General Hospital', 'Walter street, Wallington, New York.'),
-  ];
-
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context);
@@ -243,136 +230,153 @@ class HospitalsList extends StatelessWidget {
       padding: EdgeInsets.only( bottom: 30),
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        return Column(
-          children: [
-            Divider(
-              color: Theme.of(context).backgroundColor,
-              thickness: 6,
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.only(left: 16),
-              title: Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width / 2-16,
-                        child: Text(
-                          hospitalProvider.hospitalslist[index].name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText1!
-                              .copyWith(fontSize: 20, height: 1.5),
-                        ),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width / 2-16,
-                        child: Text(
-                          hospitalProvider.hospitalslist[index].type,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                              fontSize: 16,
-                              color: Theme.of(context).disabledColor,
-                              height: 1.5),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Spacer(),
-                  Container(
-                    height: 50,
-                    width: MediaQuery.of(context).size.width / 2,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: BouncingScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: hospitalProvider.hospitalslist[index].specifications.length,
-                      itemBuilder: (context, i) {
-                        return InkWell(
-                          onTap: () {
-                            //  Navigator.pushNamed(context, PageRoutes.medicines);
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 5),
-                            child: FadedScaleAnimation(
-                                  Container(
-                                    height: 50,
-                                    // padding: EdgeInsets.only(left: 10),
-                                    width: 100,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                                        color: Theme.of(context).primaryColor,
-                                        image: DecorationImage(
-                                            image: NetworkImage(hospitalProvider.hospitalslist[index].specifications[i].media[0].url),
-                                            fit: BoxFit.contain)
-                                    ),
-                                    child: FadedScaleAnimation(
-                                      Column(
-                                        children: [
-                                          Container(
-                                              height: 50,
-                                              width: 100,
-                                              padding: EdgeInsets.only(left: 3,right: 3),
-                                              //width: MediaQuery.of(context).size.width*.3,
-                                              alignment: Alignment.center,
-                                              child: Text(hospitalProvider.hospitalslist[index].specifications[i].name,overflow: TextOverflow.fade,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 12),)),
-                                        ],
-                                      ),
-                                      durationInMilliseconds: 300,
-                                    ),
-                                  ),
-
-                              durationInMilliseconds: 300,
-                            ),
+        return InkWell(
+          onTap: (){
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HospitalInfo(hospitalsModel: hospitalProvider.hospitalslist[index],)),
+            );
+          },
+          child: Column(
+            children: [
+              Divider(
+                color: Theme.of(context).backgroundColor,
+                thickness: 6,
+              ),
+              ListTile(
+                contentPadding: EdgeInsets.only(left: 16),
+                title: Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width / 2-16,
+                          child: Text(
+                            hospitalProvider.hospitalslist[index].name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1!
+                                .copyWith(fontSize: 20, height: 1.5),
                           ),
-                        );
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width / 2-16,
+                          child: Text(
+                            hospitalProvider.hospitalslist[index].type,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                                fontSize: 16,
+                                color: Theme.of(context).disabledColor,
+                                height: 1.5),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Spacer(),
+                    Container(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width / 2,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: BouncingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: hospitalProvider.hospitalslist[index].specifications.length,
+                        itemBuilder: (context, i) {
+                          return GestureDetector(
+                            onTap: () {
+                              //  Navigator.pushNamed(context, PageRoutes.medicines);
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 5),
+                              child: FadedScaleAnimation(
+                                    Container(
+                                      height: 50,
+                                      // padding: EdgeInsets.only(left: 10),
+                                      width: 100,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                                          color: Theme.of(context).primaryColor,
+                                          image: DecorationImage(
+                                              image: NetworkImage(hospitalProvider.hospitalslist[index].specifications[i].media[0].url),
+                                              fit: BoxFit.contain)
+                                      ),
+                                      child: FadedScaleAnimation(
+                                        Column(
+                                          children: [
+                                            Container(
+                                                height: 50,
+                                                width: 100,
+                                                padding: EdgeInsets.only(left: 3,right: 3),
+                                                //width: MediaQuery.of(context).size.width*.3,
+                                                alignment: Alignment.center,
+                                                child: Text(hospitalProvider.hospitalslist[index].specifications[i].name,overflow: TextOverflow.fade,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 12),)),
+                                          ],
+                                        ),
+                                        durationInMilliseconds: 300,
+                                      ),
+                                    ),
+
+                                durationInMilliseconds: 300,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 14, right: 16.0, top: 15),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.location_pin,
+                      color: Theme.of(context).disabledColor,
+                      size: 13,
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width*.6,
+                      child: Text(" "+
+                        hospitalProvider.hospitalslist[index].area.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                            fontSize: 13, color: Theme.of(context).disabledColor),
+                      ),
+                    ),
+                    Spacer(),
+                    GestureDetector(
+                      onTap: (){
+                        PublicFunction.makingPhoneCall(hospitalProvider.hospitalslist[index].phone);
                       },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 14, right: 16.0, top: 15),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.location_pin,
-                    color: Theme.of(context).disabledColor,
-                    size: 13,
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width*.6,
-                    child: Text(" "+
-                      hospitalProvider.hospitalslist[index].area.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                          fontSize: 13, color: Theme.of(context).disabledColor),
-                    ),
-                  ),
-                  Spacer(),
-                  Icon(
-                    Icons.call,
-                    color: Theme.of(context).primaryColor,
-                    size: 13,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    locale!.callNow!,
-                    style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                        fontSize: 13, color: Theme.of(context).primaryColor),
-                  ),
-                ],
-              ),
-            )
-          ],
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.call,
+                            color: Theme.of(context).primaryColor,
+                            size: 13,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            locale!.callNow!,
+                            style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                                fontSize: 13, color: Theme.of(context).primaryColor),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         );
       },
     );

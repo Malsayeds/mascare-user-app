@@ -125,7 +125,7 @@ class PageRoutes {
       hospitalMapView: (context) => HospitalMapView(),
       appointmentDetail: (context) => AppointmentDetail(),
       doctorChat: (context) => DoctorChat(),
-      hospitalInfo: (context) => HospitalInfo(),
+     // hospitalInfo: (context) => HospitalInfo(),
       walletPage: (context) => WalletPage(),
       addMoney: (context) => AddMoney(),
       createPillReminder: (context) => CreatePillReminderPage(),

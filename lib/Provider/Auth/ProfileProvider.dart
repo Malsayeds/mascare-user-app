@@ -6,13 +6,31 @@ import 'package:http/http.dart'as http;
 class ProfileProvider with ChangeNotifier{
   late Map<String,dynamic>getProfileInfo={"id":""};
   late Map<String,dynamic>updateProfileInfo;
-  Future<void> GetProfileServices(String token) async{
+  Future<void> GetProfileServices() async{
     String url=Config.base_url+"/profile";
     print(url);
     var header=await Config.getHeader();
     print(header);
     try{
       final responce=await http.get(Uri.parse(url),headers: header);
+      print(responce.body);
+      if(responce.body.isNotEmpty)
+      {
+        getProfileInfo=json.decode(responce.body);
+        notifyListeners();
+      }
+    }
+    catch(e) {
+      print(e.toString());
+    }
+  }
+  Future<void> logout() async{
+    String url=Config.base_url+"/logout";
+    print(url);
+    var header=await Config.getHeader();
+    print(header);
+    try{
+      final responce=await http.post(Uri.parse(url),headers: header);
       print(responce.body);
       if(responce.body.isNotEmpty)
       {

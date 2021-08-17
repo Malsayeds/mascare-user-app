@@ -31,9 +31,12 @@ class MenuTile {
 }
 
 class _MoreState extends State<More> {
+  bool loading=true;
 loadData() async {
-  SharedPreferences pref =await SharedPreferences.getInstance();
-  Provider.of<ProfileProvider>(context, listen: false).GetProfileServices(pref.getString("token")!);
+  await Provider.of<ProfileProvider>(context, listen: false).GetProfileServices();
+  setState(() {
+    loading=false;
+  });
 }
   @override
   void initState() {
@@ -91,7 +94,7 @@ loadData() async {
         textTheme: Theme.of(context).textTheme,
         centerTitle: true,
       ),
-      body: profileProvider.getProfileInfo["id"]==""?Center(child: CircularProgressIndicator(),):ListView(
+      body: loading?Center(child: CircularProgressIndicator.adaptive(),):ListView(
         physics: BouncingScrollPhysics(),
         children: [
           Padding(
@@ -186,6 +189,7 @@ loadData() async {
     );
   }
   void logout()async{
+    await Provider.of<ProfileProvider>(context, listen: false).logout();
   SharedPreferences pref=await SharedPreferences.getInstance();
      pref.remove("user_id");
      pref.remove("token");

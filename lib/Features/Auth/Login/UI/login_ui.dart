@@ -115,7 +115,8 @@ class _LoginUIState extends State<LoginUI> {
                                  setState(() {
                                    Docto.username=loginProvider.LoginInfo["user"]["name"];
                                  });
-                                 Navigator.pushNamed(context, PageRoutes.bottomNavigation);
+                                // Navigator.pushNamed(context, PageRoutes.bottomNavigation);
+                                 Navigator.pushNamedAndRemoveUntil(context, "bottom_navigation", (route) => false);
                                }
                                else{
                                  DialogMessages.ErrorMessage(context,loginProvider.LoginInfo["message"].toString());

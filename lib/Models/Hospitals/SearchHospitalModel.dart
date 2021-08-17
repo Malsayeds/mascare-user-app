@@ -10,24 +10,25 @@ String searchHospitalModelToJson(List<SearchHospitalModel> data) => json.encode(
 
 class SearchHospitalModel {
   SearchHospitalModel({
-    required this.id,
-    required this.name,
-    required  this.type,
-    required  this.description,
-    required  this.phone,
-    required  this.createdAt,
+    required  this.id,
+    required  this.name,
+    required this.type,
+    required this.description,
+    required this.phone,
+    required this.createdAt,
     required this.updatedAt,
     this.deletedAt,
     required this.areaId,
     this.lng,
     this.lat,
-    required  this.logo,
-    required  this.media,
+    required this.logo,
+    required this.specifications,
+    required this.media,
   });
 
   int id;
   String name;
-  String type;
+  var type;
   String description;
   String phone;
   DateTime createdAt;
@@ -37,6 +38,7 @@ class SearchHospitalModel {
   dynamic lng;
   dynamic lat;
   Logo logo;
+  List<Specification> specifications;
   List<Logo> media;
 
   factory SearchHospitalModel.fromJson(Map<String, dynamic> json) => SearchHospitalModel(
@@ -52,13 +54,14 @@ class SearchHospitalModel {
     lng: json["lng"],
     lat: json["lat"],
     logo: Logo.fromJson(json["logo"]),
+    specifications: List<Specification>.from(json["specifications"].map((x) => Specification.fromJson(x))),
     media: List<Logo>.from(json["media"].map((x) => Logo.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
     "name": name,
-    "type": type,
+    "type": type ,
     "description": description,
     "phone": phone,
     "created_at": createdAt.toIso8601String(),
@@ -68,6 +71,7 @@ class SearchHospitalModel {
     "lng": lng,
     "lat": lat,
     "logo": logo.toJson(),
+    "specifications": List<dynamic>.from(specifications.map((x) => x.toJson())),
     "media": List<dynamic>.from(media.map((x) => x.toJson())),
   };
 }
@@ -75,21 +79,21 @@ class SearchHospitalModel {
 class Logo {
   Logo({
     required this.id,
-    required this.modelType,
-    required this.modelId,
-    required this.uuid,
+    required  this.modelType,
+    required  this.modelId,
+    required   this.uuid,
     required  this.collectionName,
     required  this.name,
     required  this.fileName,
     required  this.mimeType,
-    required this.disk,
-    required this.conversionsDisk,
-    required  this.size,
-    required  this.manipulations,
+    required  this.disk,
+    required  this.conversionsDisk,
+    required this.size,
+    required this.manipulations,
     required  this.customProperties,
-    required this.responsiveImages,
-    required  this.orderColumn,
-    required  this.createdAt,
+    required  this.responsiveImages,
+    required this.orderColumn,
+    required this.createdAt,
     required this.updatedAt,
     required  this.url,
     required  this.thumbnail,
@@ -97,15 +101,15 @@ class Logo {
   });
 
   int id;
-  String modelType;
+  var modelType;
   int modelId;
   String uuid;
-  String collectionName;
+  var collectionName;
   String name;
   String fileName;
-  String mimeType;
-  String disk;
-  String conversionsDisk;
+  var mimeType;
+  var disk;
+  var conversionsDisk;
   int size;
   List<dynamic> manipulations;
   CustomProperties customProperties;
@@ -149,7 +153,7 @@ class Logo {
     "name": name,
     "file_name": fileName,
     "mime_type": mimeType,
-    "disk": disk,
+    "disk":disk,
     "conversions_disk": conversionsDisk,
     "size": size,
     "manipulations": List<dynamic>.from(manipulations.map((x) => x)),
@@ -164,9 +168,11 @@ class Logo {
   };
 }
 
+
+
 class CustomProperties {
   CustomProperties({
-    required  this.generatedConversions,
+    required this.generatedConversions,
   });
 
   GeneratedConversions generatedConversions;
@@ -182,8 +188,8 @@ class CustomProperties {
 
 class GeneratedConversions {
   GeneratedConversions({
-    required  this.thumb,
-    required  this.preview,
+    required this.thumb,
+    required this.preview,
   });
 
   bool thumb;
@@ -199,3 +205,73 @@ class GeneratedConversions {
     "preview": preview,
   };
 }
+
+
+
+
+
+class Specification {
+  Specification({
+    required this.id,
+    required  this.name,
+    required  this.createdAt,
+    required  this.updatedAt,
+    this.deletedAt,
+    required  this.icon,
+    required  this.pivot,
+    required  this.media,
+  });
+
+  int id;
+  String name;
+  DateTime createdAt;
+  DateTime updatedAt;
+  dynamic deletedAt;
+  Logo icon;
+  Pivot pivot;
+  List<Logo> media;
+
+  factory Specification.fromJson(Map<String, dynamic> json) => Specification(
+    id: json["id"],
+    name: json["name"],
+    createdAt: DateTime.parse(json["created_at"]),
+    updatedAt: DateTime.parse(json["updated_at"]),
+    deletedAt: json["deleted_at"],
+    icon: Logo.fromJson(json["icon"]),
+    pivot: Pivot.fromJson(json["pivot"]),
+    media: List<Logo>.from(json["media"].map((x) => Logo.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "name": name,
+    "created_at": createdAt.toIso8601String(),
+    "updated_at": updatedAt.toIso8601String(),
+    "deleted_at": deletedAt,
+    "icon": icon.toJson(),
+    "pivot": pivot.toJson(),
+    "media": List<dynamic>.from(media.map((x) => x.toJson())),
+  };
+}
+
+class Pivot {
+  Pivot({
+    required this.hospitalId,
+    required this.specificationId,
+  });
+
+  int hospitalId;
+  int specificationId;
+
+  factory Pivot.fromJson(Map<String, dynamic> json) => Pivot(
+    hospitalId: json["hospital_id"],
+    specificationId: json["specification_id"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "hospital_id": hospitalId,
+    "specification_id": specificationId,
+  };
+}
+
+

@@ -1,4 +1,5 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
+import 'package:doctoworld_user/Features/PublicFunction.dart';
 import 'package:doctoworld_user/Provider/Config.dart';
 import 'package:doctoworld_user/Provider/Doctor/DoctorProvider.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +40,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
     setState(() {
       loading=false;
     });
+    print(Provider.of<DoctorProvider>(context, listen: false).myAppointment.pastAppointments.length);
   }
   @override
   void initState() {
@@ -224,22 +226,27 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                             child: Row(
                               children: [
                                 InkWell(
-                                  child: Icon(
-                                    Icons.phone,
-                                    color: Theme.of(context).primaryColor,
-                                    size: 16,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(6.0),
+                                    child: Icon(
+                                      Icons.phone,
+                                      color: Theme.of(context).primaryColor,
+                                      size: 16,
+                                    ),
                                   ),
                                   onTap: () {
-                                    // Navigator.pushNamed(
-                                    //     context, PageRoutes.doctorChat);
+                                    PublicFunction.makingPhoneCall(doctorProvider.myAppointment.commingAppointments[index].doctor.contactNumber);
                                   },
                                 ),
-                                SizedBox(width: 13,),
+                                SizedBox(width: MediaQuery.of(context).size.width*.05,),
                                 InkWell(
-                                  child: Icon(
-                                    Icons.message,
-                                    color: Theme.of(context).primaryColor,
-                                    size: 16,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(6.0),
+                                    child: Icon(
+                                      Icons.message,
+                                      color: Theme.of(context).primaryColor,
+                                      size: 16,
+                                    ),
                                   ),
                                   onTap: () {
                                     Navigator.pushNamed(
@@ -318,7 +325,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                                     ),
                                     Container(
                                       width: MediaQuery.of(context).size.width*.65,
-                                      child: Text( doctorProvider.myAppointment.commingAppointments[index].doctor.bio,   style: Theme.of(context)
+                                      child: Text( doctorProvider.myAppointment.pastAppointments[index].doctor.bio,   style: Theme.of(context)
                                           .textTheme
                                           .bodyText2!
                                           .copyWith(
@@ -374,14 +381,14 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                                     Row(
                                       children: [
                                         Text(
-                                          doctorProvider.myAppointment.commingAppointments[index].date.toString().substring(0,11) + ' | ',
+                                          doctorProvider.myAppointment.pastAppointments[index].date.toString().substring(0,11) + ' | ',
                                           style: Theme.of(context)
                                               .textTheme
                                               .subtitle1!
                                               .copyWith(fontSize: 13),
                                         ),
                                         Text(
-                                          doctorProvider.myAppointment.commingAppointments[index].time.toString().substring(0,5),
+                                          doctorProvider.myAppointment.pastAppointments[index].time.toString().substring(0,5),
                                           style: Theme.of(context)
                                               .textTheme
                                               .subtitle1!
@@ -401,22 +408,27 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                             child: Row(
                               children: [
                                 InkWell(
-                                  child: Icon(
-                                    Icons.phone,
-                                    color: Theme.of(context).primaryColor,
-                                    size: 16,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(6.0),
+                                    child: Icon(
+                                      Icons.phone,
+                                      color: Theme.of(context).primaryColor,
+                                      size: 16,
+                                    ),
                                   ),
                                   onTap: () {
-                                    // Navigator.pushNamed(
-                                    //     context, PageRoutes.doctorChat);
+                                    PublicFunction.makingPhoneCall(doctorProvider.myAppointment.pastAppointments[index].doctor.contactNumber);
                                   },
                                 ),
-                                SizedBox(width: 13,),
+                                SizedBox(width: MediaQuery.of(context).size.width*.05,),
                                 InkWell(
-                                  child: Icon(
-                                    Icons.message,
-                                    color: Theme.of(context).primaryColor,
-                                    size: 16,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(6.0),
+                                    child: Icon(
+                                      Icons.message,
+                                      color: Theme.of(context).primaryColor,
+                                      size: 16,
+                                    ),
                                   ),
                                   onTap: () {
                                     Navigator.pushNamed(
