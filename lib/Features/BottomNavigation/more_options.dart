@@ -1,10 +1,12 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
 import 'package:doctoworld_user/Provider/Auth/ProfileProvider.dart';
+import 'package:doctoworld_user/Provider/Config.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -98,22 +100,28 @@ loadData() async {
         physics: BouncingScrollPhysics(),
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 12),
+            padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 0),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 FadedScaleAnimation(
-                  Image.asset('assets/userprofile.png', scale: 3.5),
+                  Image.network(Config.user_defualt_image,fit: BoxFit.fill,
+                    width: MediaQuery.of(context).size.width*.3,
+                  ),
                   durationInMilliseconds: 400,
                 ),
                 SizedBox(
-                  width: 15,
+                  width: 20,
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(profileProvider.getProfileInfo["user"]["name"],
-                    style:Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 20, height: 2)) ,
+                  SizedBox(height: 7,),
+                  Container(
+                    width: MediaQuery.of(context).size.width*.7-50,
+                    child: Text(profileProvider.getProfileInfo["user"]["name"],maxLines: 2,
+                      style:Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 18,fontWeight: FontWeight.bold, height: 1.5)),
+                  ) ,
                     Text(profileProvider.getProfileInfo["profile"]["contact_number"],style: Theme.of(context).textTheme.subtitle2!.copyWith(
                         color: Theme.of(context).disabledColor, height: 2)
                     )

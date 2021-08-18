@@ -16,19 +16,24 @@ class Address {
 class SavedAddressesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => LocationProvider(), child: Scaffold(
-        appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.savedAddresses!),
-          textTheme: Theme.of(context).textTheme,
-          centerTitle: true,
-        ),
-        body: FadedSlideAnimation(
-          SavedAddresses(),
-          beginOffset: Offset(0, 0.3),
-          endOffset: Offset(0, 0),
-          slideCurve: Curves.linearToEaseOut,
-        )));
+    return WillPopScope(
+      onWillPop: (){
+      Navigator.pushNamedAndRemoveUntil(context, "account", (route) => false);
+      return Future.value(true);
+      },
+      child: Scaffold(
+          appBar: AppBar(
+            title: Text(AppLocalizations.of(context)!.savedAddresses!),
+            textTheme: Theme.of(context).textTheme,
+            centerTitle: true,
+          ),
+          body: FadedSlideAnimation(
+            SavedAddresses(),
+            beginOffset: Offset(0, 0.3),
+            endOffset: Offset(0, 0),
+            slideCurve: Curves.linearToEaseOut,
+          )),
+    );
   }
 
 }
@@ -39,16 +44,26 @@ class SavedAddresses extends StatefulWidget {
 }
 
 class _SavedAddressesState extends State<SavedAddresses> {
+  bool loading=true;
   @override
   void initState() {
     super.initState();
-    Provider.of<LocationProvider>(context, listen: false).getAddresses();
+    getAddress();
   }
-
+  getAddress()async{
+    await Provider.of<LocationProvider>(context, listen: false).getAddresses();
+    setState(() {
+      loading=false;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     final locationProvider = Provider.of<LocationProvider>(context, listen: true);
-    return Container(
+    return loading?Center(child: CircularProgressIndicator.adaptive(),):
+    locationProvider.addresseslist==0?Center(
+      child: Text("No Addresses For You "),
+    ):
+    Container(
       color: Theme.of(context).dividerColor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -71,10 +86,10 @@ class _SavedAddressesState extends State<SavedAddresses> {
                       ),
                       title: Padding(
                         padding: EdgeInsets.only(bottom: 8.0),
-                        child: Text(locationProvider.addresseslist[index].name!),
+                        child: Text(locationProvider.addresseslist[index].name),
                       ),
                       subtitle: Text(
-                        locationProvider.addresseslist[index].detailedAddress!,
+                        locationProvider.addresseslist[index].detailedAddress,
                         style: Theme.of(context)
                             .textTheme
                             .caption!

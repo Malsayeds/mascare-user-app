@@ -2,10 +2,12 @@ import 'dart:core';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:doctoworld_user/Features/Components/custom_button.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
+import 'package:doctoworld_user/Provider/Doctor/DoctorProvider.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
 
 class SortFilter extends StatefulWidget {
   @override
@@ -16,14 +18,26 @@ enum RadioList { consultancyfee, ratings, distance }
 
 class _SortFilterState extends State<SortFilter> {
   RadioList? _character = RadioList.consultancyfee;
+  int fees_from=0;
+  int fees_to=0;
+  int rate_to=0;
+  int rate_from=0;
   String? _selectedRadioButton = 'Consultancy fees';
-  RangeValues _currentRangeValues = RangeValues(40, 80);
+  RangeValues _currentRangeValues = RangeValues(1, 900);
+  RangeValues _currentRangeRate = RangeValues(1, 4);
   bool? maleValue = false;
   bool? femaleValue = false;
+  var  gender="gender";
 
+bool fees=true;
+  Future<void> getDoctorSpecialist() async {
+ var doctorProvider=Provider.of<DoctorProvider>(context, listen: false);
+    await doctorProvider.getFilterDoctor(doctorProvider.SelectedSpecialistId, fees_from, fees_to, gender, rate_from, rate_to);
+  }
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
+    var doctorProvider=Provider.of<DoctorProvider>(context, listen: true);
 
     return Scaffold(
       appBar: AppBar(
@@ -99,6 +113,7 @@ class _SortFilterState extends State<SortFilter> {
                               setState(() {
                                 _character = value;
                                 _selectedRadioButton = locale.consultancyFees;
+                                fees=true;
                               });
                             },
                           ),
@@ -119,11 +134,12 @@ class _SortFilterState extends State<SortFilter> {
                               setState(() {
                                 _character = value;
                                 _selectedRadioButton = locale.rating;
+                                fees=false;
                               });
                             },
                           ),
                         ),
-                        ListTile(
+                  /*      ListTile(
                           title: Text(
                             locale.distance!,
                             style: Theme.of(context)
@@ -142,7 +158,7 @@ class _SortFilterState extends State<SortFilter> {
                               });
                             },
                           ),
-                        ),
+                        ),*/
                       ],
                     ),
                   ),
@@ -164,13 +180,13 @@ class _SortFilterState extends State<SortFilter> {
                                     fontSize: 20),
                           ),
                         ),
-                        Row(
+                        fees?     Row(
                           children: [
                             SizedBox(
                               width: 16,
                             ),
                             Text(
-                              '1 \$',
+                              fees_from==0?'1 \$':'${fees_from} \$',
                               style: Theme.of(context)
                                   .textTheme
                                   .headline5!
@@ -180,7 +196,7 @@ class _SortFilterState extends State<SortFilter> {
                               flex: 1,
                             ),
                             Text(
-                              '100 \$',
+                             fees_to==0? '900 \$':'${fees_to} \$',
                               style: Theme.of(context)
                                   .textTheme
                                   .headline5!
@@ -192,8 +208,38 @@ class _SortFilterState extends State<SortFilter> {
                               width: 16,
                             ),
                           ],
+                        ):
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 16,
+                            ),
+                            Text(
+                             rate_from==0? '1':rate_from.toString(),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline5!
+                                  .copyWith(fontSize: 20),
+                            ),
+                            Spacer(
+                              flex: 1,
+                            ),
+                            Text(
+                              rate_to==0?'4':rate_to.toString(),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline5!
+                                  .copyWith(
+                                  color: Theme.of(context).primaryColor,
+                                  fontSize: 20),
+                            ),
+                            SizedBox(
+                              width: 16,
+                            ),
+                          ],
                         ),
-                        SliderTheme(
+                      fees?
+                      SliderTheme(
                           data: SliderTheme.of(context).copyWith(
                               thumbColor: Colors.amber,
                               activeTrackColor: Theme.of(context).primaryColor),
@@ -201,7 +247,7 @@ class _SortFilterState extends State<SortFilter> {
                             inactiveColor: Theme.of(context).backgroundColor,
                             values: _currentRangeValues,
                             min: 1,
-                            max: 100,
+                            max: 1000,
                             divisions: 99,
                             labels: RangeLabels(
                               _currentRangeValues.start.round().toString(),
@@ -210,10 +256,36 @@ class _SortFilterState extends State<SortFilter> {
                             onChanged: (RangeValues values) {
                               setState(() {
                                 _currentRangeValues = values;
+                                 fees_from=values.start.round();
+                                 fees_to=values.end.round();
                               });
                             },
                           ),
+                        ):
+                      SliderTheme(
+                        data: SliderTheme.of(context).copyWith(
+                            thumbColor: Colors.amber,
+                            activeTrackColor: Theme.of(context).primaryColor),
+                        child: RangeSlider(
+                          inactiveColor: Theme.of(context).backgroundColor,
+                          values: _currentRangeRate,
+                          min: 1,
+                          max: 5,
+                          divisions: 5,
+                          labels: RangeLabels(
+                            _currentRangeValues.start.round().toString(),
+                            _currentRangeValues.end.round().toString(),
+                          ),
+                          onChanged: (RangeValues values) {
+                            setState(() {
+                             // _currentRangeValues = values;
+                              rate_from=values.start.round();
+                              rate_to=values.end.round();
+
+                            });
+                          },
                         ),
+                      ),
                       ],
                     ),
                   ),
@@ -250,6 +322,7 @@ class _SortFilterState extends State<SortFilter> {
                                   onChanged: (bool? value) {
                                     setState(() {
                                       maleValue = value;
+                                      gender="male";
                                     });
                                   },
                                 ),
@@ -275,6 +348,7 @@ class _SortFilterState extends State<SortFilter> {
                                   onChanged: (bool? value) {
                                     setState(() {
                                       femaleValue = value;
+                                      gender="female";
                                     });
                                   },
                                 ),
@@ -302,8 +376,10 @@ class _SortFilterState extends State<SortFilter> {
             Align(
               alignment: Alignment.bottomCenter,
               child: CustomButton(
-                onTap: () {
-                  Navigator.pushNamed(context, PageRoutes.listOfDoctorsPage);
+                onTap: () async{
+                await  getDoctorSpecialist();
+                  Navigator.pop(context);
+                //  Navigator.pushNamed(context, PageRoutes.listOfDoctorsPage);
                 },
                 label: locale.applyNow,
                 radius: 0,

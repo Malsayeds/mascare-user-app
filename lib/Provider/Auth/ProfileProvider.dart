@@ -65,4 +65,24 @@ class ProfileProvider with ChangeNotifier{
       print(e.toString());
     }
   }
+  Future<void> changelanguage(String lang) async{
+    String url=Config.base_url+"/change-language";
+    print(url);
+    var body={
+      "language" : lang,
+    };
+    var header=await Config.getHeader();
+    try{
+      final responce=await http.post(Uri.parse(url),body:body,headers: header);
+      print(responce.body);
+      if(responce.body.isNotEmpty)
+      {
+        updateProfileInfo=json.decode(responce.body);
+        notifyListeners();
+      }
+    }
+    catch(e) {
+      print(e.toString());
+    }
+  }
 }

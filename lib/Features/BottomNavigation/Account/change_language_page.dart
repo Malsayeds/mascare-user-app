@@ -2,21 +2,34 @@ import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:doctoworld_user/Features/Auth/login_navigator.dart';
 import 'package:doctoworld_user/Locale/language_cubit.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
+import 'package:doctoworld_user/Provider/Auth/ProfileProvider.dart';
+import 'package:doctoworld_user/Provider/Config.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:doctoworld_user/Stroage/StorageData.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-class ChangeLanguagePage extends StatefulWidget {
+import 'package:provider/provider.dart';
+class ChangeLanguagePage extends StatelessWidget{
   final bool fromRoot;
 
   ChangeLanguagePage([this.fromRoot = false]);
-
   @override
-  _ChangeLanguagePageState createState() => _ChangeLanguagePageState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+        create: (context) => ProfileProvider(), child: ChangeLanguageScreen(this.fromRoot));
+  }
 }
 
-class _ChangeLanguagePageState extends State<ChangeLanguagePage> {
+class ChangeLanguageScreen extends StatefulWidget {
+  final bool fromRoot;
+
+  ChangeLanguageScreen([this.fromRoot = false]);
+
+  @override
+  _ChangeLanguageScreenState createState() => _ChangeLanguageScreenState();
+}
+
+class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
   late LanguageCubit _languageCubit;
   int? _selectedLanguage = -1;
 
@@ -28,6 +41,7 @@ class _ChangeLanguagePageState extends State<ChangeLanguagePage> {
 
   @override
   Widget build(BuildContext context) {
+    final profileProvider= Provider.of<ProfileProvider>(context, listen: true);
     final List<String> _languages = [
       'English',
       'عربى',
@@ -45,7 +59,7 @@ class _ChangeLanguagePageState extends State<ChangeLanguagePage> {
                  child: ListView.builder(
                   itemCount: _languages.length,
                   itemBuilder: (context, index) => ListTile(
-                    onTap: (){
+                    onTap: ()async{
                       setState(() {
                         _selectedLanguage = index;
                       });
@@ -74,6 +88,8 @@ class _ChangeLanguagePageState extends State<ChangeLanguagePage> {
                         Navigator.pushNamed(context, PageRoutes.login);
                       } else {
                         Navigator.pop(context);
+                        var lang=await StorageData.getValue("lang");
+                        profileProvider.changelanguage(lang!);
                       }
                     },
                     title: Text(_languages[index]),

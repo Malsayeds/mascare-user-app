@@ -139,19 +139,19 @@ class _SetLocationState extends State<SetLocation> {
               ),
             ),
             isCard ? SaveAddressCard() : Container(),
-            CustomButton(onTap: () {
+            CustomButton(onTap: () async{
               if (isCard == false) {
                 setState(() {
                   isCard = true;
                 });
               } else {
-                 locationProvider.addAddress(_SaveAddressCardState.SelectedAddress,_addressController.text,"1",locationProvider.long, locationProvider.lat);
-                 locationProvider.getAddresses();
-                 DialogMessages.SuccessMessage(context, "Address  Has Been Added");
+                await  locationProvider.addAddress(_SaveAddressCardState.SelectedAddress,_addressController.text,"1",locationProvider.long, locationProvider.lat);
+                 await getAdresses();
+                 DialogMessages.SuccessMessage(context, "Address Has Been Added");
                  setState(() {
                    isCard=false;
                  });
-               // Navigator.pop(context);
+                Navigator.pushNamedAndRemoveUntil(context, "addresses_page", (route) => false);
               }
             }),
           ],
@@ -161,6 +161,9 @@ class _SetLocationState extends State<SetLocation> {
         slideCurve: Curves.linearToEaseOut,
       ),
     );
+  }
+  Future<void> getAdresses() async {
+    await Provider.of<LocationProvider>(context, listen: false).getAddresses();
   }
 }
 

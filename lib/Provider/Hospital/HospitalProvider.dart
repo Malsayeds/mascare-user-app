@@ -13,7 +13,7 @@ class HospitalProvider with ChangeNotifier {
   List<HospitalsModel> searchHospitalslist=[];
   List<DoctorModel>doctorsList=[];
   Future<void>getHospitals(double long,double lat)async {
-    var url=Config.base_url+"/hospitals"/*?lng=$long&lat=$lat*/;
+    var url=Config.base_url+"/hospitals?lng=$long&lat=$lat";
     print(url);
     var header=await Config.getHeader();
     try

@@ -115,8 +115,6 @@ late MyAppointmentModel myAppointment;
   }
   Future<void> addAppointMent(String doctor_id,String time,String date,int available_time_id,String notes) async{
     String url=Config.base_url+"/single-appointments";
-    print(url);
-    print(url);
     var body={
       "doctor_id" : doctor_id,
       "time" : time,
@@ -197,6 +195,48 @@ late MyAppointmentModel myAppointment;
         List slideritems = json.decode(utf8.decode(response.bodyBytes));
         searchDoctorList= slideritems.map((e) => SearchDoctorModel.fromJson(e)).toList();
         print(searchDoctorList.length);
+        notifyListeners();
+      }
+    }
+    catch(e)
+    {
+      print(e);
+    }
+  }
+  Future<void>getFilterDoctor(int id,int fees_from,int fees_to,var gender,int rate_from,int rate_to)async {
+    var url=Config.base_url+"/filter-doctors/$id";
+    print(url);
+    var body;
+    if(gender=="gender"){
+      body={
+        "fees_from":fees_from.toString(),
+        "fees_to":fees_to.toString(),
+        "rate_from":rate_from.toString(),
+        "rate_to":rate_to.toString()
+      };
+    }
+    else{
+      body={
+        "fees_from":fees_from.toString(),
+        "fees_to":fees_to.toString(),
+        "gender":gender,
+        "rate_from":rate_from.toString(),
+        "rate_to":rate_to.toString()
+      };
+    }
+    var header=await Config.getHeader();
+    print(header);
+
+    try
+    {
+      final response = await http.post(Uri.parse(url),body: body,headers: header);
+      print(response.body);
+      if(response.statusCode==200 && response.body!=null)
+      {
+        List slideritems = json.decode(utf8.decode(response.bodyBytes));
+        doctors= slideritems.map((e) => DoctorModel.fromJson(e)).toList();
+        print(doctors.length);
+        print("doctor_length");
         notifyListeners();
       }
     }

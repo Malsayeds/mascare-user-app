@@ -29,8 +29,13 @@ class _HospitalsScreenState extends State<HospitalsScreen>{
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<HospitalProvider>(context, listen: false).getHospitals(30,30);
-    Provider.of<LocationProvider>(context, listen: false).getAddresses();
+    loadData();
+  }
+  loadData()async{
+    var locationProvider= Provider.of<LocationProvider>(context, listen: false);
+   await locationProvider.getCurrentLocation();
+    await Provider.of<HospitalProvider>(context, listen: false).getHospitals(locationProvider.lat,locationProvider.long);
+  // Provider.of<LocationProvider>(context, listen: false).getAddresses();
   }
   @override
   Widget build(BuildContext context) {
@@ -44,7 +49,8 @@ class _HospitalsScreenState extends State<HospitalsScreen>{
           Icons.location_on,
           color: Theme.of(context).primaryColor,
         ),
-        title: DropdownButton(
+        title: Text(locationProvider.address.substring(6),style: TextStyle(color: Colors.black),)
+        /*DropdownButton(
           value: value,
           iconSize: 0.0,
           // style: inputTextStyle.copyWith(
@@ -74,7 +80,7 @@ class _HospitalsScreenState extends State<HospitalsScreen>{
               ),
             );
           }).toList(),
-        ),
+        ),*/
       ),
       body: HospitalsBody(),
     );
@@ -225,7 +231,13 @@ class HospitalsList extends StatelessWidget {
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context);
     var hospitalProvider=    Provider.of<HospitalProvider>(context, listen: true);
-    return ListView.builder(
+    return hospitalProvider.hospitalslist.length==0?Container(
+      height: MediaQuery.of(context).size.height*.1,
+      child: Center(
+        child: Text("No Hospitals Near For You",
+        style: Theme.of(context).textTheme.subtitle1,),
+      ),
+    ):ListView.builder(
       itemCount: hospitalProvider.hospitalslist.length,
       padding: EdgeInsets.only( bottom: 30),
       shrinkWrap: true,

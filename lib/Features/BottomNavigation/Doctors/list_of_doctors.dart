@@ -12,8 +12,7 @@ import 'package:provider/provider.dart';
 class DoctorsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => DoctorProvider(), child: Doctorspage2());
+    return Doctorspage2();
   }
 }
 
@@ -99,93 +98,14 @@ class _DoctorsListScreenState extends State<DoctorsListScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getDoctorSpecialist();
   }
 
-  Future<void> getDoctorSpecialist() async {
-    setState(() {
-      isLoading = true;
-    });
-    await Provider.of<DoctorProvider>(context, listen: false)
-        .getDoctorBySpecialist(4);
-    setState(() {
-      isLoading = false;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context);
     var doctorSpeialistProvider = Provider.of<DoctorProvider>(
         context, listen: true);
-    print(doctorSpeialistProvider.doctors.length);
-    print("lengthtttttttttttttttttttttttttttttttttttttttttttttt");
-    List<SearchDoctorTile> searchList = [
-      SearchDoctorTile(
-          'assets/Doctors/doc1.png',
-          'Dr. Joseph Williamson',
-          'Cardiac Surgeon',
-          'Apple Hospital',
-          '22',
-          '30',
-          '152'),
-      SearchDoctorTile(
-          'assets/Doctors/doc2.png',
-          'Dr. Anglina Taylor',
-          'Cardiac Surgeon',
-          'Operum Clinics',
-          '22',
-          '30',
-          '201'),
-      SearchDoctorTile(
-          'assets/Doctors/doc3.png',
-          'Dr. Anthony Peterson',
-          'Cardiac Surgeon',
-          'Opus Hospital',
-          '22',
-          '30',
-          '135'),
-      SearchDoctorTile(
-          'assets/Doctors/doc4.png',
-          'Dr. Elina George',
-          'Cardiac Surgeon',
-          'Lismuth Hospital',
-          '22',
-          '30',
-          '438'),
-      SearchDoctorTile(
-          'assets/Doctors/doc1.png',
-          'Dr. Joseph Williamson',
-          'Cardiac Surgeon',
-          'Apple Hospital',
-          '22',
-          '30',
-          '152'),
-      SearchDoctorTile(
-          'assets/Doctors/doc2.png',
-          'Dr. Anglina Taylor',
-          'Cardiac Surgeon',
-          'Operum Clinics',
-          '22',
-          '30',
-          '201'),
-      SearchDoctorTile(
-          'assets/Doctors/doc3.png',
-          'Dr. Anthony Peterson',
-          'Cardiac Surgeon',
-          'Opus Hospital',
-          '22',
-          '30',
-          '135'),
-      SearchDoctorTile(
-          'assets/Doctors/doc4.png',
-          'Dr. Elina George',
-          'Cardiac Surgeon',
-          'Lismuth Hospital',
-          '22',
-          '30',
-          '438'),
-    ];
     return Scaffold(
       body: isLoading ? Center(
         child: CircularProgressIndicator.adaptive(),) : doctorSpeialistProvider

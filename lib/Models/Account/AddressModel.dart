@@ -10,30 +10,30 @@ String addressModelToJson(List<AddressModel> data) => json.encode(List<dynamic>.
 
 class AddressModel {
   AddressModel({
-    required  this.id,
+    required this.id,
     required  this.name,
-    required   this.detailedAddress,
-    required   this.phone,
-    required   this.lng,
-    required    this.lat,
-    required    this.createdAt,
-    required      this.updatedAt,
-    required      this.deletedAt,
+    required this.detailedAddress,
+    required this.phone,
+    required this.lng,
+    required this.lat,
+    required this.createdAt,
+    required this.updatedAt,
+    this.deletedAt,
     required this.patientId,
-    required  this.areaId,
-    required   this.patient,
-    required   this.area,
+    required this.areaId,
+    required this.patient,
+    required  this.area,
   });
 
   int id;
-  String? name;
-  String? detailedAddress;
-  String? phone;
-  String? lng;
-  String? lat;
+  String name;
+  String detailedAddress;
+  dynamic phone;
+  String lng;
+  String lat;
   DateTime createdAt;
   DateTime updatedAt;
-  String? deletedAt;
+  dynamic deletedAt;
   int patientId;
   int areaId;
   Patient patient;
@@ -43,7 +43,7 @@ class AddressModel {
     id: json["id"],
     name: json["name"],
     detailedAddress: json["detailed_address"],
-    phone: json["phone"] == null ? null : json["phone"],
+    phone: json["phone"],
     lng: json["lng"],
     lat: json["lat"],
     createdAt: DateTime.parse(json["created_at"]),
@@ -59,7 +59,7 @@ class AddressModel {
     "id": id,
     "name": name,
     "detailed_address": detailedAddress,
-    "phone": phone == null ? null : phone,
+    "phone": phone,
     "lng": lng,
     "lat": lat,
     "created_at": createdAt.toIso8601String(),
@@ -75,11 +75,11 @@ class AddressModel {
 class Area {
   Area({
     required  this.id,
-    required this.name,
+    required  this.name,
     required   this.createdAt,
-    required  this.updatedAt,
-    required  this.deletedAt,
-    required  this.cityId,
+    required   this.updatedAt,
+    this.deletedAt,
+    required this.cityId,
   });
 
   int id;
@@ -111,25 +111,27 @@ class Area {
 class Patient {
   Patient({
     required this.id,
-    required this.age,
-    required this.contactNumber,
-    required this.diagnosis,
-    required this.createdAt,
-    required this.updatedAt,
-    required  this.deletedAt,
+    required  this.age,
+    required  this.contactNumber,
+    this.diagnosis,
+    required  this.createdAt,
+    required   this.updatedAt,
+    this.deletedAt,
     required  this.userId,
-    required  this.areaId,
+    this.areaId,
+    required  this.user,
   });
 
   int id;
   int age;
   String contactNumber;
-  String diagnosis;
+  dynamic diagnosis;
   DateTime createdAt;
   DateTime updatedAt;
   dynamic deletedAt;
   int userId;
-  int areaId;
+  dynamic areaId;
+  User user;
 
   factory Patient.fromJson(Map<String, dynamic> json) => Patient(
     id: json["id"],
@@ -141,6 +143,7 @@ class Patient {
     deletedAt: json["deleted_at"],
     userId: json["user_id"],
     areaId: json["area_id"],
+    user: User.fromJson(json["user"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -153,5 +156,38 @@ class Patient {
     "deleted_at": deletedAt,
     "user_id": userId,
     "area_id": areaId,
+    "user": user.toJson(),
+  };
+}
+
+class User {
+  User({
+    required this.id,
+    required this.name,
+    this.image,
+    required   this.email,
+    this.gender,
+  });
+
+  int id;
+  String name;
+  dynamic image;
+  String email;
+  dynamic gender;
+
+  factory User.fromJson(Map<String, dynamic> json) => User(
+    id: json["id"],
+    name: json["name"],
+    image: json["image"],
+    email: json["email"],
+    gender: json["gender"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "name": name,
+    "image": image,
+    "email": email,
+    "gender": gender,
   };
 }

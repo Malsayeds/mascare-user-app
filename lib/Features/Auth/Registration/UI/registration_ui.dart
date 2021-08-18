@@ -157,11 +157,13 @@ class _RegistrationUIState extends State<RegistrationUI> {
                 CustomButton(
                   color: loader?Colors.black26:Theme.of(context).primaryColor,
                   onTap: () async{
+
                     if(formKey.currentState!.validate()){
+                      var lang=await StorageData.getValue("lang");
                       setState(() {
                         loader=true;
                       });
-                        await registerProvider.RegisterServices(_firstController.text.toString()+_lastController.text.toString(),_emailController.text,_passwordController.text,_ageController.text,_phoneController.text);
+                        await registerProvider.RegisterServices(_firstController.text.toString()+" "+_lastController.text.toString(),_emailController.text,_passwordController.text,_ageController.text,_phoneController.text,lang!);
                         print(registerProvider.RegisterInfo);
                         print("000000000000000000000000000000000000000000000");
                         if(registerProvider.RegisterInfo["access_token"]!=null){

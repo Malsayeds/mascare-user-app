@@ -96,6 +96,7 @@ class PageRoutes {
   static const String loginNavigator = 'loginNavigator';
   static const String register = 'register';
   static const String login = 'login';
+  static const String account = 'account';
 
   // static const String trial = 'trial';
 
@@ -103,6 +104,7 @@ class PageRoutes {
     return {
       findMedicinesPage: (context) => MedicinePage(),
       bottomNavigation: (context) => BottomNavigation(index: 0,),
+      account: (context) => BottomNavigation(index: 4,),
       shopByCategory: (context) => ShopByCategoryPage(),
       medicines: (context) => MedicinesPage(),
       reviewsPage: (context) => ReviewPage(),

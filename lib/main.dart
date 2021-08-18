@@ -33,15 +33,10 @@ class Docto extends StatelessWidget {
         builder: (_, locale) {
           return MultiProvider(
               providers: [
-                ChangeNotifierProvider.value(
-                  value: GlobalProvider(),
-                ),
-                ChangeNotifierProvider.value(
-                  value: LocationProvider(),
-                ),
-                ChangeNotifierProvider.value(
-                  value: DoctorProvider(),
-                ),
+                ChangeNotifierProvider.value(value: GlobalProvider(),),
+                ChangeNotifierProvider.value(value: LocationProvider(),),
+                ChangeNotifierProvider.value(value: DoctorProvider(),),
+                ChangeNotifierProvider.value(value: LocationProvider(),),
               ],
             child: MaterialApp(
               localizationsDelegates: [

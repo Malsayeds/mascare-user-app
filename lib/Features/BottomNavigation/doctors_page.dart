@@ -171,8 +171,8 @@ class _DoctorsBodyState extends State<DoctorsBody> {
                   return InkWell(
                     onTap: () async{
                       doctorProvider.SetSelectedSpecialist(doctorProvider.doctorSpeiaList[index].id,doctorProvider.doctorSpeiaList[index].name);
-                      //await doctorSpeialistProvider.getDoctorBySpecialist(doctorSpeialistProvider.doctorSpeiaList[index].id);
-                      Navigator.pushNamed(context, PageRoutes.listOfDoctorsPage);
+                      await getDoctorSpecialist(doctorProvider.doctorSpeiaList[index].id);
+                       Navigator.pushNamed(context, PageRoutes.listOfDoctorsPage);
 
                     },
                     child: Row(
@@ -299,5 +299,9 @@ class _DoctorsBodyState extends State<DoctorsBody> {
         ],
       ),
     );
+  }
+  Future<void> getDoctorSpecialist(int id) async {
+    await Provider.of<DoctorProvider>(context, listen: false)
+        .getDoctorBySpecialist(id);
   }
 }
