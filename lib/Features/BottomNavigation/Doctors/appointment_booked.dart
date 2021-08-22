@@ -62,8 +62,7 @@ class _AppointmentBookedState extends State<AppointmentBooked> {
                       alignment: Alignment.bottomCenter,
                       child: CustomButton(
                         onTap: () {
-                          Navigator.pushNamed(
-                              context, PageRoutes.appointmentPage);
+                          Navigator.pushNamedAndRemoveUntil(context, "appointments_page", (route) => false);
                         },
                         label: locale.myAppointments,
                         radius: 0,

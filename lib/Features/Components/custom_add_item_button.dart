@@ -1,4 +1,7 @@
+import 'package:doctoworld_user/Features/Components/DialogMessages.dart';
+import 'package:doctoworld_user/Models/Medicine/ProductModel.dart';
 import 'package:doctoworld_user/Provider/GlobalProvider.dart';
+import 'package:doctoworld_user/Provider/Product/ProductProvider.dart';
 import 'package:doctoworld_user/Stroage/DbHelper.dart';
 import 'package:doctoworld_user/Stroage/Model/CartModelLocal.dart';
 import 'package:flutter/material.dart';
@@ -6,33 +9,37 @@ import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:provider/provider.dart';
 
 class CustomAddItemButton extends StatelessWidget {
+  ProductDetailModel product;
+  CustomAddItemButton({required this.product});
    DbHelper dbHelper=new DbHelper();
   @override
   Widget build(BuildContext context) {
+    var productProvider=Provider.of<ProductProvider>(context, listen: true);
     return  Consumer<GlobalProvider>(
         builder:  (context,globalProvider,child){
       return GestureDetector(
         onTap: ()async {
           CartMedelLocal p1=new CartMedelLocal({
-            "id":2,
-            "name":"product test",
-            "img":'assets/SellerImages/1a.png',
-            "category":"category",
-            "price":5.0,
+            "id":product.id,
+            "name":product.name,
+            "img":product.image,
+            "category":product.category,
+            "price":double.parse(product.price),
             "quantity":1,
           });
           try
           {
-            await dbHelper.addToCart(p1);
-            Provider.of<GlobalProvider>(context,listen: false).updateCounter();
-            print("success");
+           // await  productProvider.addUpdateCart(product.id, 1);
+           await dbHelper.addToCart(p1);
+           Provider.of<GlobalProvider>(context,listen: false).updateCounter();
+            Navigator.pushNamed(context, PageRoutes.myCartPage);
           }
           catch(e)
           {
             print(e.toString());
-            print("fail");
+            DialogMessages.ErrorMessage(context, "Product Has Been Added Befor");
           }
-          Navigator.pushNamed(context, PageRoutes.myCartPage);
+
         },
         child: Container(
           decoration: BoxDecoration(

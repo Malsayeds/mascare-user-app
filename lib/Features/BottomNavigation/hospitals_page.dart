@@ -1,6 +1,7 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/Hospitals/SearchHospitals.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/Hospitals/hospital_info.dart';
+import 'package:doctoworld_user/Features/Components/CustomAddressAppBar.dart';
 import 'package:doctoworld_user/Features/PublicFunction.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
 import 'package:doctoworld_user/Provider/Hospital/HospitalProvider.dart';
@@ -25,6 +26,7 @@ class HospitalsScreen extends StatefulWidget {
 }
 
 class _HospitalsScreenState extends State<HospitalsScreen>{
+   bool loading=true;
   @override
   void initState() {
     // TODO: implement initState
@@ -33,9 +35,12 @@ class _HospitalsScreenState extends State<HospitalsScreen>{
   }
   loadData()async{
     var locationProvider= Provider.of<LocationProvider>(context, listen: false);
-   await locationProvider.getCurrentLocation();
+   //await locationProvider.getCurrentLocation();
     await Provider.of<HospitalProvider>(context, listen: false).getHospitals(locationProvider.lat,locationProvider.long);
   // Provider.of<LocationProvider>(context, listen: false).getAddresses();
+    setState(() {
+      loading=false;
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -49,7 +54,7 @@ class _HospitalsScreenState extends State<HospitalsScreen>{
           Icons.location_on,
           color: Theme.of(context).primaryColor,
         ),
-        title: Text(locationProvider.address.substring(6),style: TextStyle(color: Colors.black),)
+        title:CustomAddressAppBar()
         /*DropdownButton(
           value: value,
           iconSize: 0.0,
@@ -82,7 +87,7 @@ class _HospitalsScreenState extends State<HospitalsScreen>{
           }).toList(),
         ),*/
       ),
-      body: HospitalsBody(),
+      body: loading?Center(child: CircularProgressIndicator.adaptive(),):HospitalsBody(),
     );
   }
 }
@@ -114,8 +119,7 @@ class _HospitalsBodyState extends State<HospitalsBody> {
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6),
             child: Text(
               locale.hello! + ', ${Docto.username}',
-              style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                  fontSize: 20, color: Theme.of(context).disabledColor),
+              style: Theme.of(context).textTheme.subtitle2,
             ),
           ),
           Padding(

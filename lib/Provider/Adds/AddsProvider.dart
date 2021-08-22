@@ -4,7 +4,7 @@
 import 'dart:convert';
 
 import 'package:doctoworld_user/Models/Adds/AddsModel.dart';
-import 'package:doctoworld_user/Models/Medicine/MedicineModel.dart';
+import 'package:doctoworld_user/Models/Medicine/ProductModel.dart';
 import 'package:doctoworld_user/Provider/Config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart'as http;

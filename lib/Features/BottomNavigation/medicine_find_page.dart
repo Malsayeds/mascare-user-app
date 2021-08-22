@@ -1,11 +1,14 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/Data/data.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/Medicine/SearchMedicine.dart';
+import 'package:doctoworld_user/Features/Components/CustomAddressAppBar.dart';
 import 'package:doctoworld_user/Features/Components/CustomCartIcon.dart';
 import 'package:doctoworld_user/Features/Components/entry_field.dart';
 import 'package:doctoworld_user/Features/Components/title_row.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
 import 'package:doctoworld_user/Provider/GlobalProvider.dart';
+import 'package:doctoworld_user/Provider/LocationProvider.dart';
+import 'package:doctoworld_user/Provider/Product/ProductProvider.dart';
 import 'package:doctoworld_user/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,14 +28,23 @@ class FindMedicine extends StatefulWidget {
 }
 
 class _FindMedicineState extends State<FindMedicine> {
+  bool loading =true;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getProductCategory();
+  }
+  getProductCategory()async{
+   await Provider.of<ProductProvider>(context, listen: false).getCategories();
+   setState(() {
+     loading=false;
+   });
   }
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
+    var productProvider=Provider.of<ProductProvider>(context, listen: true);
     String? value = 'Wallington';
     return Scaffold(
       appBar: AppBar(
@@ -40,7 +52,8 @@ class _FindMedicineState extends State<FindMedicine> {
           Icons.location_on,
           color: Theme.of(context).primaryColor,
         ),
-        title: DropdownButton(
+        title: CustomAddressAppBar()
+        /*DropdownButton(
           value: value,
           iconSize: 0.0,
           // style: inputTextStyle.copyWith(
@@ -68,12 +81,12 @@ class _FindMedicineState extends State<FindMedicine> {
               ),
             );
           }).toList(),
-        ),
+        )*/,
         actions: <Widget>[
           CustomCartIcon()
         ],
       ),
-      body: ListView(
+      body: loading?Center(child: CircularProgressIndicator.adaptive(),):ListView(
         physics: BouncingScrollPhysics(),
         children: <Widget>[
           Padding(
@@ -102,7 +115,7 @@ class _FindMedicineState extends State<FindMedicine> {
                     const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
                 child: EntryField(
                   onTap: (){
-                      print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
                       Navigator.push(context, MaterialPageRoute(builder: (context) => MedicineSearchScreen()));
                   },
                   readOnly: true,
@@ -126,20 +139,27 @@ class _FindMedicineState extends State<FindMedicine> {
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
-                itemCount: categories.length,
+                itemCount: productProvider.CategoryList.length,
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: () {
-                      Navigator.pushNamed(context, PageRoutes.medicines);
+                      getProductByCategory(productProvider.CategoryList[index].id);
+                       Navigator.pushNamed(context, PageRoutes.medicines);
                     },
-                    child: Padding(
-                      padding: EdgeInsetsDirectional.only(end: 8),
-                      child: FadedScaleAnimation(
-                        Image.asset(
-                          categories[index],
-                          width: 96,
-                          fit: BoxFit.fill,
+                    child: Container(
+                      height: 124,
+                      width: MediaQuery.of(context).size.width*.3,
+                      padding: EdgeInsetsDirectional.all(8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        image: DecorationImage(
+                          image: NetworkImage(productProvider.CategoryList[index].image)
                         ),
+                        color: Theme.of(context).primaryColor
+                      ),
+                      child: FadedScaleAnimation(
+                        Text(productProvider.CategoryList[index].name,style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Colors.white,fontSize: 14
+                        ),),
                         durationInMilliseconds: 300,
                       ),
                     ),
@@ -191,6 +211,10 @@ class _FindMedicineState extends State<FindMedicine> {
         ],
       ),
     );
+  }
+  Future<void> getProductByCategory(int id) async {
+    await Provider.of<ProductProvider>(context, listen: false)
+        .getProductByCategory(id);
   }
 
   Widget quickGrid(BuildContext context, String image) {

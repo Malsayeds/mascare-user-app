@@ -1,7 +1,11 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
+import 'package:doctoworld_user/Features/Components/DialogMessages.dart';
 import 'package:doctoworld_user/Features/Components/custom_button.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
+import 'package:doctoworld_user/Models/Medicine/ProductModel.dart';
+import 'package:doctoworld_user/Provider/Config.dart';
 import 'package:doctoworld_user/Provider/GlobalProvider.dart';
+import 'package:doctoworld_user/Provider/Product/ProductProvider.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:doctoworld_user/Stroage/DbHelper.dart';
 import 'package:doctoworld_user/Stroage/Model/CartModelLocal.dart';
@@ -10,16 +14,21 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ProductInfo extends StatefulWidget {
+  final ProductDetailModel productDetailModel;
+  ProductInfo({required this.productDetailModel});
   @override
-  _ProductInfoState createState() => _ProductInfoState();
+  _ProductInfoState createState() => _ProductInfoState(productDetailModel: this.productDetailModel);
 }
 
 class _ProductInfoState extends State<ProductInfo> {
+  final ProductDetailModel productDetailModel;
+  _ProductInfoState({required this.productDetailModel});
   IconData saved = Icons.bookmark_border;
   DbHelper dbHelper=new DbHelper();
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
+    var productProvider=Provider.of<ProductProvider>(context, listen: true);
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -28,12 +37,7 @@ class _ProductInfoState extends State<ProductInfo> {
           IconButton(
               icon: Icon(saved),
               onPressed: () {
-                setState(() {
-                  if (saved == Icons.bookmark_border)
-                    saved = Icons.bookmark_outlined;
-                  else
-                    saved = Icons.bookmark_border;
-                });
+                productProvider.addItemToWishlist(productDetailModel.id);
               }),
           IconButton(
               icon: Icon(Icons.shopping_cart),
@@ -49,33 +53,22 @@ class _ProductInfoState extends State<ProductInfo> {
                     scrollDirection: Axis.vertical,
                     physics: BouncingScrollPhysics(),
                     children: [
-                      Stack(
-                        children: [
-                          FadedScaleAnimation(
-                            Image.asset(
-                              'assets/Medicines/11.png',
-                              width: MediaQuery.of(context).size.width,
-                              fit: BoxFit.fitWidth,
-                            ),
-                            durationInMilliseconds: 400,
-                          ),
-                          Positioned.directional(
-                              textDirection: Directionality.of(context),
-                              end: 5,
-                              top: 15,
-                              child: Image.asset(
-                                'assets/ic_prescription.png',
-                                scale: 3,
-                              )),
-                        ],
-                      ),
+                   
+                    
+                          Image.network( 
+                               productDetailModel.image,
+                                width: MediaQuery.of(context).size.width,
+                                height: MediaQuery.of(context).size.height*.5,
+                                fit: BoxFit.cover,
+                              ),
+                      
                       Container(
                         color: Theme.of(context).scaffoldBackgroundColor,
                         child: ListTile(
                           title: Row(
                             children: [
                               Text(
-                                'Salospir 100mg Tablet',
+                                productDetailModel.name,
                                 style: Theme.of(context).textTheme.bodyText1,
                               ),
                               Spacer(),
@@ -88,7 +81,7 @@ class _ProductInfoState extends State<ProductInfo> {
                                 width: 5,
                               ),
                               Text(
-                                '4.5',
+                                '${productDetailModel.review.avg}',
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyText1!
@@ -99,7 +92,7 @@ class _ProductInfoState extends State<ProductInfo> {
                           subtitle: Row(
                             children: [
                               Text(
-                                locale.heathCare!,
+                                productDetailModel.category,
                                 style:
                                     Theme.of(context).textTheme.subtitle2!.copyWith(
                                           color: Theme.of(context).disabledColor,
@@ -112,7 +105,7 @@ class _ProductInfoState extends State<ProductInfo> {
                                         context, PageRoutes.reviewsPage);
                                   },
                                   child: Text(
-                                    locale.readAll! + ' 125 ' + locale.reviews!,
+                                    locale.readAll! + ' ${productDetailModel.review.count}  ' + locale.reviews!,
                                     style: Theme.of(context)
                                         .textTheme
                                         .subtitle2!
@@ -132,7 +125,7 @@ class _ProductInfoState extends State<ProductInfo> {
                       SizedBox(
                         height: 8,
                       ),
-                      Container(
+                /*      Container(
                         color: Theme.of(context).scaffoldBackgroundColor,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16.0, vertical: 4.0),
@@ -140,8 +133,8 @@ class _ProductInfoState extends State<ProductInfo> {
                           locale.description!,
                           style: Theme.of(context).textTheme.subtitle2,
                         ),
-                      ),
-                      Container(
+                      ),*/
+                /*      Container(
                         color: Theme.of(context).scaffoldBackgroundColor,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16.0, vertical: 4.0),
@@ -155,7 +148,7 @@ class _ProductInfoState extends State<ProductInfo> {
                       ),
                       SizedBox(
                         height: 8,
-                      ),
+                      ),*/
                       Container(
                         color: Theme.of(context).scaffoldBackgroundColor,
                         padding: const EdgeInsets.only(
@@ -165,17 +158,17 @@ class _ProductInfoState extends State<ProductInfo> {
                       Container(
                         color: Theme.of(context).scaffoldBackgroundColor,
                         child: ListTile(
-                          leading: Image.asset('assets/SellerImages/1a.png',
+                          leading: Image.network(productDetailModel.manufacturer.logo==null?Config.company_logo:productDetailModel.manufacturer.logo,
                               width: MediaQuery.of(context).size.width*.2,
                           ),
                           title: Container(
                             width: MediaQuery.of(context).size.width*.7,
                             child: Text(
-                              'Well Life Store',
+                              productDetailModel.manufacturer.name,
                               style: Theme.of(context).textTheme.subtitle1,
                             ),
                           ),
-                          subtitle: Column(
+                       /*   subtitle: Column(
                             children: [
                               SizedBox(height: 2,),
                              Row(
@@ -219,7 +212,7 @@ class _ProductInfoState extends State<ProductInfo> {
                           ),
                              )
                             ],
-                          ),
+                          ),*/
                         ),
                       ),
                       SizedBox(
@@ -236,13 +229,13 @@ class _ProductInfoState extends State<ProductInfo> {
                           color: Theme.of(context).scaffoldBackgroundColor,
                           child: ListTile(
                             title: Text(
-                              '\$ 3.50',
+                              '\$ ${productDetailModel.price}',
                               style: Theme.of(context).textTheme.subtitle1,
                             ),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(locale.packOf! + ' 8'),
+                                Text(locale.packOf! + ' ${productDetailModel.packing}'),
                                 Icon(
                                   Icons.keyboard_arrow_down,
                                   size: 14,
@@ -257,25 +250,26 @@ class _ProductInfoState extends State<ProductInfo> {
 
                             onTap: ()async {
                                 CartMedelLocal p1=new CartMedelLocal({
-                                  "id":1,
-                                  "name":"product test",
-                                  "img":'assets/SellerImages/1a.png',
-                                  "category":"category",
-                                  "price":10.0,
+                                  "id":productDetailModel.id,
+                                  "name":productDetailModel.name,
+                                  "img":productDetailModel.image,
+                                  "category":productDetailModel.category,
+                                  "price":double.parse(productDetailModel.price),
                                   "quantity":1,
                                 });
                                 try
                                 {
                                   await dbHelper.addToCart(p1);
                                   Provider.of<GlobalProvider>(context,listen: false).updateCounter();
+                                  Navigator.pushNamed(context, PageRoutes.myCartPage);
                                 }
                                 catch(e)
                                 {
                                 print(e.toString());
-                                print("fail");
+                                 DialogMessages.ErrorMessage(context, "This Product Has Been Added Before");
                                 }
 
-                              Navigator.pushNamed(context, PageRoutes.myCartPage);
+
                             },
                           )
                       ],

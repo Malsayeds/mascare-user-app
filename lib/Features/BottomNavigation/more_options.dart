@@ -58,10 +58,10 @@ loadData() async {
       MenuTile(locale.myOrders, locale.orderStatus, Icons.motorcycle, () {
         Navigator.pushNamed(context, PageRoutes.recentOrder);
       }),
-      MenuTile(locale.pillReminder, locale.takePillOnTime,
+   /*   MenuTile(locale.pillReminder, locale.takePillOnTime,
           Icons.access_alarms_outlined, () {
         Navigator.pushNamed(context, PageRoutes.pillReminder);
-      }),
+      }),*/
       MenuTile(locale.myAddress, locale.saveAddress, Icons.location_pin, () {
         Navigator.pushNamed(context, PageRoutes.addressesPage);
       }),
@@ -107,6 +107,7 @@ loadData() async {
                 FadedScaleAnimation(
                   Image.network(Config.user_defualt_image,fit: BoxFit.fill,
                     width: MediaQuery.of(context).size.width*.3,
+                    height: MediaQuery.of(context).size.height*.13,
                   ),
                   durationInMilliseconds: 400,
                 ),

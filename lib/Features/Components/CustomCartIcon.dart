@@ -14,7 +14,7 @@ class _state extends State<CustomCartIcon>{
 var  globalProvider=GlobalProvider();
   @override
   Widget build(BuildContext context) {
-    var counter = Provider.of<GlobalProvider>(context,listen: false).getCounter();
+    var counter = Provider.of<GlobalProvider>(context,listen: true).getCounter();
    return   Stack(
        children: [
          IconButton(

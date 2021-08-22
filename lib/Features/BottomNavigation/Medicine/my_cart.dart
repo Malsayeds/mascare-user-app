@@ -2,11 +2,13 @@ import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:doctoworld_user/Features/Components/DialogMessages.dart';
 import 'package:doctoworld_user/Features/Components/custom_button.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
+import 'package:doctoworld_user/Provider/GlobalProvider.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:doctoworld_user/Stroage/DbHelper.dart';
 import 'package:doctoworld_user/Stroage/Model/CartModelLocal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Product {
   Product(this.img, this.name, this.category, this.price);
@@ -106,7 +108,7 @@ class _CartPageState extends State<CartPage> {
                                       child: Row(
                                         crossAxisAlignment: CrossAxisAlignment.end,
                                         children: [
-                                          Image.asset(
+                                          Image.network(
                                             c.img,
                                             height: MediaQuery.of(context).size.height*.15,
                                             width: MediaQuery.of(context).size.width*.25,
@@ -211,14 +213,14 @@ class _CartPageState extends State<CartPage> {
                                           Container(
                                             height: MediaQuery.of(context).size.height*.15,
                                             padding: EdgeInsets.only(
-                                              top: MediaQuery.of(context).size.height*.02
+                                                top: MediaQuery.of(context).size.height*.02
                                             ),
                                             child: Column(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
                                                 InkWell(
                                                   onTap: (){
-                                                   DeleteFromCart(context, c.id, c.quantity, c.price);
+                                                    DeleteFromCart(context, c.id, c.quantity, c.price);
                                                   },
                                                   child: Container(
                                                       padding: EdgeInsets.all(3),
@@ -249,8 +251,8 @@ class _CartPageState extends State<CartPage> {
                 ],
               ),
             ),
-           dataLocal.length==0?SizedBox():
-           Align(
+            dataLocal.length==0?SizedBox():
+            Align(
               alignment: Alignment.bottomCenter,
               child: Container(
                 color: Theme.of(context).scaffoldBackgroundColor,
@@ -281,8 +283,8 @@ class _CartPageState extends State<CartPage> {
                                         .textTheme
                                         .bodyText2!
                                         .copyWith(
-                                            color:
-                                                Theme.of(context).primaryColor),
+                                        color:
+                                        Theme.of(context).primaryColor),
                                   ),
                                 ),
                                 GestureDetector(
@@ -377,6 +379,7 @@ class _CartPageState extends State<CartPage> {
     print("00000000000000000000000");
   }
   DeleteFromCart(BuildContext context,id,int quantity,double price) {
+    var globalProvider=Provider.of<GlobalProvider>(context, listen: false);
     double totalPrice=price*quantity;
     showDialog(
         context: context,
@@ -429,6 +432,7 @@ class _CartPageState extends State<CartPage> {
                           ),
                           onTap: () async {
                             print(totalPrice*quantity);
+                            globalProvider.decrementCounter();
                             setState(() {
                               db.delete(id);
                             });
@@ -471,12 +475,12 @@ class _CartPageState extends State<CartPage> {
           ),
           title == locale.amountPayable
               ? GestureDetector(
-                  onTap: () {},
-                  child: Icon(
-                    Icons.error_outline,
-                    size: 16,
-                    color: Theme.of(context).primaryColor,
-                  ))
+              onTap: () {},
+              child: Icon(
+                Icons.error_outline,
+                size: 16,
+                color: Theme.of(context).primaryColor,
+              ))
               : SizedBox.shrink(),
           Spacer(),
           Text(

@@ -1,7 +1,9 @@
 import 'package:doctoworld_user/Features/Components/CustomCartIcon.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
+import 'package:doctoworld_user/Provider/LocationProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CustomAddressAppBar extends StatefulWidget{
   @override
@@ -10,47 +12,25 @@ class CustomAddressAppBar extends StatefulWidget{
   }
 }
 class _state extends State<CustomAddressAppBar>{
+  getCurrentLoctaion()async{
+    var locationProvider= Provider.of<LocationProvider>(context, listen: false);
+    await locationProvider.getCurrentLocation();
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getCurrentLoctaion();
+  }
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
-    String? value = 'Wallington';
-    return AppBar(
-      leading: Icon(
-        Icons.location_on,
-        color: Theme.of(context).primaryColor,
-      ),
-      title: DropdownButton(
-        value: value,
-        iconSize: 0.0,
-        // style: inputTextStyle.copyWith(
-        //     fontWeight: FontWeight.bold,
-        //     color: Theme.of(context).secondaryHeaderColor),
-        underline: Container(height: 0),
-        onChanged: (String? newValue) {
-          setState(() {
-            value = newValue;
-          });
-          // if (value == 'appLocalization.setLocation')
-          //   Navigator.pushNamed(context, PageRoutes.locationPage);
-        },
-        items: <String?>[
-          'Wallington',
-          locale.office,
-          locale.other,
-          locale.setLocation
-        ].map<DropdownMenuItem<String>>((address) {
-          return DropdownMenuItem<String>(
-            value: address,
-            child: Text(
-              address!,
-              overflow: TextOverflow.ellipsis,
-            ),
-          );
-        }).toList(),
-      ),
-      actions: <Widget>[
-        CustomCartIcon()
-      ],
+    var locationProvider= Provider.of<LocationProvider>(context, listen: true);
+    return locationProvider.address=="Current Location"?
+    InkWell(
+    onTap: ()=>getCurrentLoctaion()
+    ,child: Text("Set Current Loction",style: TextStyle(color: Colors.black,fontSize: 14)))
+    :Text(locationProvider.address.substring(5),style: TextStyle(color: Colors.black,fontSize: 14)
     );
   }
 }

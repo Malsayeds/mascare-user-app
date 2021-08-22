@@ -6,7 +6,7 @@ import 'package:doctoworld_user/Models/Doctor/DoctorInfoModel.dart';
 import 'package:doctoworld_user/Models/Doctor/DoctorModel.dart';
 import 'package:doctoworld_user/Models/Doctor/DoctorSpialistModel.dart';
 import 'package:doctoworld_user/Models/Doctor/SearchDoctorModel.dart';
-import 'package:doctoworld_user/Models/Medicine/MedicineModel.dart';
+import 'package:doctoworld_user/Models/Medicine/ProductModel.dart';
 import 'package:doctoworld_user/Provider/Config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart'as http;
@@ -49,7 +49,11 @@ late MyAppointmentModel myAppointment;
     }
   }
   Future<void>getDoctorBySpecialist(int id)async {
-    var url=Config.base_url+"/specification/${id}/doctors";
+    var url;
+    if(id==0)
+      url=Config.base_url+"/single-doctors";
+     else
+       url=Config.base_url+"/specification/${id}/doctors";
     print(url);
     var header=await Config.getHeader();
     print(header);
@@ -182,7 +186,7 @@ late MyAppointmentModel myAppointment;
     var url=Config.base_url+"/search-doctors";
     print(url);
     var body={
-      "key-name":key
+      "name":key
     };
     print(body);
     var header=await Config.getHeader();

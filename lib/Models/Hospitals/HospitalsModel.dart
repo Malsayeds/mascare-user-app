@@ -51,7 +51,7 @@ class HospitalsModel {
     phone: json["phone"],
     createdAt: DateTime.parse(json["created_at"]),
     updatedAt: DateTime.parse(json["updated_at"]),
-    deletedAt: json["deleted_at"],
+    deletedAt: json["deleted_at"]??"",
     areaId: json["area_id"],
     lng: json["lng"],
     lat: json["lat"],

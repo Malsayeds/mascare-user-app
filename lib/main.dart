@@ -2,6 +2,7 @@ import 'package:doctoworld_user/Features/Auth/login_navigator.dart';
 import 'package:doctoworld_user/Features/Splash.dart';
 import 'package:doctoworld_user/Provider/GlobalProvider.dart';
 import 'package:doctoworld_user/Provider/LocationProvider.dart';
+import 'package:doctoworld_user/Provider/Product/ProductProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,6 +38,7 @@ class Docto extends StatelessWidget {
                 ChangeNotifierProvider.value(value: LocationProvider(),),
                 ChangeNotifierProvider.value(value: DoctorProvider(),),
                 ChangeNotifierProvider.value(value: LocationProvider(),),
+                ChangeNotifierProvider.value(value: ProductProvider(),),
               ],
             child: MaterialApp(
               localizationsDelegates: [

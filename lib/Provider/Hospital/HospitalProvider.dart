@@ -4,7 +4,7 @@ import 'package:doctoworld_user/Models/Doctor/DoctorModel.dart';
 import 'package:doctoworld_user/Models/Doctor/DoctorSpialistModel.dart';
 import 'package:doctoworld_user/Models/Hospitals/HospitalsModel.dart';
 import 'package:doctoworld_user/Models/Hospitals/SearchHospitalModel.dart';
-import 'package:doctoworld_user/Models/Medicine/MedicineModel.dart';
+import 'package:doctoworld_user/Models/Medicine/ProductModel.dart';
 import 'package:doctoworld_user/Provider/Config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart'as http;
@@ -13,7 +13,7 @@ class HospitalProvider with ChangeNotifier {
   List<HospitalsModel> searchHospitalslist=[];
   List<DoctorModel>doctorsList=[];
   Future<void>getHospitals(double long,double lat)async {
-    var url=Config.base_url+"/hospitals?lng=$long&lat=$lat";
+    var url=Config.base_url+"/hospitals";//?lng=$long&lat=$lat;
     print(url);
     var header=await Config.getHeader();
     try
@@ -36,7 +36,7 @@ class HospitalProvider with ChangeNotifier {
     var url=Config.base_url+"/search-hospitals";
     print(url);
     var body={
-      "key-name":key
+      "name":key
     };
     print(body);
     var header=await Config.getHeader();

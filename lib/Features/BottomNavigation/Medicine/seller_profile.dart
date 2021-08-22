@@ -162,7 +162,8 @@ class _SellerProfilePageState extends State<SellerProfilePage> {
                         ),
                         Align(
                           alignment: Alignment.bottomRight,
-                          child: CustomAddItemButton(),
+                          child: Text("add")
+                          //CustomAddItemButton(),
                         ),
                       ],
                     ),

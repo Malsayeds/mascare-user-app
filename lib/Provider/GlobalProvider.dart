@@ -19,4 +19,8 @@ class GlobalProvider with ChangeNotifier {
     this.counter+=1;
     notifyListeners();
   }
+  void decrementCounter(){
+    this.counter-=1;
+    notifyListeners();
+  }
 }

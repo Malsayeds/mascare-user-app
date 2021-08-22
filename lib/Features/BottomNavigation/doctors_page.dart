@@ -1,4 +1,5 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
+import 'package:doctoworld_user/Features/Components/CustomAddressAppBar.dart';
 import 'package:doctoworld_user/Features/Components/CustomCartIcon.dart';
 import 'package:doctoworld_user/Features/PublicFunction.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
@@ -42,7 +43,8 @@ class _DoctorScreesnState extends State<DoctorScreesn> {
             Icons.location_on,
             color: Theme.of(context).primaryColor,
           ),
-          title: DropdownButton(
+          title: CustomAddressAppBar()
+          /*DropdownButton(
             value: value,
             iconSize: 0.0,
             // style: inputTextStyle.copyWith(
@@ -72,7 +74,7 @@ class _DoctorScreesnState extends State<DoctorScreesn> {
                 ),
               );
             }).toList(),
-          ),
+          )*/,
           actions: <Widget>[
             CustomCartIcon()
           ],
@@ -145,8 +147,9 @@ class _DoctorsBodyState extends State<DoctorsBody> {
                 ),
                 Spacer(),
                 GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, PageRoutes.searchDoctors);
+                  onTap: () async{
+                    await getDoctorSpecialist(0);
+                    Navigator.pushNamed(context, PageRoutes.listOfDoctorsPage);
                   },
                   child: Text(
                     locale.viewAll!,

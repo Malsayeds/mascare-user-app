@@ -48,17 +48,23 @@ class _state extends State<Splash>{
       // Phoenix.rebirth(context);
     });
     return Scaffold(
-      body: Column(
-        children: [
-          SizedBox(height: MediaQuery.of(context).size.height*.15),
-          Image.asset('assets/logo_user.png', scale: 3),
-          Image.asset('assets/hero_image.png'),
-          Spacer(),
-          Text("Please Wait Until App loading ",style: TextStyle(color: Theme.of(context).primaryColor,fontWeight: FontWeight.bold)),
-          SizedBox(height: 5,),
-          Text("من فضلك انتظر تحميل التطبيق ",style: TextStyle(color: Theme.of(context).primaryColor,fontWeight: FontWeight.bold),),
-          SizedBox(height: 30,)
-        ],
+      body: Container(
+        padding :EdgeInsets.only(
+          left: MediaQuery.of(context).size.width*.05,
+          right: MediaQuery.of(context).size.width*.05
+        ),
+        child: Column(
+          children: [
+            SizedBox(height: MediaQuery.of(context).size.height*.15),
+            Image.asset('assets/logo_user.png', scale: 3),
+            Image.asset('assets/hero_image.png'),
+            Spacer(),
+            Text("Please Wait Until App loading ",style: TextStyle(color: Theme.of(context).primaryColor,fontWeight: FontWeight.bold)),
+            SizedBox(height: 5,),
+            Text("من فضلك انتظر تحميل التطبيق ",style: TextStyle(color: Theme.of(context).primaryColor,fontWeight: FontWeight.bold),),
+            SizedBox(height: 30,)
+          ],
+        ),
       ),
     );
   }

@@ -1,9 +1,11 @@
 import 'package:animation_wrappers/Animations/faded_scale_animation.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
+import 'package:doctoworld_user/Features/BottomNavigation/Medicine/medicine_info.dart';
 import 'package:doctoworld_user/Features/Components/CustomCartIcon.dart';
 import 'package:doctoworld_user/Features/Components/custom_add_item_button.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
 import 'package:doctoworld_user/Provider/GlobalProvider.dart';
+import 'package:doctoworld_user/Provider/Product/ProductProvider.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -52,41 +54,17 @@ class MedicineInfo {
 class _MedicinesState extends State<Medicines> {
   @override
   Widget build(BuildContext context) {
-    List<MedicineInfo> _myItems = [
-      MedicineInfo(
-          'assets/Medicines/11.png', 'Salospir 100mg\nTablet', '3.50', true),
-      MedicineInfo(
-          'assets/Medicines/22.png', 'Xenical 120mg\nTablet', '3.00', false),
-      MedicineInfo('assets/Medicines/33.png', 'Allergy Relief\nTopcare Tablet',
-          '4.00', false),
-      MedicineInfo(
-          'assets/Medicines/44.png', 'Arber OTC\nTablet', '3.50', true),
-      MedicineInfo(
-          'assets/Medicines/55.png', 'Non Drosy\nLartin Tablet', '3.50', false),
-      MedicineInfo(
-          'assets/Medicines/66.png', 'Coricidin 100mg\nTablet', '3.50', true),
-      MedicineInfo(
-          'assets/Medicines/11.png', 'Salospir 100mg\nTablet', '3.50', true),
-      MedicineInfo(
-          'assets/Medicines/22.png', 'Xenical 120mg\nTablet', '3.00', false),
-      MedicineInfo('assets/Medicines/33.png', 'Allergy Relief\nTopcare Tablet',
-          '4.00', false),
-      MedicineInfo(
-          'assets/Medicines/44.png', 'Arber OTC\nTablet', '3.50', true),
-      MedicineInfo(
-          'assets/Medicines/55.png', 'Non Drosy\nLartin Tablet', '3.50', false),
-      MedicineInfo(
-          'assets/Medicines/66.png', 'Coricidin 100mg\nTablet', '3.50', true),
-    ];
+    var productProvider=Provider.of<ProductProvider>(context, listen: true);
     return Scaffold(
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+        height: MediaQuery.of(context).size.height,
         color: Theme.of(context).backgroundColor,
         child: GridView.builder(
             padding: EdgeInsets.symmetric(vertical: 6, horizontal: 6),
             physics: BouncingScrollPhysics(),
             shrinkWrap: true,
-            itemCount: _myItems.length,
+            itemCount: productProvider.productList.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: 0.8,
@@ -95,7 +73,10 @@ class _MedicinesState extends State<Medicines> {
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, PageRoutes.medicineInfo);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProductInfo(productDetailModel:productProvider.productList[index] ,)),
+                  );
                 },
                 child: Stack(
                   children: [
@@ -109,28 +90,27 @@ class _MedicinesState extends State<Medicines> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Stack(
-                            children: [
-                              FadedScaleAnimation(
-                                Image.asset(_myItems[index].image),
+                            FadedScaleAnimation(
+                                Image.network(productProvider.productList[index].image,
+                                height: MediaQuery.of(context).size.height*.135,
+                                width: MediaQuery.of(context).size.width*.3,
+                                fit: BoxFit.cover,
+                                ),
                                 durationInMilliseconds: 400,
                               ),
-                              _myItems[index].prescription
-                                  ? Align(
-                                      alignment: Alignment.topRight,
+                         /*     Align(
+                                      alignment: Alignment.center,
                                       child: FadedScaleAnimation(
-                                        Image.asset(
-                                          'assets/ic_prescription.png',
+                                        Image.network(
+                                          productProvider.productList[index].image,
                                           scale: 3,
                                         ),
                                         durationInMilliseconds: 400,
                                       ),
-                                    )
-                                  : SizedBox.shrink(),
-                            ],
-                          ),
+                                    )*/
+
                           Spacer(),
-                          Text(_myItems[index].name,textAlign: TextAlign.start,),
+                          Text(productProvider.productList[index].name,textAlign: TextAlign.start,),
                           SizedBox(height: 25,)
                         ],
                       ),
@@ -140,12 +120,12 @@ class _MedicinesState extends State<Medicines> {
                              alignment: Alignment.bottomRight,
                              child: Row(
                                children: [
-                                 CustomAddItemButton(),
+                                 CustomAddItemButton(product: productProvider.productList[index],),
                                  SizedBox(width: MediaQuery.of(context).size.width*.19,),
                                  Row(
                                    children: [
                                      Text(
-                                       '\$ ' + _myItems[index].price,
+                                       '\$ ' + productProvider.productList[index].price,
                                        style: Theme.of(context).textTheme.subtitle1,
                                      ),
                                    ],
