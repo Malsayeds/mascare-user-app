@@ -65,18 +65,18 @@ class Manufacturer {
 
   String name;
   dynamic logo;
-  DateTime createdAt;
+  String createdAt;
 
   factory Manufacturer.fromJson(Map<String, dynamic> json) => Manufacturer(
     name: json["name"],
     logo: json["logo"],
-    createdAt: DateTime.parse(json["created_at"]),
+    createdAt: json["created_at"],
   );
 
   Map<String, dynamic> toJson() => {
     "name": name,
     "logo": logo,
-    "created_at": "${createdAt.year.toString().padLeft(4, '0')}-${createdAt.month.toString().padLeft(2, '0')}-${createdAt.day.toString().padLeft(2, '0')}",
+    "created_at": createdAt,
   };
 }
 

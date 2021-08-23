@@ -1,4 +1,5 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
+import 'package:doctoworld_user/Features/Components/DialogMessages.dart';
 import 'package:doctoworld_user/Provider/Config.dart';
 import 'package:doctoworld_user/Provider/Doctor/DoctorProvider.dart';
 import 'package:doctoworld_user/Theme/colors.dart';
@@ -53,7 +54,14 @@ class _DoctorInfoScreenState extends State<DoctorInfoScreen> {
           Stack(
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: ()async {
+                 await  doctorProvider.addItemToWishlist(doctorProvider.doctorInfo.singleDoctor.id);
+                 if(doctorProvider.addToWishlist==200){
+                   DialogMessages.SuccessMessage(context, "This Docter Added To Wishlist");
+                 }else{
+                   DialogMessages.ErrorMessage(context, "This Docter Has Been Added Before To Wishlist");
+                 }
+                },
                 icon: Icon(Icons.bookmark_outline_outlined),
               )
             ],

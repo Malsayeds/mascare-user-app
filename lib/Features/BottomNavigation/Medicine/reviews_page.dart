@@ -1,8 +1,11 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
+import 'package:doctoworld_user/Provider/Config.dart';
+import 'package:doctoworld_user/Provider/Product/ProductProvider.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 class ReviewPage extends StatefulWidget {
   @override
@@ -23,26 +26,7 @@ class _ReviewPageState extends State<ReviewPage> {
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
-    List<ReviewDetail> _reviews = [
-      ReviewDetail('assets/ProfilePics/dp1.png', 'Ronny George',
-          locale.coldFever, 5.0, '20 Dec, 2019'),
-      ReviewDetail('assets/ProfilePics/dp2.png', 'Reena Roy', locale.headache,
-          4.0, '15 Dec, 2019'),
-      ReviewDetail('assets/ProfilePics/dp3.png', 'Herry Johnson',
-          locale.headache, 1.0, '02 Dec, 2019'),
-      ReviewDetail('assets/ProfilePics/dp1.png', 'Ronny George',
-          locale.coldFever, 5.0, '20 Dec, 2019'),
-      ReviewDetail('assets/ProfilePics/dp2.png', 'Reena Roy', locale.headache,
-          4.0, '15 Dec, 2019'),
-      ReviewDetail('assets/ProfilePics/dp3.png', 'Herry Johnson',
-          locale.headache, 1.0, '02 Dec, 2019'),
-      ReviewDetail('assets/ProfilePics/dp1.png', 'Ronny George',
-          locale.coldFever, 5.0, '20 Dec, 2019'),
-      ReviewDetail('assets/ProfilePics/dp2.png', 'Reena Roy', locale.headache,
-          4.0, '15 Dec, 2019'),
-      ReviewDetail('assets/ProfilePics/dp3.png', 'Herry Johnson',
-          locale.headache, 1.0, '02 Dec, 2019'),
-    ];
+    var productProvider=    Provider.of<ProductProvider>(context, listen: true);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -62,7 +46,7 @@ class _ReviewPageState extends State<ReviewPage> {
               title: Row(
                 children: [
                   Text(
-                    'Salospir 100mg Tablet',
+                   productProvider.reviews.name,
                     style: Theme.of(context)
                         .textTheme
                         .bodyText1!
@@ -80,7 +64,7 @@ class _ReviewPageState extends State<ReviewPage> {
                         width: 4,
                       ),
                       Text(
-                        '4.5',
+                        '${productProvider.reviews.avg}',
                         style: Theme.of(context)
                             .textTheme
                             .bodyText1!
@@ -112,7 +96,7 @@ class _ReviewPageState extends State<ReviewPage> {
             ),
             ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: _reviews.length,
+                itemCount: productProvider.reviews.reviews.length,
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   return Column(
@@ -124,19 +108,19 @@ class _ReviewPageState extends State<ReviewPage> {
                       ListTile(
                         leading: CircleAvatar(
                           radius: 18,
-                          backgroundImage: AssetImage(_reviews[index].image),
+                          backgroundImage: NetworkImage(productProvider.reviews.reviews[index].image==""?Config.user_defualt_image:productProvider.reviews.reviews[index].image),
                         ),
                         title: Row(
                           children: [
                             Text(
-                              _reviews[index].name,
+                              productProvider.reviews.reviews[index].username,
                               style: Theme.of(context).textTheme.bodyText1,
                             ),
                             Spacer(),
                             Row(
                               children: [
                                 Text(
-                                  _reviews[index].rating.toString(),
+                                  productProvider.reviews.reviews[index].rate.toString(),
                                   style: Theme.of(context)
                                       .textTheme
                                       .subtitle1!
@@ -147,7 +131,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                 ),
                                 Row(
                                   children: List.generate(
-                                    _reviews[index].rating.floor(),
+                                    productProvider.reviews.reviews[index].rate.floor(),
                                     (index) => Icon(
                                       Icons.star,
                                       size: 12,
@@ -157,7 +141,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                 ),
                                 Row(
                                   children: List.generate(
-                                    5 - _reviews[index].rating.floor(),
+                                    5 - productProvider.reviews.reviews[index].rate.floor(),
                                     (index) => Icon(
                                       Icons.star,
                                       size: 12,
@@ -169,7 +153,7 @@ class _ReviewPageState extends State<ReviewPage> {
                             ),
                           ],
                         ),
-                        subtitle: Row(
+                    /*    subtitle: Row(
                           children: [
                             RichText(
                                 text: TextSpan(children: <TextSpan>[
@@ -193,20 +177,19 @@ class _ReviewPageState extends State<ReviewPage> {
                             ])),
                             Spacer(),
                             Text(
-                              '20 Dec, 2020',
+                              productProvider.reviews.reviews[index].date,
                               style: Theme.of(context)
                                   .textTheme
                                   .subtitle2!
                                   .copyWith(fontSize: 10),
                             )
                           ],
-                        ),
+                        ),*/
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
                             left: 20.0, right: 20.0, bottom: 10.0),
-                        child: Text(
-                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'),
+                        child: Text(productProvider.reviews.reviews[index].review),
                       )
                     ],
                   );

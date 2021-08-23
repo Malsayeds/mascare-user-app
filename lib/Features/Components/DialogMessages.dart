@@ -63,7 +63,7 @@ class DialogMessages{
                       ),
 
                       SizedBox(height: 10,),
-                      Text(message,maxLines:3,overflow: TextOverflow.ellipsis,style: TextStyle(color: Colors.red,fontSize: 14,fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
+                      Text(message,maxLines:3,overflow: TextOverflow.ellipsis,style: TextStyle(color: Colors.black,fontSize: 14,fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
                       // Text("${title}",textAlign: TextAlign.center,)
                     ],
                   )),

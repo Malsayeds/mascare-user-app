@@ -56,7 +56,7 @@ class _MedicinesState extends State<Medicines> {
   Widget build(BuildContext context) {
     var productProvider=Provider.of<ProductProvider>(context, listen: true);
     return Scaffold(
-      body: Container(
+      body:productProvider.productList.length==0?Center(child: Text("No Medicines Found ! ",style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Colors.black),),): Container(
         padding: EdgeInsets.symmetric(horizontal: 6, vertical: 6),
         height: MediaQuery.of(context).size.height,
         color: Theme.of(context).backgroundColor,
@@ -121,7 +121,7 @@ class _MedicinesState extends State<Medicines> {
                              child: Row(
                                children: [
                                  CustomAddItemButton(product: productProvider.productList[index],),
-                                 SizedBox(width: MediaQuery.of(context).size.width*.19,),
+                                 Expanded(child: SizedBox()),
                                  Row(
                                    children: [
                                      Text(

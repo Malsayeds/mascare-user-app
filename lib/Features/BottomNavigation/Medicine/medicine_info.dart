@@ -36,8 +36,13 @@ class _ProductInfoState extends State<ProductInfo> {
         actions: [
           IconButton(
               icon: Icon(saved),
-              onPressed: () {
-                productProvider.addItemToWishlist(productDetailModel.id);
+              onPressed: ()async {
+                await  productProvider.addItemToWishlist(productDetailModel.id);
+                if(productProvider.addWishlist==200){
+                  DialogMessages.SuccessMessage(context, "This Medicine Added To Wishlist");
+                }else{
+                  DialogMessages.ErrorMessage(context, "This Medicine Has Been Added Before To Wishlist");
+                }
               }),
           IconButton(
               icon: Icon(Icons.shopping_cart),
@@ -100,9 +105,9 @@ class _ProductInfoState extends State<ProductInfo> {
                               ),
                               Spacer(),
                               GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                        context, PageRoutes.reviewsPage);
+                                  onTap: () async{
+                                   await productProvider.getReviews(productDetailModel.id);
+                                   Navigator.pushNamed(context, PageRoutes.reviewsPage);
                                   },
                                   child: Text(
                                     locale.readAll! + ' ${productDetailModel.review.count}  ' + locale.reviews!,

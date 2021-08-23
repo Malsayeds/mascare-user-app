@@ -110,7 +110,7 @@ class _DoctorsListScreenState extends State<DoctorsListScreen> {
       body: isLoading ? Center(
         child: CircularProgressIndicator.adaptive(),) : doctorSpeialistProvider
           .doctors.isEmpty ? Center(
-        child: Text('No Data'),
+        child: Text('No Doctors Found ! ',style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Colors.black)),
       ) : FadedSlideAnimation(
         Container(
           child: ListView(

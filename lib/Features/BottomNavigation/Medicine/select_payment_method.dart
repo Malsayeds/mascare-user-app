@@ -1,8 +1,10 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
+import 'package:doctoworld_user/Provider/Product/ProductProvider.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ChoosePaymentMethod extends StatefulWidget {
   @override
@@ -18,15 +20,24 @@ class PaymentType {
 
 class _ChoosePaymentMethodState extends State<ChoosePaymentMethod> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getPaymentMethod();
+  }
+  var loading=true;
+  Future<void>getPaymentMethod()async{
+    await Provider.of<ProductProvider>(context, listen: false).getPaymentMethod();
+    print("ddddddddddddddddddddddd");
+    setState(() {
+      loading=false;
+    });
+    print("afterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
+  }
+  @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
-    List<PaymentType> paymentModes = [
-      PaymentType('', locale.wallet),
-      PaymentType('assets/PaymentIcons/payment_cod.png', locale.cashOnDelivery),
-      PaymentType('assets/PaymentIcons/payment_paypal.png', locale.payPal),
-      PaymentType('assets/PaymentIcons/payment_payu.png', locale.payUMoney),
-      PaymentType('assets/PaymentIcons/payment_stripe.png', locale.stripe),
-    ];
+    var productProvider=Provider.of<ProductProvider>(context, listen: true);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -35,7 +46,7 @@ class _ChoosePaymentMethodState extends State<ChoosePaymentMethod> {
           style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 18),
         ),
       ),
-      body: FadedSlideAnimation(
+      body:loading?Center(child: CircularProgressIndicator.adaptive(),): FadedSlideAnimation(
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -63,7 +74,7 @@ class _ChoosePaymentMethodState extends State<ChoosePaymentMethod> {
               ),
             ),
             ListView.builder(
-                itemCount: 5,
+                itemCount: productProvider.paymentMethodList.length,
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
@@ -71,30 +82,19 @@ class _ChoosePaymentMethodState extends State<ChoosePaymentMethod> {
                     children: [
                       ListTile(
                         onTap: () {
-                          Navigator.pushNamed(
-                              context, PageRoutes.orderPlacedPage);
+                          Navigator.pushNamed(context, PageRoutes.orderPlacedPage);
                         },
                         contentPadding:
                             EdgeInsets.symmetric(horizontal: 16, vertical: 7),
-                        leading: index == 0
-                            ? CircleAvatar(
-                                backgroundColor: Colors.grey[50],
-                                child: Icon(
-                                  Icons.credit_card,
-                                  size: 20,
-                                  color: Colors.lightGreen,
-                                ))
-                            : FadedScaleAnimation(
-                                Image.asset(
-                                  paymentModes[index].icon,
+                        leading:  FadedScaleAnimation(
+                                Image.network(
+                                  productProvider.paymentMethodList[index].logo,
                                   scale: 3,
                                 ),
                                 durationInMilliseconds: 400,
                               ),
                         title: Text(
-                          index == 0
-                              ? locale.wallet!
-                              : paymentModes[index].title!,
+                           productProvider.paymentMethodList[index].name,
                           style: Theme.of(context).textTheme.subtitle1,
                         ),
                       ),

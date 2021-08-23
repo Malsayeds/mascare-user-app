@@ -16,6 +16,7 @@ class DoctorProvider with ChangeNotifier {
   List<DoctorModel>doctors=[];
   late DoctorInfoModel doctorInfo;
  late AvailableTimeModel  times;
+int addToWishlist=0;
  List<SearchDoctorModel>searchDoctorList=[];
 late MyAppointmentModel myAppointment;
   late Map<String,dynamic>appointInfo;
@@ -241,6 +242,47 @@ late MyAppointmentModel myAppointment;
         doctors= slideritems.map((e) => DoctorModel.fromJson(e)).toList();
         print(doctors.length);
         print("doctor_length");
+        notifyListeners();
+      }
+    }
+    catch(e)
+    {
+      print(e);
+    }
+  }
+  Future<void> addItemToWishlist(var single_medicine_id) async{
+    String url=Config.base_url+"/doctor-wishlist";
+    print(url);
+    var body={
+      "single_doctor_id" : single_medicine_id.toString(),
+    };
+    print(body);
+    var header=await Config.getHeader();
+    try{
+      final responce=await http.post(Uri.parse(url),body:body,headers: header);
+      print(responce.body);
+      if(responce.body.isNotEmpty)
+      {
+        addToWishlist=responce.statusCode;
+        notifyListeners();
+      }
+    }
+    catch(e) {
+      print(e.toString());
+    }
+  }
+  Future<void>getWishlist()async {
+    var url=Config.base_url+"/doctor-wishlist";
+    print(url);
+    var header=await Config.getHeader();
+    try
+    {
+      final response = await http.get(Uri.parse(url),headers: header);
+      print(response.body);
+      if(response.statusCode==200 && response.body!=null)
+      {
+        List slideritems = json.decode(utf8.decode(response.bodyBytes));
+        doctors= slideritems.map((e) => DoctorModel.fromJson(e)).toList();
         notifyListeners();
       }
     }

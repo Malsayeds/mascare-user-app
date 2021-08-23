@@ -3,7 +3,10 @@ import 'package:doctoworld_user/Features/BottomNavigation/Doctors/list_of_doctor
 import 'package:doctoworld_user/Features/BottomNavigation/Medicine/medicines.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/hospitals_page.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
+import 'package:doctoworld_user/Provider/Doctor/DoctorProvider.dart';
+import 'package:doctoworld_user/Provider/Product/ProductProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SavedPage extends StatefulWidget {
   @override
@@ -12,11 +15,21 @@ class SavedPage extends StatefulWidget {
 
 class _SavedPageState extends State<SavedPage> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getWishlist();
+  }
+  Future<void>getWishlist()async{
+    Provider.of<ProductProvider>(context, listen: false).getWishlist();
+    Provider.of<DoctorProvider>(context, listen: false).getWishlist();
+  }
+  @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
 
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
           title: Text(locale.saved!),
@@ -30,7 +43,7 @@ class _SavedPageState extends State<SavedPage> {
             tabs: [
               Tab(text: locale.medicine),
               Tab(text: locale.doctors),
-              Tab(text: locale.hospitals),
+            //  Tab(text: locale.hospitals),
             ],
           ),
         ),
@@ -48,12 +61,12 @@ class _SavedPageState extends State<SavedPage> {
               endOffset: Offset(0, 0),
               slideCurve: Curves.linearToEaseOut,
             ),
-            FadedSlideAnimation(
+           /* FadedSlideAnimation(
               HospitalsList(),
               beginOffset: Offset(0, 0.3),
               endOffset: Offset(0, 0),
               slideCurve: Curves.linearToEaseOut,
-            ),
+            ),*/
           ],
         ),
       ),

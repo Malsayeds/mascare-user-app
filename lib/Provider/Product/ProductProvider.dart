@@ -5,7 +5,9 @@ import 'dart:convert';
 
 import 'package:doctoworld_user/Models/Medicine/CartModel.dart';
 import 'package:doctoworld_user/Models/Medicine/CategoryModel.dart';
+import 'package:doctoworld_user/Models/Medicine/PaymentMethodModel.dart';
 import 'package:doctoworld_user/Models/Medicine/ProductModel.dart';
+import 'package:doctoworld_user/Models/Medicine/ReviewModel.dart';
 import 'package:doctoworld_user/Provider/Config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart'as http;
@@ -14,9 +16,11 @@ List<ProductDetailModel>productList=[];
 List<ProductDetailModel>searchProductList=[];
 List<CartModel>cartItem=[];
 List<CategoryModel>CategoryList=[];
+late ReviewsModel reviews;
 Map<String,dynamic>UpdateCart={};
 Map<String,dynamic>remove={};
-Map<String,dynamic>addWishlist={};
+int addWishlist=0;
+List<PaymentMethodModel>paymentMethodList=[];
 Future<void>getProductByCategory(int id)async {
     var url=Config.base_url+"/medicine-categories/$id";
     var uri;
@@ -45,6 +49,7 @@ Future<void>getCategories()async {
   try
   {
     final response = await http.get(Uri.parse(url),headers: header);
+    print(response.body);
     if(response.statusCode==200 && response.body!=null)
     {
       List slideritems = json.decode(utf8.decode(response.bodyBytes));
@@ -152,12 +157,71 @@ Future<void> addItemToWishlist(var single_medicine_id) async{
     print(responce.body);
     if(responce.body.isNotEmpty)
     {
-      UpdateCart=json.decode(responce.body);
+      addWishlist=responce.statusCode;
       notifyListeners();
     }
   }
   catch(e) {
     print(e.toString());
+  }
+}
+Future<void>getWishlist()async {
+  var url=Config.base_url+"/wishlist";
+  print(url);
+  var header=await Config.getHeader();
+  try
+  {
+    final response = await http.get(Uri.parse(url),headers: header);
+    print(response.body);
+    if(response.statusCode==200 && response.body!=null)
+    {
+      List slideritems = json.decode(utf8.decode(response.bodyBytes));
+      productList= slideritems.map((e) => ProductDetailModel.fromJson(e)).toList();
+      notifyListeners();
+    }
+  }
+  catch(e)
+  {
+    print(e);
+  }
+}
+Future<void>getReviews(int id)async {
+  var url=Config.base_url+"/medicine/${id}/reviews";
+  print(url);
+  var header=await Config.getHeader();
+  try
+  {
+    final response = await http.get(Uri.parse(url),headers: header);
+    print(response.body);
+    if(response.statusCode==200 && response.body!=null)
+    {
+      reviews=ReviewsModel.fromJson(json.decode(response.body)["medicine"]);
+      print(reviews);
+      notifyListeners();
+    }
+  }
+  catch(e)
+  {
+    print(e);
+  }
+}
+Future<void>getPaymentMethod()async {
+  var url=Config.base_url+"/payment-methods";
+  print(url);
+  var header=await Config.getHeader();
+  try
+  {
+    final response = await http.get(Uri.parse(url),headers: header);
+    if(response.statusCode==200 && response.body!=null)
+    {
+      List slideritems = json.decode(utf8.decode(response.bodyBytes));
+      paymentMethodList= slideritems.map((e) => PaymentMethodModel.fromJson(e)).toList();
+      notifyListeners();
+    }
+  }
+  catch(e)
+  {
+    print(e);
   }
 }
 
