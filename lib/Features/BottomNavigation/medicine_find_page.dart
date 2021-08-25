@@ -28,7 +28,8 @@ class FindMedicine extends StatefulWidget {
 }
 
 class _FindMedicineState extends State<FindMedicine> {
-  bool loading =true;
+  bool loading=true;
+  bool loadingCategory=false;
   @override
   void initState() {
     // TODO: implement initState
@@ -142,9 +143,15 @@ class _FindMedicineState extends State<FindMedicine> {
                 itemCount: productProvider.CategoryList.length,
                 itemBuilder: (context, index) {
                   return InkWell(
-                    onTap: () {
-                      getProductByCategory(productProvider.CategoryList[index].id);
+                    onTap: () async{
+                      setState(() {
+                        loadingCategory=true;
+                      });
+                     await  getProductByCategory(productProvider.CategoryList[index].id);
                        Navigator.pushNamed(context, PageRoutes.medicines);
+                      setState(() {
+                        loadingCategory=false;
+                      });
                     },
                     child: Container(
                       height: 124,
@@ -155,7 +162,7 @@ class _FindMedicineState extends State<FindMedicine> {
                         image: DecorationImage(
                           image: NetworkImage(productProvider.CategoryList[index].image)
                         ),
-                        color: Theme.of(context).primaryColor
+                        color: loadingCategory?Colors.black12:Theme.of(context).primaryColor
                       ),
                       child: FadedScaleAnimation(
                         Text(productProvider.CategoryList[index].name,style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Colors.white,fontSize: 14

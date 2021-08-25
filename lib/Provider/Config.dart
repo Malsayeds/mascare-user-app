@@ -12,4 +12,12 @@ class Config{
    var header={ "Authorization":"Bearer "+pref.getString("token")!};
    return header;
  }
+  static Future<Map<String,String>>getHeaderWithjson()async{
+    SharedPreferences pref=await SharedPreferences.getInstance();
+    var header={
+      "Content-Type":"application/json",
+      "Authorization":"Bearer "+pref.getString("token")!
+    };
+    return header;
+  }
 }

@@ -1,7 +1,11 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
+import 'package:doctoworld_user/Features/Components/DialogMessages.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
+import 'package:doctoworld_user/Provider/GlobalProvider.dart';
+import 'package:doctoworld_user/Provider/Product/CartProvider.dart';
 import 'package:doctoworld_user/Provider/Product/ProductProvider.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
+import 'package:doctoworld_user/Stroage/DbHelper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -38,6 +42,7 @@ class _ChoosePaymentMethodState extends State<ChoosePaymentMethod> {
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
     var productProvider=Provider.of<ProductProvider>(context, listen: true);
+    var cartProvider=Provider.of<CartProvider>(context, listen: true);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -81,8 +86,17 @@ class _ChoosePaymentMethodState extends State<ChoosePaymentMethod> {
                   return Column(
                     children: [
                       ListTile(
-                        onTap: () {
+                        onTap: ()async {
+                          DbHelper db=new DbHelper();
+                         await cartProvider.makeOrder(productProvider.paymentMethodList[index].id);
+                         if(cartProvider.successOrder==201)
+                        {
+                          db.deleteCart();
+                          Provider.of<GlobalProvider>(context, listen: false).setcounter();
                           Navigator.pushNamed(context, PageRoutes.orderPlacedPage);
+                        }
+                         else
+                           DialogMessages.ErrorMessage(context, "Error In Order");
                         },
                         contentPadding:
                             EdgeInsets.symmetric(horizontal: 16, vertical: 7),

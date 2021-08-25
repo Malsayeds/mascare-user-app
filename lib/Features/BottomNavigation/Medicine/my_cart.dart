@@ -2,7 +2,9 @@ import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:doctoworld_user/Features/Components/DialogMessages.dart';
 import 'package:doctoworld_user/Features/Components/custom_button.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
+import 'package:doctoworld_user/Models/Medicine/CartItemModel.dart';
 import 'package:doctoworld_user/Provider/GlobalProvider.dart';
+import 'package:doctoworld_user/Provider/Product/CartProvider.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:doctoworld_user/Stroage/DbHelper.dart';
 import 'package:doctoworld_user/Stroage/Model/CartModelLocal.dart';
@@ -48,14 +50,6 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
     // bool _isPromoApplied = false;
-    List<Product> items = [
-      Product("assets/Medicines/11.png", 'Salospir 100mg Tablet',
-          'Operum England', '\$32.00'),
-      Product("assets/Medicines/22.png", 'Non Drosy Laritin Tablet',
-          'Operum England', '\$44.00'),
-      Product("assets/Medicines/33.png", 'Xenical 120mg Tablet',
-          'Operum England', '\$14.00'),
-    ];
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -232,7 +226,7 @@ class _CartPageState extends State<CartPage> {
                                                         textAlign: TextAlign.right,
                                                         style:
                                                         Theme.of(context).textTheme.subtitle1),
-                                                    SizedBox(width: 10,)
+                                                    SizedBox(width: 0,)
                                                   ],
                                                 )
                                               ],
@@ -336,11 +330,21 @@ class _CartPageState extends State<CartPage> {
                     ),
                     CustomButton(
                       onTap: () {
-                        showDialog(
+                        List Items=[];
+                        List<Map<String,dynamic>>list2=[];
+                        for(int i=0;i<dataLocal.length;i++){
+                          CartMedelLocal c=new CartMedelLocal.fromMap(dataLocal[i]);
+                          CartItemModel a=new CartItemModel(medicine_id: c.id, price: c.price, quantity: c.quantity);
+                          Items.add(a.toJson());
+                        }
+                        Provider.of<CartProvider>(context, listen: false).setItems(Items);
+                        Provider.of<CartProvider>(context, listen: false).setTotal(allPrice);
+                        Navigator.pushNamed(context, PageRoutes.confirmOrderPage);
+                    /*    showDialog(
                           context: context,
                           builder: (BuildContext context) =>
                               _prescriptionRequired(context),
-                        );
+                        );*/
                       },
                       radius: 0,
                       label: locale.checkout,

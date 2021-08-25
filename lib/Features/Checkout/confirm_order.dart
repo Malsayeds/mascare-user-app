@@ -1,9 +1,13 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
+import 'package:doctoworld_user/Features/Components/DialogMessages.dart';
 import 'package:doctoworld_user/Features/Components/custom_button.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
+import 'package:doctoworld_user/Provider/LocationProvider.dart';
+import 'package:doctoworld_user/Provider/Product/CartProvider.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ConfirmOrder extends StatefulWidget {
   @override
@@ -20,18 +24,25 @@ class CartItem {
 }
 
 class _ConfirmOrderState extends State<ConfirmOrder> {
+  var loading =true;
+  int selectAddressId=0;
+  getAddress()async{
+    await Provider.of<LocationProvider>(context, listen: false).getAddresses();
+    setState(() {
+      loading=false;
+    });
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getAddress();
+  }
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
-    List<CartItem> cartItems = [
-      CartItem('Salospir 100mg Tablet', 2, '6.00', false),
-      CartItem('Non Drosy Laritin Tablet', 1, '8.00', true),
-      CartItem('Xenical 120mg Tablet', 1, '4.00', true),
-      CartItem('Non Drosy Laritin Tablet', 1, '8.00', true),
-      CartItem('Xenical 120mg Tablet', 1, '4.00', true),
-      CartItem('Non Drosy Laritin Tablet', 1, '8.00', true),
-      CartItem('Xenical 120mg Tablet', 1, '4.00', true),
-    ];
+    var cartProvider=Provider.of<CartProvider>(context, listen: false);
+    var addressProvider=Provider.of<LocationProvider>(context, listen: true);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -40,7 +51,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
           style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 18),
         ),
       ),
-      body: FadedSlideAnimation(
+      body: loading?Center(child: CircularProgressIndicator.adaptive(),):FadedSlideAnimation(
         Stack(
           children: [
             ListView(
@@ -53,27 +64,44 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                   height: 6,
                 ),
                 buildCustomContainer(context, locale.deliveryAt!),
-                ListTile(
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                  leading: Icon(
-                    Icons.home,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  title: Text(
-                    locale.home! + '\n',
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle1!
-                        .copyWith(height: 0.6),
-                  ),
-                  subtitle: Text(
-                    '14134, Silver Green Street, 2nd Avenue,\nHamiltone,New York, USA',
-                    style: Theme.of(context).textTheme.subtitle2,
-                  ),
-                ),
-                buildCustomContainer(context, locale.itemsInCart!),
-                ListView.builder(
+                 ListView.builder(
+                 shrinkWrap: true,
+                 primary: false,
+                 itemCount: addressProvider.addresseslist.length,
+                 itemBuilder: (context,index){
+                   return  Container(
+                     decoration: BoxDecoration(
+                       color:selectAddressId==addressProvider.addresseslist[index].id? Colors.black12:Colors.white
+                     ),
+                     child: ListTile(
+                       onTap: (){
+                         cartProvider.setAddressId(addressProvider.addresseslist[index].id);
+                         setState(() {
+                           selectAddressId=addressProvider.addresseslist[index].id;
+                         });
+                       },
+                       contentPadding:
+                       EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                       leading: Icon(
+                         addressProvider.addresseslist[index].name=="Home"?Icons.home:addressProvider.addresseslist[index].name=="Office"?Icons.business:Icons.assistant,
+                         color: Theme.of(context).primaryColor,
+                       ),
+                       title: Text(
+                         addressProvider.addresseslist[index].name + '\n',
+                         style: Theme.of(context)
+                             .textTheme
+                             .subtitle1!
+                             .copyWith(height: 0.6),
+                       ),
+                       subtitle: Text(
+                         addressProvider.addresseslist[index].detailedAddress,
+                         style: Theme.of(context).textTheme.subtitle2,
+                       ),
+                     ),
+                   );
+                 })
+               /* buildCustomContainer(context, locale.itemsInCart!),*/
+                /*ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: cartItems.length,
                     shrinkWrap: true,
@@ -129,8 +157,8 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                           ],
                         ),
                       );
-                    }),
-                Divider(
+                    }),*/
+             /*   Divider(
                   thickness: 6,
                   height: 6,
                   color: Theme.of(context).backgroundColor,
@@ -156,7 +184,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                 ),
                 SizedBox(
                   height: 200,
-                ),
+                ),*/
               ],
             ),
             Align(
@@ -171,7 +199,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                           horizontal: 12.0, vertical: 8),
                       child: Column(
                         children: [
-                          buildAmountRow(context, locale.subTotal!, '18.0'),
+                          buildAmountRow(context, locale.subTotal!, cartProvider.total.toString()),
                           buildAmountRow(
                               context, locale.promoCodeApplied!, '-2.0'),
                           buildAmountRow(context, locale.serviceCharge!, '4.0'),
@@ -183,8 +211,13 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                       radius: 0,
                       label: locale.continueToPay,
                       onTap: () {
-                        Navigator.pushNamed(
-                            context, PageRoutes.choosePaymentMethod);
+                     if(selectAddressId!=0){
+                       Navigator.pushNamed(
+                           context, PageRoutes.choosePaymentMethod);
+                     }
+                     else{
+                       DialogMessages.ErrorMessage(context, "Please Select Delivery Address");
+                     }
                       },
                     ),
                   ],

@@ -8,8 +8,7 @@ class GlobalProvider with ChangeNotifier {
   int  counter = 0;
   int getCounter(){
     return this.counter;
-  }
-  Future<void>setcounter()async{
+  }  Future<void>setcounter()async{
     DbHelper db =new DbHelper();
    List dataLocal=await db.allProduct();
    this.counter =dataLocal.length;

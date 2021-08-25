@@ -1,23 +1,51 @@
 // To parse this JSON data, do
 //
-//     final productDetailModel = productDetailModelFromJson(jsonString);
+//     final productModel = productModelFromJson(jsonString);
 
 import 'dart:convert';
 
-List<ProductDetailModel> productDetailModelFromJson(String str) => List<ProductDetailModel>.from(json.decode(str).map((x) => ProductDetailModel.fromJson(x)));
+ProductModel productModelFromJson(String str) => ProductModel.fromJson(json.decode(str));
 
-String productDetailModelToJson(List<ProductDetailModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String productModelToJson(ProductModel data) => json.encode(data.toJson());
+
+class ProductModel {
+  ProductModel({
+    required this.id,
+    required  this.name,
+    required this.image,
+    required this.productDetailModel,
+  });
+
+  int id;
+  String name;
+  String image;
+  List<ProductDetailModel> productDetailModel;
+
+  factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
+    id: json["id"],
+    name: json["name"],
+    image: json["image"],
+    productDetailModel: List<ProductDetailModel>.from(json["ProductDetailModel"].map((x) => ProductDetailModel.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "name": name,
+    "image": image,
+    "ProductDetailModel": List<dynamic>.from(productDetailModel.map((x) => x.toJson())),
+  };
+}
 
 class ProductDetailModel {
   ProductDetailModel({
     required  this.id,
     required  this.name,
-    required  this.price,
+    required this.price,
     required  this.packing,
-    required this.category,
-    required this.type,
-    required this.manufacturer,
-    required this.review,
+    required  this.category,
+    required  this.type,
+    required  this.manufacturer,
+    required  this.review,
     required  this.image,
   });
 
@@ -58,13 +86,13 @@ class ProductDetailModel {
 
 class Manufacturer {
   Manufacturer({
-    required this.name,
-    required this.logo,
+    required  this.name,
+    required  this.logo,
     required this.createdAt,
   });
 
   String name;
-  dynamic logo;
+  String logo;
   String createdAt;
 
   factory Manufacturer.fromJson(Map<String, dynamic> json) => Manufacturer(
@@ -82,16 +110,16 @@ class Manufacturer {
 
 class Review {
   Review({
-    required this.count,
-    required this.avg,
+    required  this.count,
+    required  this.avg,
   });
 
   int count;
-  double avg;
+  dynamic? avg;
 
   factory Review.fromJson(Map<String, dynamic> json) => Review(
     count: json["count"],
-    avg: json["avg"].toDouble(),
+    avg: json["avg"],
   );
 
   Map<String, dynamic> toJson() => {

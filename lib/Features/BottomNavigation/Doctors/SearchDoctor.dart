@@ -27,27 +27,9 @@ class _state extends State<SearchDoctor>{
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context);
-    List<SearchDoctorTile> searchList = [
-      SearchDoctorTile('assets/Doctors/doc1.png', 'Dr. Joseph Williamson',
-          'Cardiac Surgeon', 'Apple Hospital', '22', '30', '152'),
-      SearchDoctorTile('assets/Doctors/doc2.png', 'Dr. Anglina Taylor',
-          'Cardiac Surgeon', 'Operum Clinics', '22', '30', '201'),
-      SearchDoctorTile('assets/Doctors/doc3.png', 'Dr. Anthony Peterson',
-          'Cardiac Surgeon', 'Opus Hospital', '22', '30', '135'),
-      SearchDoctorTile('assets/Doctors/doc4.png', 'Dr. Elina George',
-          'Cardiac Surgeon', 'Lismuth Hospital', '22', '30', '438'),
-      SearchDoctorTile('assets/Doctors/doc1.png', 'Dr. Joseph Williamson',
-          'Cardiac Surgeon', 'Apple Hospital', '22', '30', '152'),
-      SearchDoctorTile('assets/Doctors/doc2.png', 'Dr. Anglina Taylor',
-          'Cardiac Surgeon', 'Operum Clinics', '22', '30', '201'),
-      SearchDoctorTile('assets/Doctors/doc3.png', 'Dr. Anthony Peterson',
-          'Cardiac Surgeon', 'Opus Hospital', '22', '30', '135'),
-      SearchDoctorTile('assets/Doctors/doc4.png', 'Dr. Elina George',
-          'Cardiac Surgeon', 'Lismuth Hospital', '22', '30', '438'),
-    ];
     return SafeArea(
       child: Scaffold(
-          body: Container(
+     /*     body: Container(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -142,7 +124,7 @@ class _state extends State<SearchDoctor>{
                                                     .disabledColor,
                                                 fontSize: 12),),
                                         ),
-                                        /*    Container(
+                                        *//*    Container(
                                     width: MediaQuery.of(context).size.width*.7,
 
                                     child: RichText(
@@ -186,7 +168,7 @@ class _state extends State<SearchDoctor>{
                                                     fontSize: 12),
                                           ),
                                         ])),
-                                  ),*/
+                                  ),*//*
                                         SizedBox(
                                           height: 15,
                                         ),
@@ -274,7 +256,7 @@ class _state extends State<SearchDoctor>{
                           ],
                         );
 
-                        /*ListTile(
+                        *//*ListTile(
                   contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                   leading: Image.asset('assets/Doctors/doc1.png', height: 100,),
                   title: RichText( text: TextSpan(style: Theme.of(context).textTheme.subtitle2, children: <TextSpan>[
@@ -304,14 +286,14 @@ class _state extends State<SearchDoctor>{
                       print(rating);
                     })
                   ],),
-                );*/
+                );*//*
                       },
                     ),
                   ),
                 )
               ],
             ),
-          )
+          )*/
       ),
     );
   }

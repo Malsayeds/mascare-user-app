@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:geocoding/geocoding.dart' as geocode;
 import 'package:http/http.dart'as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'Config.dart';
 
 class LocationProvider with ChangeNotifier {
@@ -66,7 +67,7 @@ class LocationProvider with ChangeNotifier {
 
   Future<void> getCurrentLocation() async {
     Location location = Location();
-
+     SharedPreferences pref=await SharedPreferences.getInstance();
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
     LocationData _locationData;
@@ -91,7 +92,7 @@ class LocationProvider with ChangeNotifier {
     this.lat = _locationData.latitude!;
     this.long = _locationData.longitude!;
     List<geocode.Placemark> placemarks =
-        await geocode.placemarkFromCoordinates(this.lat, this.long);
+        await geocode.placemarkFromCoordinates(this.lat, this.long,localeIdentifier: pref.getString("lang"));
     this.address = placemarks[0].country! + " " + placemarks[0].street!;
     this.makeMarker();
     notifyListeners();

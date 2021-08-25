@@ -32,24 +32,6 @@ class _SearchDoctorsState extends State<SearchDoctors> {
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
     var doctorProvider=Provider.of<DoctorProvider>(context, listen: true);
-    List<SearchDoctorTile> searchList = [
-      SearchDoctorTile('assets/Doctors/doc1.png', 'Dr. Joseph Williamson',
-          'Cardiac Surgeon', 'Apple Hospital', '22', '30', '152'),
-      SearchDoctorTile('assets/Doctors/doc2.png', 'Dr. Anglina Taylor',
-          'Cardiac Surgeon', 'Operum Clinics', '22', '30', '201'),
-      SearchDoctorTile('assets/Doctors/doc3.png', 'Dr. Anthony Peterson',
-          'Cardiac Surgeon', 'Opus Hospital', '22', '30', '135'),
-      SearchDoctorTile('assets/Doctors/doc4.png', 'Dr. Elina George',
-          'Cardiac Surgeon', 'Lismuth Hospital', '22', '30', '438'),
-      SearchDoctorTile('assets/Doctors/doc1.png', 'Dr. Joseph Williamson',
-          'Cardiac Surgeon', 'Apple Hospital', '22', '30', '152'),
-      SearchDoctorTile('assets/Doctors/doc2.png', 'Dr. Anglina Taylor',
-          'Cardiac Surgeon', 'Operum Clinics', '22', '30', '201'),
-      SearchDoctorTile('assets/Doctors/doc3.png', 'Dr. Anthony Peterson',
-          'Cardiac Surgeon', 'Opus Hospital', '22', '30', '135'),
-      SearchDoctorTile('assets/Doctors/doc4.png', 'Dr. Elina George',
-          'Cardiac Surgeon', 'Lismuth Hospital', '22', '30', '438'),
-    ];
     return Scaffold(
       body: FadedSlideAnimation(
         ListView(
@@ -59,7 +41,7 @@ class _SearchDoctorsState extends State<SearchDoctors> {
             Padding(
               padding: const EdgeInsets.only(top: 20.0, left: 14, right: 14),
               child: TextFormField(
-                initialValue: 'Surgeon',
+                initialValue: '',
                 onChanged: (val){
                   doctorProvider.seachDoctor(val);
                 },
@@ -116,7 +98,7 @@ class _SearchDoctorsState extends State<SearchDoctors> {
                             children: [
                               FadedScaleAnimation(
                                 Image.network(
-                                  doctorProvider.searchDoctorList[index].user.image==null?Config.doctor_defualt_image:doctorProvider.searchDoctorList[index].user.image,
+                                  doctorProvider.searchDoctorList[index].user.image==""?Config.doctor_defualt_image:doctorProvider.searchDoctorList[index].user.image,
                                   height: MediaQuery.of(context).size.height*.15,
                                   width: MediaQuery.of(context).size.width*.21,
                                 ),
@@ -183,7 +165,7 @@ class _SearchDoctorsState extends State<SearchDoctors> {
                                                 fontSize: 12),
                                       ),
                                       Text(
-                                        doctorProvider.searchDoctorList[index].experience +
+                                        doctorProvider.searchDoctorList[index].exprience +
                                             locale.years!,
                                         style: Theme.of(context)
                                             .textTheme

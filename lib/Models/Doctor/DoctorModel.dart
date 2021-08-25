@@ -34,15 +34,15 @@ class DoctorModel {
   String contactNumber;
   String qualtification;
   String fees;
-  dynamic detailedAddress;
-  dynamic about;
+  dynamic? detailedAddress;
+  dynamic? about;
   DateTime createdAt;
   DateTime updatedAt;
-  dynamic deletedAt;
+  dynamic? deletedAt;
   int userId;
-  int areaId;
+  dynamic? areaId;
   int reviewsCount;
-  double reviewsAvgRate;
+  var reviewsAvgRate;
   User user;
 
   factory DoctorModel.fromJson(Map<String, dynamic> json) => DoctorModel(
@@ -56,11 +56,11 @@ class DoctorModel {
     about: json["about"]??"",
     createdAt: DateTime.parse(json["created_at"]),
     updatedAt: DateTime.parse(json["updated_at"]),
-    deletedAt: json["deleted_at"],
+    deletedAt: json["deleted_at"]??"",
     userId: json["user_id"],
-    areaId: json["area_id"]??"",
+    areaId: json["area_id"]??0,
     reviewsCount: json["reviews_count"],
-    reviewsAvgRate: json["reviews_avg_rate"].toDouble(),
+    reviewsAvgRate:json["reviews_avg_rate"]==null? 0.0:json["reviews_avg_rate"].toDouble(),
     user: User.fromJson(json["user"]),
   );
 

@@ -16,8 +16,8 @@ class DoctorProvider with ChangeNotifier {
   List<DoctorModel>doctors=[];
   late DoctorInfoModel doctorInfo;
  late AvailableTimeModel  times;
-int addToWishlist=0;
- List<SearchDoctorModel>searchDoctorList=[];
+ int addToWishlist=0;
+ List<DoctorModel>searchDoctorList=[];
 late MyAppointmentModel myAppointment;
   late Map<String,dynamic>appointInfo;
   List<AddsDetail>addsList=[];
@@ -198,7 +198,7 @@ late MyAppointmentModel myAppointment;
       if(response.statusCode==200 && response.body!=null)
       {
         List slideritems = json.decode(utf8.decode(response.bodyBytes));
-        searchDoctorList= slideritems.map((e) => SearchDoctorModel.fromJson(e)).toList();
+        searchDoctorList= slideritems.map((e) => DoctorModel.fromJson(e)).toList();
         print(searchDoctorList.length);
         notifyListeners();
       }
