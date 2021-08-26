@@ -17,7 +17,6 @@ class OrderModel {
     required this.status,
     required this.medicines,
   });
-
   int id;
   String date;
   String total;

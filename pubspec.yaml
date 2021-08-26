@@ -30,6 +30,7 @@ dependencies:
   flutter_bloc: ^7.0.0
   flutter_datetime_picker: ^1.5.1
   geocoder:
+  carousel_slider:
   #geolocation:
   google_maps_flutter:
   geolocator:
@@ -62,10 +63,8 @@ flutter:
 
   assets:
     - assets/
-    - assets/CategoryImages/
     - assets/HomeBanner/
     - assets/banners/
-    - assets/Categories/
     - assets/DoctorCategory/
     - assets/HomeBanner/
     - assets/Icons/

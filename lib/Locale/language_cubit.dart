@@ -39,4 +39,5 @@ class LanguageCubit extends Cubit<Locale> {
   void selectSwahiliLanguage() {
     emit(Locale('sw'));
   }
+
 }

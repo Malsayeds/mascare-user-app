@@ -1,3 +1,4 @@
+import 'package:doctoworld_user/Features/BottomNavigation/Offers/offers.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/doctors_page.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/hospitals_page.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/appointments_page.dart';
@@ -23,9 +24,9 @@ class _BottomNavigationState extends State<BottomNavigation> {
   double start = 0;
 
   final List<Widget> _children = [
-    MedicinePage(),
     DoctorsHome(),
-    HospitalsHome(),
+    MedicinePage(),
+    Offers(),
     AppointmentPage(),
     MoreOptions(),
   ];
@@ -38,22 +39,22 @@ class _BottomNavigationState extends State<BottomNavigation> {
     var locale = AppLocalizations.of(context)!;
     final List<BottomNavigationBarItem> _bottomBarItems = [
       BottomNavigationBarItem(
-        icon: ImageIcon(AssetImage('assets/FooterIcons/ic_medicine.png')),
-        activeIcon:
-            ImageIcon(AssetImage('assets/FooterIcons/ic_medicineact.png')),
-        label: locale.medicine,
-      ),
-      BottomNavigationBarItem(
         icon: ImageIcon(AssetImage('assets/FooterIcons/ic_doctors.png')),
         activeIcon:
             ImageIcon(AssetImage('assets/FooterIcons/ic_doctorsact.png')),
-        label: locale.doctors,
+        label: locale.home,
+      ),
+      BottomNavigationBarItem(
+        icon: ImageIcon(AssetImage('assets/FooterIcons/ic_medicine.png')),
+        activeIcon:
+        ImageIcon(AssetImage('assets/FooterIcons/ic_medicineact.png')),
+        label: locale.medicine,
       ),
       BottomNavigationBarItem(
         icon: ImageIcon(AssetImage('assets/FooterIcons/ic_hospitals.png')),
         activeIcon:
             ImageIcon(AssetImage('assets/FooterIcons/ic_hospitalsact.png')),
-        label: locale.hospitals,
+        label: locale.offers,
       ),
       BottomNavigationBarItem(
         icon: ImageIcon(AssetImage('assets/FooterIcons/ic_appointments.png')),

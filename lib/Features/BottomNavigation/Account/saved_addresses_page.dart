@@ -31,6 +31,7 @@ class SavedAddressesPage extends StatelessWidget {
             SavedAddresses(),
             beginOffset: Offset(0, 0.3),
             endOffset: Offset(0, 0),
+
             slideCurve: Curves.linearToEaseOut,
           )),
     );

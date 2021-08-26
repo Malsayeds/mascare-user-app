@@ -21,7 +21,7 @@ Map<String, String> arabic() {
     'viewAll': 'مشاهدة الكل',
     'offers': 'عروض',
     'sellerNearYou': 'بائع بالقرب منك',
-    'medicine': 'الادوية',
+    'medicine': 'الصيدليات',
     'doctors': 'الأطباء',
     'hospitals': 'المستشفيات',
     'appointments': 'المواعيد',
@@ -224,6 +224,8 @@ Map<String, String> arabic() {
     "firstname":"الاسم الاول",
     "lastname":"الاسم الاخير",
     "logout":"تسجيل الخروج",
-    "enterage":"ادخل عمرك"
+    "enterage":"ادخل عمرك",
+    "home":"الرئيسية",
+    "offers":"العروض"
   };
 }

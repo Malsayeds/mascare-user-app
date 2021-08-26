@@ -21,7 +21,7 @@ Map<String, String> english() {
     'viewAll': 'View all',
     'offers': 'Offers',
     'sellerNearYou': 'Seller Near you',
-    'medicine': 'Medicine',
+    'medicine': 'Pharmacies',
     'doctors': 'Doctors',
     'hospitals': 'Hospitals',
     'appointments': 'Appointments',
@@ -230,6 +230,8 @@ Map<String, String> english() {
     "firstname":"First Name",
     "lastname":"Last  Name",
     "logout":"Logout",
-    "enterage":"Enter Your Age"
+    "enterage":"Enter Your Age",
+    "home":"Home",
+    "offers":"Offers"
   };
 }

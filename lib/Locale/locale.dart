@@ -915,6 +915,8 @@ class AppLocalizations {
   String? get logout {
     return _localizedValues[locale.languageCode]!['logout'];
   }
+
+
   String? get enterage {
     return _localizedValues[locale.languageCode]!['enterage'];
   }
