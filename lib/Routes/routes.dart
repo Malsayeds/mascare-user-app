@@ -12,6 +12,7 @@ import 'package:doctoworld_user/Features/BottomNavigation/Doctors/search_history
 import 'package:doctoworld_user/Features/BottomNavigation/Doctors/sort_filter.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/Hospitals/hospital_info.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/Hospitals/hospital_map_view.dart';
+import 'package:doctoworld_user/Features/BottomNavigation/Medicine/Specification.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/Medicine/medicine_info.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/Medicine/medicines.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/Medicine/my_cart.dart';
@@ -46,6 +47,8 @@ import 'package:doctoworld_user/Features/BottomNavigation/Account/Order/order_in
 import 'package:doctoworld_user/Features/BottomNavigation/Account/Order/order_tracking_page.dart';
 import 'package:doctoworld_user/Features/BottomNavigation/Account/Order/chat_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:doctoworld_user/Features/BottomNavigation/Offers/ListOffers.dart';
+
 
 class PageRoutes {
   static const String findMedicinesPage = 'find_medicines_page';
@@ -97,12 +100,17 @@ class PageRoutes {
   static const String register = 'register';
   static const String login = 'login';
   static const String account = 'account';
+  static const String listOffers = 'listOffers';
+  static const String specification = 'specification';
+  static const String offers = 'offers';
+  //ListOffers
 
   // static const String trial = 'trial';
 
   Map<String, WidgetBuilder> routes() {
     return {
-      findMedicinesPage: (context) => MedicinePage(),
+      offers: (context) => BottomNavigation(index: 2,),
+      findMedicinesPage: (context) => BottomNavigation(index: 1,),
       bottomNavigation: (context) => BottomNavigation(index: 0,),
       account: (context) => BottomNavigation(index: 3,),
       shopByCategory: (context) => ShopByCategoryPage(),
@@ -146,11 +154,13 @@ class PageRoutes {
       reviewOrderPage: (context) => ReviewOrderPage(),
       orderInfoPage: (context) => OrderInfoPage(),
       doctorMapView: (context) => DoctorMapView(),
-      appointmentPage: (context) =>  BottomNavigation(index: 2,),
+      appointmentPage: (context) =>  BottomNavigation(index: 3,),
       languagePage: (context) => ChangeLanguagePage(true),
      // loginNavigator: (context) => LoginNavigator(),
       register: (context) => RegisterScreen(),
       login: (context) => LoginScreen(),
+      listOffers: (context) => ListOffers(),
+      specification: (context) => Specification(),
 
       // trial: (context) => Trail(),
     };

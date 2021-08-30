@@ -1,4 +1,7 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
+import 'package:carousel_slider/carousel_controller.dart';
+import 'package:carousel_slider/carousel_options.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:doctoworld_user/Features/Components/CustomAddressAppBar.dart';
 import 'package:doctoworld_user/Features/Components/CustomCartIcon.dart';
 import 'package:doctoworld_user/Features/PublicFunction.dart';
@@ -7,6 +10,7 @@ import 'package:doctoworld_user/Provider/Config.dart';
 import 'package:doctoworld_user/Provider/Doctor/DoctorProvider.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
 import '../../main.dart';
@@ -24,12 +28,18 @@ class DoctorScreesn extends StatefulWidget {
 }
 
 class _DoctorScreesnState extends State<DoctorScreesn> {
+  bool loading=true;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<DoctorProvider>(context, listen: false).getDoctorSpecialist();
-    Provider.of<DoctorProvider>(context, listen: false).getDoctorAdds();
+    loadData();
+  }
+  loadData()async{
+  await  Provider.of<DoctorProvider>(context, listen: false).getDoctorAdds();
+  setState(() {
+    loading=false;
+  });
   }
   @override
   Widget build(BuildContext context) {
@@ -79,7 +89,7 @@ class _DoctorScreesnState extends State<DoctorScreesn> {
             CustomCartIcon()
           ],
         ),
-        body:doctorSpeialistProvider.doctorSpeiaList.length==0?Center(child: CircularProgressIndicator(),) :DoctorsBody());
+        body:loading?Center(child: CircularProgressIndicator(),) :DoctorsBody());
   }
 }
 
@@ -89,6 +99,8 @@ class DoctorsBody extends StatefulWidget {
 }
 
 class _DoctorsBodyState extends State<DoctorsBody> {
+  bool clinicLoading=false;
+  bool homeloading=false;
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
@@ -104,7 +116,7 @@ class _DoctorsBodyState extends State<DoctorsBody> {
               style: Theme.of(context).textTheme.subtitle2,
             ),
           ),
-          Padding(
+       /*   Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: FadedScaleAnimation(
               Text(
@@ -116,7 +128,7 @@ class _DoctorsBodyState extends State<DoctorsBody> {
               ),
               durationInMilliseconds: 400,
             ),
-          ),
+          ),*/
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
             child: TextFormField(
@@ -134,7 +146,7 @@ class _DoctorsBodyState extends State<DoctorsBody> {
                       borderSide: BorderSide.none)),
             ),
           ),
-          Padding(
+          /*Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
             child: Row(
               children: [
@@ -161,8 +173,8 @@ class _DoctorsBodyState extends State<DoctorsBody> {
                 ),
               ],
             ),
-          ),
-          Container(
+          ),*/
+          /*Container(
             height: 123.3,
             margin: EdgeInsets.only(left: 10),
             child: ListView.builder(
@@ -213,7 +225,283 @@ class _DoctorsBodyState extends State<DoctorsBody> {
                     ),
                   );
                 }),
+          ),*/
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height*.13,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                GestureDetector(
+                  onTap: (){
+                    Navigator.pushNamed(context, PageRoutes.offers);
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width*.27,
+                    height: MediaQuery.of(context).size.height*.13,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Colors.white,
+                      boxShadow:[
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1), //color of shadow
+                          spreadRadius: 1, //spread radius
+                          blurRadius: 1, // blur radius
+                          offset: Offset(2, 2), // changes position of shadow
+                        ),
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1), //color of shadow
+                          spreadRadius: 1, //spread radius
+                          blurRadius: 1, // blur radius
+                          offset: Offset(-2, -2), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    padding: EdgeInsets.all(2),
+                    child: Column(
+                      children: [
+                        Expanded(child: ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            child: Image.network(Config.offerIcon,
+                              width: MediaQuery.of(context).size.width*.2,
+                              height: MediaQuery.of(context).size.height*.08,
+                              fit: BoxFit.cover,))),
+                        SizedBox(height: 3,),
+                        Text(locale.offers!,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),)
+                      ],
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: (){
+                   Navigator.pushNamed(context, PageRoutes.findMedicinesPage);
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width*.27,
+                    height: MediaQuery.of(context).size.height*.13,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Colors.white,
+                      boxShadow:[
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1), //color of shadow
+                          spreadRadius: 1, //spread radius
+                          blurRadius: 1, // blur radius
+                          offset: Offset(2, 2), // changes position of shadow
+                        ),
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1), //color of shadow
+                          spreadRadius: 1, //spread radius
+                          blurRadius: 1, // blur radius
+                          offset: Offset(-2, -2), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    padding: EdgeInsets.all(2),
+                    child: Column(
+                      children: [
+                        Expanded(child: ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            child: Image.asset('assets/FooterIcons/ic_medicineact.png',
+                              width: MediaQuery.of(context).size.width*.2,
+                              height: MediaQuery.of(context).size.height*.08,
+                              fit: BoxFit.cover,))),
+                        SizedBox(height: 3,),
+                        Text(locale.medicine!,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),)
+                      ],
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: ()async{
+                    setState(() {
+                      clinicLoading=true;
+                    });
+                    await  doctorProvider.getDoctorSpecialist(0);
+                    doctorProvider.type=0;
+                    Navigator.pushNamed(context, "specification");
+                    setState(() {
+                      clinicLoading=false;
+                    });
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width*.27,
+                    height: MediaQuery.of(context).size.height*.13,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color:clinicLoading?Colors.black12: Colors.white,
+                      boxShadow:[
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1), //color of shadow
+                          spreadRadius: 1, //spread radius
+                          blurRadius: 1, // blur radius
+                          offset: Offset(2, 2), // changes position of shadow
+                        ),
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1), //color of shadow
+                          spreadRadius: 1, //spread radius
+                          blurRadius: 1, // blur radius
+                          offset: Offset(-2, -2), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    padding: EdgeInsets.all(2),
+                    child: Column(
+                      children: [
+                        Expanded(child: ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            child: Image.network(Config.doctor_defualt_image,
+                              width: MediaQuery.of(context).size.width*.2,
+                              height: MediaQuery.of(context).size.height*.08,
+                              fit: BoxFit.cover,))),
+                        SizedBox(height: 3,),
+                        Text("Clinic Care",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),)
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
+          SizedBox(height: 10,),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height*.13,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                GestureDetector(
+                  onTap: (){
+                    // Navigator.pushNamed(context, "listOffers");
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width*.27,
+                    height: MediaQuery.of(context).size.height*.13,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Colors.white,
+                      boxShadow:[
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1), //color of shadow
+                          spreadRadius: 1, //spread radius
+                          blurRadius: 1, // blur radius
+                          offset: Offset(2, 2), // changes position of shadow
+                        ),
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1), //color of shadow
+                          spreadRadius: 1, //spread radius
+                          blurRadius: 1, // blur radius
+                          offset: Offset(-2, -2), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    padding: EdgeInsets.all(2),
+                    child: Column(
+                      children: [
+                        Expanded(child: ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            child: Image.network(Config.test,
+                              width: MediaQuery.of(context).size.width*.2,
+                              height: MediaQuery.of(context).size.height*.08,
+                              fit: BoxFit.cover,))),
+                        SizedBox(height: 3,),
+                        Text("Medical tests",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),)
+                      ],
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: (){
+                    //Navigator.pushNamed(context, "listOffers");
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width*.27,
+                    height: MediaQuery.of(context).size.height*.13,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Colors.white,
+                      boxShadow:[
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1), //color of shadow
+                          spreadRadius: 1, //spread radius
+                          blurRadius: 1, // blur radius
+                          offset: Offset(2, 2), // changes position of shadow
+                        ),
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1), //color of shadow
+                          spreadRadius: 1, //spread radius
+                          blurRadius: 1, // blur radius
+                          offset: Offset(-2, -2), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    padding: EdgeInsets.all(2),
+                    child: Column(
+                      children: [
+                        Expanded(child: ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            child: Image.network(Config.exmination,
+                              width: MediaQuery.of(context).size.width*.2,
+                              height: MediaQuery.of(context).size.height*.08,
+                              fit: BoxFit.cover,))),
+                        SizedBox(height: 3,),
+                        Text("Examination",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),)
+                      ],
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: ()async{
+                    setState(() {
+                      homeloading=true;
+                    });
+                    await  doctorProvider.getDoctorSpecialist(1);
+                    doctorProvider.type=1;
+                    Navigator.pushNamed(context, "specification");
+                    setState(() {
+                      homeloading=false;
+                    });
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width*.27,
+                    height: MediaQuery.of(context).size.height*.13,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: homeloading?Colors.black12:Colors.white,
+                      boxShadow:[
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1), //color of shadow
+                          spreadRadius: 1, //spread radius
+                          blurRadius: 1, // blur radius
+                          offset: Offset(2, 2), // changes position of shadow
+                        ),
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1), //color of shadow
+                          spreadRadius: 1, //spread radius
+                          blurRadius: 1, // blur radius
+                          offset: Offset(-2, -2), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    padding: EdgeInsets.all(2),
+                    child: Column(
+                      children: [
+                        Expanded(child: ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            child: Image.network(Config.home_care,
+                              width: MediaQuery.of(context).size.width*.2,
+                              height: MediaQuery.of(context).size.height*.08,
+                              fit: BoxFit.cover,))),
+                        SizedBox(height: 3,),
+                        Text("Home Care",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),)
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+          ////////////////////////////////////////////////////
           SizedBox(
             height: 5,
           ),
@@ -259,14 +547,14 @@ class _DoctorsBodyState extends State<DoctorsBody> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
             child: Text(
-              locale.listOfSpec!,
+             "Last Offers ",
               style: Theme.of(context)
                   .textTheme
                   .bodyText1!
                   .copyWith(color: Theme.of(context).disabledColor),
             ),
           ),
-          ListView.builder(
+  /*        ListView.builder(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: doctorProvider.doctorSpeiaList.length,
@@ -292,13 +580,135 @@ class _DoctorsBodyState extends State<DoctorsBody> {
                   ],
                 ),
               );
-              /*ListTile(
+              *//*ListTile(
                 contentPadding: EdgeInsets.symmetric(),
                 title: Text('Addiction psychiatrist'),
                 trailing: Icon(Icons.arrow_forward_ios, size: 15,),
-              );*/
+              );*//*
             },
-          ),
+          ),*/
+          ListView.builder(
+              padding: EdgeInsets.only(
+                bottom: 20,
+              ),
+              itemCount: 15,
+              shrinkWrap: true,
+              primary: false,
+              itemBuilder: (context,index){
+                return Container(
+                  //     width: MediaQuery.of(context).size.width*.9,
+                  margin: EdgeInsets.only(bottom: 10),
+
+                  child: Column(
+                    children: [
+                      Container(
+                        height: MediaQuery.of(context).size.height * .15,
+                        width: MediaQuery.of(context).size.width ,
+                        color: Colors.white,
+                        child: CarouselSlider.builder(
+                          itemCount: 15,
+                          itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) =>
+                              Container(
+                                child: Image.network("https://i.ytimg.com/vi/X7qdgjBDwnk/maxresdefault.jpg",
+                                  height: MediaQuery.of(context).size.height * .15,
+                                  width: MediaQuery.of(context).size.width ,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                          carouselController: CarouselController(),
+                          options: CarouselOptions(
+                            autoPlay: false,
+                            enlargeCenterPage: true,
+                            viewportFraction: 0.9,
+                            aspectRatio: 2.0,
+                            initialPage: 2,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: EdgeInsets.only(
+                          left: MediaQuery.of(context).size.width*.05,
+                          right: MediaQuery.of(context).size.width*.05,
+
+                        ),
+                        padding:EdgeInsets.only(
+                            top: 5,
+                            bottom: 5,
+                            left: 5,
+                            right: 5
+                        ) ,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(0)),
+                            border: Border.all(color: Colors.black12,width: 1)
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(1000),
+                                child: Image.network(Config.doctor_defualt_image,
+                                  height: 40,width: 40,fit: BoxFit.cover,
+                                ),
+                              ),
+                              SizedBox(width: 10,),
+                              Text("Doctor Name"),
+                              SizedBox(width: 5,),
+                              Text("-"),
+                              SizedBox(width: 5,),
+                              Text("10 St Elabysia"),
+                            ],),
+                            SizedBox(height: 10,),
+                            Text("Offers  Name Offers name",style: Theme.of(context).textTheme.subtitle1,),
+                            SizedBox(height: 2,),
+                            Text("Offers  Description Offers  Description Offers  Description",style: Theme.of(context).textTheme.bodyText2,),
+                            SizedBox(height: 2,),
+                            Row(
+                              children: [
+                                RatingBar.builder(
+                                    itemSize: 15,
+                                    initialRating: 4,
+                                    direction: Axis.horizontal,
+                                    itemCount: 5,
+                                    itemBuilder: (context, _) =>
+                                        Icon(
+                                          Icons.star,
+                                          color: Colors.amber,
+                                        ),
+                                    onRatingUpdate: (rating) {
+                                      print(rating);
+                                    }),
+                                SizedBox(width: 10,),
+                                Text("(2)",style: Theme.of(context).textTheme.bodyText2,),
+                              ],
+                            ),
+                            SizedBox(height: 2,),
+                            Row(children: [
+                              Text("1000",style: TextStyle(decoration: TextDecoration.lineThrough),),
+                              SizedBox(width: 10,),
+                              Text("800"),
+                              Expanded(child: SizedBox(),),
+                              Container(
+                                width: MediaQuery.of(context).size.width*.2,
+                                height: MediaQuery.of(context).size.height*.04,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                                    color: Theme.of(context).primaryColor
+                                ),
+                                alignment: Alignment.center,
+                                child: Text("Book Now",style: TextStyle(fontSize: 12,fontWeight:FontWeight.bold,color: Colors.white),),
+                              )
+                            ],),
+                            SizedBox(height: 2,),
+                          ],
+                        ),
+                      )
+
+                    ],
+                  ),
+                );
+              })
         ],
       ),
     );

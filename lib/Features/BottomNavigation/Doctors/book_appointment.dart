@@ -105,7 +105,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                         child: Container(
                           child: FadedScaleAnimation(
                             Image.network(
-                              doctorProvider.doctorInfo.singleDoctor.user.image==null?Config.doctor_defualt_image:doctorProvider.doctorInfo.singleDoctor.user.image,
+                              doctorProvider.doctorInfo.singleDoctor.image==null?Config.doctor_defualt_image:doctorProvider.doctorInfo.singleDoctor.image,
                               width: MediaQuery.of(context).size.width*.5,
                             ),
                             durationInMilliseconds: 400,
@@ -123,7 +123,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                               style: Theme.of(context).textTheme.subtitle2,
                               children: [
                                 TextSpan(
-                                    text: '${doctorProvider.doctorInfo.singleDoctor.user.name}\n\n',
+                                    text: '${doctorProvider.doctorInfo.singleDoctor.name}\n\n',
                                     style: Theme.of(context)
                                         .textTheme
                                         .subtitle2!

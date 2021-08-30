@@ -16,6 +16,7 @@ class DoctorProvider with ChangeNotifier {
   List<DoctorModel>doctors=[];
   late DoctorInfoModel doctorInfo;
  late AvailableTimeModel  times;
+ int type=-1;
  int addToWishlist=0;
  List<DoctorModel>searchDoctorList=[];
 late MyAppointmentModel myAppointment;
@@ -28,8 +29,8 @@ late MyAppointmentModel myAppointment;
     this.SelectedSpecialist=name;
     notifyListeners();
   }
-  Future<void>getDoctorSpecialist()async {
-    var url=Config.base_url+"/specifications";
+  Future<void>getDoctorSpecialist(int type)async {
+    var url=Config.base_url+"/specifications?type=$type";
     print(url);
     var header=await Config.getHeader();
     try
@@ -54,7 +55,7 @@ late MyAppointmentModel myAppointment;
     if(id==0)
       url=Config.base_url+"/single-doctors";
      else
-       url=Config.base_url+"/specification/${id}/doctors";
+       url=Config.base_url+"/specification/${id}/doctors?type=$type";
     print(url);
     var header=await Config.getHeader();
     print(header);
@@ -186,9 +187,14 @@ late MyAppointmentModel myAppointment;
   Future<void>seachDoctor(String key)async {
     var url=Config.base_url+"/search-doctors";
     print(url);
-    var body={
+    var body1={
+      "name":key,
+      "type":type.toString()
+    };
+    var body2={
       "name":key
     };
+    var body=type==-1?body2:body1;
     print(body);
     var header=await Config.getHeader();
     try

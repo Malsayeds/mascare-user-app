@@ -88,7 +88,7 @@ class _DoctorInfoScreenState extends State<DoctorInfoScreen> {
                                   const EdgeInsets.symmetric(horizontal: 20.0),
                               child: FadedScaleAnimation(
                                 Image.network(
-                                  doctorProvider.doctorInfo.singleDoctor.user.image==null?Config.doctor_defualt_image:doctorProvider.doctorInfo.singleDoctor.user.image,
+                                  doctorProvider.doctorInfo.singleDoctor.image==null?Config.doctor_defualt_image:doctorProvider.doctorInfo.singleDoctor.image,
                                   width: MediaQuery.of(context).size.width*.5,
                                 ),
                                 durationInMilliseconds: 400,
@@ -158,7 +158,7 @@ class _DoctorInfoScreenState extends State<DoctorInfoScreen> {
                                         Theme.of(context).textTheme.subtitle2,
                                     children: [
                                       TextSpan(
-                                          text: '${doctorProvider.doctorInfo.singleDoctor.user.name}\n\n',
+                                          text: '${doctorProvider.doctorInfo.singleDoctor.name}\n\n',
                                           style: Theme.of(context)
                                               .textTheme
                                               .subtitle2!
@@ -312,7 +312,7 @@ class _DoctorInfoScreenState extends State<DoctorInfoScreen> {
                         SizedBox(
                           height: 20,
                         ),
-                        ListView.builder(
+                       /* ListView.builder(
                            shrinkWrap: true,
                             primary: false,
                             itemCount: doctorProvider.doctorInfo.hotspitals.length,
@@ -326,7 +326,7 @@ class _DoctorInfoScreenState extends State<DoctorInfoScreen> {
                               size: 18,
                             ),
                           );
-                        }),
+                        }),*/
                         Text(
                           '+1 ' + locale.more!,
                           style: Theme.of(context).textTheme.bodyText1!.copyWith(

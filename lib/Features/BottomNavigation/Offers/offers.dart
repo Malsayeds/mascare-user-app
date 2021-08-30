@@ -4,6 +4,7 @@ import 'package:doctoworld_user/Locale/locale.dart';
 import 'package:doctoworld_user/Provider/Config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class Offers extends StatefulWidget{
   @override
@@ -80,33 +81,38 @@ class _state extends State<Offers>{
                    crossAxisSpacing: 10,
                    childAspectRatio: 1 / 1.1),
                itemBuilder: (context, index) {
-                 return Container(
-                   decoration: BoxDecoration(
-                     borderRadius: BorderRadius.all(Radius.circular(10)),
-                     color: Colors.white,
-                     boxShadow:[
-                       BoxShadow(
-                       color: Colors.grey.withOpacity(0.1), //color of shadow
-                       spreadRadius: 1, //spread radius
-                       blurRadius: 1, // blur radius
-                       offset: Offset(2, 2), // changes position of shadow
-                     ),
-                       BoxShadow(
+                 return GestureDetector(
+                   onTap: (){
+                     Navigator.pushNamed(context, "listOffers");
+                   },
+                   child: Container(
+                     decoration: BoxDecoration(
+                       borderRadius: BorderRadius.all(Radius.circular(10)),
+                       color: Colors.white,
+                       boxShadow:[
+                         BoxShadow(
                          color: Colors.grey.withOpacity(0.1), //color of shadow
                          spreadRadius: 1, //spread radius
                          blurRadius: 1, // blur radius
-                         offset: Offset(-2, -2), // changes position of shadow
+                         offset: Offset(2, 2), // changes position of shadow
                        ),
-                     ],
-                   ),
-                   padding: EdgeInsets.all(2),
-                   child: Column(
-                     children: [
-                       Expanded(child: ClipRRect(
-                           borderRadius: BorderRadius.all(Radius.circular(10)),
-                           child: Image.network("https://pbs.twimg.com/media/ETP7yvbXQAIRe7q.jpg",fit: BoxFit.cover,))),
-                       Text("ليزك",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),)
-                     ],
+                         BoxShadow(
+                           color: Colors.grey.withOpacity(0.1), //color of shadow
+                           spreadRadius: 1, //spread radius
+                           blurRadius: 1, // blur radius
+                           offset: Offset(-2, -2), // changes position of shadow
+                         ),
+                       ],
+                     ),
+                     padding: EdgeInsets.all(2),
+                     child: Column(
+                       children: [
+                         Expanded(child: ClipRRect(
+                             borderRadius: BorderRadius.all(Radius.circular(10)),
+                             child: Image.network("https://pbs.twimg.com/media/ETP7yvbXQAIRe7q.jpg",fit: BoxFit.cover,))),
+                         Text("ليزك",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),)
+                       ],
+                     ),
                    ),
                  );
                },
@@ -128,11 +134,14 @@ class _state extends State<Offers>{
              padding: EdgeInsets.only(
                bottom: 20,
              ),
-           itemCount: 1,
+           itemCount: 15,
            shrinkWrap: true,
            primary: false,
            itemBuilder: (context,index){
              return Container(
+          //     width: MediaQuery.of(context).size.width*.9,
+               margin: EdgeInsets.only(bottom: 10),
+
                child: Column(
                  children: [
                    Container(
@@ -161,12 +170,23 @@ class _state extends State<Offers>{
                    ),
                    Container(
                      width: MediaQuery.of(context).size.width,
-                     padding: EdgeInsets.only(
+                     margin: EdgeInsets.only(
                        left: MediaQuery.of(context).size.width*.05,
                        right: MediaQuery.of(context).size.width*.05,
-                       top: 5
+
+                     ),
+                     padding:EdgeInsets.only(
+                         top: 5,
+                       bottom: 5,
+                       left: 5,
+                       right: 5
+                     ) ,
+                     decoration: BoxDecoration(
+                         borderRadius: BorderRadius.all(Radius.circular(0)),
+                         border: Border.all(color: Colors.black12,width: 1)
                      ),
                      child: Column(
+                       crossAxisAlignment: CrossAxisAlignment.start,
                        children: [
                          Row(children: [
                            ClipRRect(
@@ -174,8 +194,56 @@ class _state extends State<Offers>{
                              child: Image.network(Config.doctor_defualt_image,
                                height: 40,width: 40,fit: BoxFit.cover,
                              ),
-                           )
-                         ],)
+                           ),
+                           SizedBox(width: 10,),
+                           Text("Doctor Name"),
+                           SizedBox(width: 5,),
+                           Text("-"),
+                           SizedBox(width: 5,),
+                           Text("10 St Elabysia"),
+                         ],),
+                         SizedBox(height: 10,),
+                         Text("Offers  Name Offers name",style: Theme.of(context).textTheme.subtitle1,),
+                         SizedBox(height: 2,),
+                         Text("Offers  Description Offers  Description Offers  Description",style: Theme.of(context).textTheme.bodyText2,),
+                         SizedBox(height: 2,),
+                         Row(
+                           children: [
+                             RatingBar.builder(
+                                 itemSize: 15,
+                                 initialRating: 4,
+                                 direction: Axis.horizontal,
+                                 itemCount: 5,
+                                 itemBuilder: (context, _) =>
+                                     Icon(
+                                       Icons.star,
+                                       color: Colors.amber,
+                                     ),
+                                 onRatingUpdate: (rating) {
+                                   print(rating);
+                                 }),
+                             SizedBox(width: 10,),
+                             Text("(2)",style: Theme.of(context).textTheme.bodyText2,),
+                           ],
+                         ),
+                         SizedBox(height: 2,),
+                        Row(children: [
+                          Text("1000",style: TextStyle(decoration: TextDecoration.lineThrough),),
+                          SizedBox(width: 10,),
+                          Text("800"),
+                          Expanded(child: SizedBox(),),
+                          Container(
+                            width: MediaQuery.of(context).size.width*.2,
+                            height: MediaQuery.of(context).size.height*.04,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(5)),
+                              color: Theme.of(context).primaryColor
+                            ),
+                            alignment: Alignment.center,
+                            child: Text("Book Now",style: TextStyle(fontSize: 12,fontWeight:FontWeight.bold,color: Colors.white),),
+                          )
+                        ],),
+                         SizedBox(height: 2,),
                        ],
                      ),
                    )

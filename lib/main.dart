@@ -62,7 +62,7 @@ class Docto extends StatelessWidget {
               ],
               locale: locale,
               theme: appTheme,
-              home: BottomNavigation(index: 0,),
+              home: Splash()/*BottomNavigation(index: 0,)*/,
               routes: PageRoutes().routes(),
               debugShowCheckedModeBanner: false,
             ),
