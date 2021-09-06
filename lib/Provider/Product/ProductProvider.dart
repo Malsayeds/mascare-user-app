@@ -29,6 +29,7 @@ Future<void>getProductByCategory(int id)async {
     try
     {
       final response = await http.get(Uri.parse(url),headers: header);
+      print(response.body);
       if(response.statusCode==200 && response.body!=null)
       {
         List slideritems = json.decode(utf8.decode(response.bodyBytes))["medicines"];
@@ -222,6 +223,47 @@ Future<void>getPaymentMethod()async {
   catch(e)
   {
     print(e);
+  }
+}
+Future<bool>productWishlist(int id)async {
+  var url=Config.base_url+"/is-wishlisted/medicine/${id}";
+  print(url);
+  var header=await Config.getHeader();
+  print(header);
+
+  try
+  {
+    final response = await http.get(Uri.parse(url),headers: header);
+    print(response.body);
+    print("responcceeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+    if(response.statusCode==200 && response.body!=null)
+    {
+     print(response.body);
+      notifyListeners();
+    }
+    return json.decode(response.body)["is_exists"];
+  }
+  catch(e)
+  {
+    print(e);
+    return false;
+  }
+}
+Future<void> deleteItemToWishlist(int id) async{
+  String url=Config.base_url+"/wishlist/${id}";
+  print(url);
+  var header=await Config.getHeader();
+  try{
+    final responce=await http.delete(Uri.parse(url),headers: header);
+    print(responce.body);
+    if(responce.body.isNotEmpty)
+    {
+      print(responce.body);
+      notifyListeners();
+    }
+  }
+  catch(e) {
+    print(e.toString());
   }
 }
 

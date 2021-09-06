@@ -9,6 +9,7 @@ class Config{
  static String offerIcon="https://cdn0.iconfinder.com/data/icons/shopping-3-13/68/104-512.png";
  static String test="https://tse3.mm.bing.net/th?id=OIP.4uOhlK3mTqkdhnXtaNzQugHaGi&pid=Api&P=0&w=198&h=176";
  static String exmination="https://tse4.mm.bing.net/th?id=OIP.pUo0YR2pr6fJ4OnURqRoYAHaHa&pid=Api&P=0&w=300&h=300";
+ static String no_image_found="https://tse2.mm.bing.net/th?id=OIP.hV6MoBaE8NYeMCugmhd7_QHaEo&pid=Api&P=0&w=255&h=160";
   static var Header={};
   static var HeaderWithTocken={};
  static Future<Map<String,String>>getHeader()async{

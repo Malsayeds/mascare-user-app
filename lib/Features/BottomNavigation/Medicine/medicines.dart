@@ -4,6 +4,7 @@ import 'package:doctoworld_user/Features/BottomNavigation/Medicine/medicine_info
 import 'package:doctoworld_user/Features/Components/CustomCartIcon.dart';
 import 'package:doctoworld_user/Features/Components/custom_add_item_button.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
+import 'package:doctoworld_user/Provider/Config.dart';
 import 'package:doctoworld_user/Provider/GlobalProvider.dart';
 import 'package:doctoworld_user/Provider/Product/ProductProvider.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
@@ -91,7 +92,7 @@ class _MedicinesState extends State<Medicines> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                             FadedScaleAnimation(
-                                Image.network(productProvider.productList[index].image,
+                                Image.network(productProvider.productList[index].image==""?Config.no_image_found:productProvider.productList[index].image,
                                 height: MediaQuery.of(context).size.height*.135,
                                 width: MediaQuery.of(context).size.width*.3,
                                 fit: BoxFit.cover,

@@ -23,25 +23,45 @@ class ProductInfo extends StatefulWidget {
 class _ProductInfoState extends State<ProductInfo> {
   final ProductDetailModel productDetailModel;
   _ProductInfoState({required this.productDetailModel});
-  IconData saved = Icons.bookmark_border;
   DbHelper dbHelper=new DbHelper();
+  late bool iswishlist;
+  bool loading =true;
+  loadData()async{
+    iswishlist=await Provider.of<ProductProvider>(context, listen: false).productWishlist(productDetailModel.id);
+    setState(() {
+      loading=false;
+    });
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadData();
+  }
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
     var productProvider=Provider.of<ProductProvider>(context, listen: true);
-    return Scaffold(
+    return loading?Scaffold(body: Center(child: CircularProgressIndicator(),),):Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         actions: [
           IconButton(
-              icon: Icon(saved),
+              icon: Icon(iswishlist?Icons.bookmark:Icons.bookmark_border),
               onPressed: ()async {
-                await  productProvider.addItemToWishlist(productDetailModel.id);
-                if(productProvider.addWishlist==200){
+                if(!iswishlist){
+                  await  productProvider.addItemToWishlist(productDetailModel.id);
                   DialogMessages.SuccessMessage(context, "This Medicine Added To Wishlist");
+                  setState(() {
+                    iswishlist=true;
+                  });
                 }else{
-                  DialogMessages.ErrorMessage(context, "This Medicine Has Been Added Before To Wishlist");
+                  productProvider.deleteItemToWishlist(productDetailModel.id);
+                  DialogMessages.ErrorMessage(context, "This Medicine Has Been Deleted From Wishlist");
+                  setState(() {
+                    iswishlist=false;
+                  });
                 }
               }),
           IconButton(
@@ -61,7 +81,7 @@ class _ProductInfoState extends State<ProductInfo> {
                    
                     
                           Image.network( 
-                               productDetailModel.image,
+                               productDetailModel.image==""?Config.no_image_found: productDetailModel.image,
                                 width: MediaQuery.of(context).size.width,
                                 height: MediaQuery.of(context).size.height*.5,
                                 fit: BoxFit.cover,
@@ -154,26 +174,28 @@ class _ProductInfoState extends State<ProductInfo> {
                       SizedBox(
                         height: 8,
                       ),*/
-                      Container(
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        padding: const EdgeInsets.only(
-                            left: 16.0, right: 16.0, bottom: 4.0, top: 12.0),
-                        child: Text(locale.soldBy!),
-                      ),
-                      Container(
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        child: ListTile(
-                          leading: Image.network(productDetailModel.manufacturer.logo==null?Config.company_logo:productDetailModel.manufacturer.logo,
-                              width: MediaQuery.of(context).size.width*.2,
-                          ),
-                          title: Container(
-                            width: MediaQuery.of(context).size.width*.7,
-                            child: Text(
-                              productDetailModel.manufacturer.name,
-                              style: Theme.of(context).textTheme.subtitle1,
-                            ),
-                          ),
-                       /*   subtitle: Column(
+                      productDetailModel.manufacturer.name==""? SizedBox():Column(
+                         children: [
+                           Container(
+                             color: Theme.of(context).scaffoldBackgroundColor,
+                             padding: const EdgeInsets.only(
+                                 left: 16.0, right: 16.0, bottom: 4.0, top: 12.0),
+                             child: Text(locale.soldBy!),
+                           ),
+                           Container(
+                             color: Theme.of(context).scaffoldBackgroundColor,
+                             child: ListTile(
+                               leading: Image.network(productDetailModel.manufacturer.logo==""?Config.company_logo:productDetailModel.manufacturer.logo,
+                                 width: MediaQuery.of(context).size.width*.2,
+                               ),
+                               title: Container(
+                                 width: MediaQuery.of(context).size.width*.7,
+                                 child: Text(
+                                   productDetailModel.manufacturer.name,
+                                   style: Theme.of(context).textTheme.subtitle1,
+                                 ),
+                               ),
+                               /*   subtitle: Column(
                             children: [
                               SizedBox(height: 2,),
                              Row(
@@ -218,8 +240,10 @@ class _ProductInfoState extends State<ProductInfo> {
                              )
                             ],
                           ),*/
-                        ),
-                      ),
+                             ),
+                           ),
+                         ],
+                       ),
                       SizedBox(
                         height: 120,
                       ),

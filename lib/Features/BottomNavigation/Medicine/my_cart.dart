@@ -3,13 +3,16 @@ import 'package:doctoworld_user/Features/Components/DialogMessages.dart';
 import 'package:doctoworld_user/Features/Components/custom_button.dart';
 import 'package:doctoworld_user/Locale/locale.dart';
 import 'package:doctoworld_user/Models/Medicine/CartItemModel.dart';
+import 'package:doctoworld_user/Provider/Config.dart';
 import 'package:doctoworld_user/Provider/GlobalProvider.dart';
 import 'package:doctoworld_user/Provider/Product/CartProvider.dart';
+import 'package:doctoworld_user/Provider/Product/ProductProvider.dart';
 import 'package:doctoworld_user/Routes/routes.dart';
 import 'package:doctoworld_user/Stroage/DbHelper.dart';
 import 'package:doctoworld_user/Stroage/Model/CartModelLocal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:provider/provider.dart';
 
 class Product {
@@ -28,16 +31,36 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   List<int> count = [1, 1, 1];
+  TextEditingController code=new TextEditingController();
+  bool codeLoading=false;
   DbHelper db=new DbHelper();
   List dataLocal=[];
   int totalquantity=0;
   double allPrice=0.0;
   loadData() async{
+    var cartProvider=Provider.of<CartProvider>(context, listen: false);
     dataLocal=await db.allProduct();
+    if(cartProvider.discoundCode!="")
+    code.text=cartProvider.discoundCode;
     setState(() {
     });
-    print(dataLocal.length.toString());
-    print("ssssssssssssssssssssss.....................................");
+  }
+  getDiscound(String code,bool first)async{
+    setState(() {
+      codeLoading=true;
+    });
+    var cartProvider=Provider.of<CartProvider>(context, listen: false);
+     await cartProvider.getdiscound(code);
+    setState(() {
+      codeLoading=false;
+    });
+    if(first){
+      if(cartProvider.discound==0){
+        DialogMessages.ErrorMessage(context, cartProvider.discoundMessage);
+      }
+      else
+        DialogMessages.SuccessMessage(context, cartProvider.discoundMessage);
+    }
   }
   @override
   void initState() {
@@ -49,6 +72,7 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
+    var cartProvider=Provider.of<CartProvider>(context, listen: true);
     // bool _isPromoApplied = false;
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
@@ -103,7 +127,7 @@ class _CartPageState extends State<CartPage> {
                                         crossAxisAlignment: CrossAxisAlignment.end,
                                         children: [
                                           Image.network(
-                                            c.img,
+                                            c.img==""?Config.no_image_found:c.img,
                                             height: MediaQuery.of(context).size.height*.15,
                                             width: MediaQuery.of(context).size.width*.25,
                                           ),
@@ -169,7 +193,6 @@ class _CartPageState extends State<CartPage> {
                                                           ),
                                                         ),
                                                         SizedBox(width: 5,),
-
                                                         Text('${c.quantity}',
                                                             style: Theme.of(context)
                                                                 .textTheme
@@ -257,6 +280,7 @@ class _CartPageState extends State<CartPage> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12.0, vertical: 12),
                       child: TextField(
+                        controller: code,
                         decoration: InputDecoration(
                             contentPadding: EdgeInsets.only(left: 12),
                             hintText: locale.addPromoCode,
@@ -265,7 +289,7 @@ class _CartPageState extends State<CartPage> {
                             suffixIcon: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                TextButton(
+                              /*  TextButton(
                                   onPressed: () {
                                     Navigator.pushNamed(
                                         context, PageRoutes.offersPage);
@@ -280,9 +304,11 @@ class _CartPageState extends State<CartPage> {
                                         color:
                                         Theme.of(context).primaryColor),
                                   ),
-                                ),
+                                ),*/
                                 GestureDetector(
                                   onTap: () {
+                                    if(code.text.isNotEmpty)
+                                      getDiscound(code.text,true);
                                     setState(() {
                                       // _isPromoApplied = true;
                                     });
@@ -298,8 +324,11 @@ class _CartPageState extends State<CartPage> {
                                         borderRadius: BorderRadius.only(
                                             topRight: Radius.circular(4),
                                             bottomRight: Radius.circular(4))),
-                                    child: Icon(
-                                      Icons.check,
+                                    child:codeLoading?Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: CircularProgressIndicator.adaptive(),
+                                    ): Icon(
+                                       Icons.check,
                                       color: Theme.of(context)
                                           .scaffoldBackgroundColor,
                                     ),
@@ -319,9 +348,9 @@ class _CartPageState extends State<CartPage> {
                         children: [
                           buildAmountRow(context, locale.subTotal!, allPrice.toString()),
                           buildAmountRow(
-                              context, locale.promoCodeApplied!, '-2.0'),
-                          buildAmountRow(context, locale.serviceCharge!, '4.0'),
-                          buildAmountRow(context, locale.amountPayable!, '20.0'),
+                              context, locale.promoCodeApplied!, '-${cartProvider.discound}'),
+                          buildAmountRow(context, locale.serviceCharge!, '0.0'),
+                          buildAmountRow(context, locale.amountPayable!, cartProvider.totalAfterDiscount==0.0?'$allPrice':'${cartProvider.totalAfterDiscount}'),
                         ],
                       ),
                     ),
@@ -366,16 +395,17 @@ class _CartPageState extends State<CartPage> {
       ),
     );
   }
+
   getTotal() async {
     //totalquantity=0;
     //allPrice=0.0;
+    var cartProvider=Provider.of<CartProvider>(context, listen: false);
     List product=await db.allProduct();
     for(int i=0;i<product.length;i++){
       CartMedelLocal c=new CartMedelLocal.fromMap(product[i]);
       totalquantity=totalquantity+int.parse(c.quantity.toString());
       allPrice=allPrice+double.parse((c.price*c.quantity).toString());
-      print(totalquantity);
-      print("qqqqqqqqqqqqqqqq");
+       cartProvider.setTotal(allPrice);
       setState(() {
       });
     }
@@ -460,7 +490,11 @@ class _CartPageState extends State<CartPage> {
   }
   updateTotal(int quantity,double price){
     totalquantity+=quantity;
+    var cartProvider=Provider.of<CartProvider>(context, listen: false);
     allPrice+=price;
+    cartProvider.setTotal(allPrice);
+    if(cartProvider.discoundCode!="")
+      getDiscound(cartProvider.discoundCode,false);
     setState(() {
     });
   }

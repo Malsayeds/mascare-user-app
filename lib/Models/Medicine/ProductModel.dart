@@ -23,8 +23,8 @@ class ProductModel {
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
     id: json["id"],
-    name: json["name"],
-    image: json["image"],
+    name: json["name"]??"",
+    image: json["image"]??"",
     productDetailModel: List<ProductDetailModel>.from(json["ProductDetailModel"].map((x) => ProductDetailModel.fromJson(x))),
   );
 
@@ -61,14 +61,14 @@ class ProductDetailModel {
 
   factory ProductDetailModel.fromJson(Map<String, dynamic> json) => ProductDetailModel(
     id: json["id"],
-    name: json["name"],
+    name: json["name"]??"",
     price: json["price"],
     packing: json["packing"],
     category: json["category"],
-    type: json["type"],
+    type: json["type"]??"",
     manufacturer: Manufacturer.fromJson(json["manufacturer"]),
     review: Review.fromJson(json["review"]),
-    image: json["image"],
+    image: json["image"]??"",
   );
 
   Map<String, dynamic> toJson() => {
@@ -97,7 +97,7 @@ class Manufacturer {
 
   factory Manufacturer.fromJson(Map<String, dynamic> json) => Manufacturer(
     name: json["name"],
-    logo: json["logo"],
+    logo: json["logo"]??"",
     createdAt: json["created_at"],
   );
 

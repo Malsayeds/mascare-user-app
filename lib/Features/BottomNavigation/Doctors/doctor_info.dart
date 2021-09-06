@@ -13,8 +13,7 @@ import 'package:provider/provider.dart';
 class DoctorInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => DoctorProvider(), child: DoctorInfoScreen());
+    return DoctorInfoScreen();
   }
 }
 
@@ -32,8 +31,10 @@ class _DoctorInfoScreenState extends State<DoctorInfoScreen> {
     loadDoctorInfo();
 
   }
+  late bool iswishlist;
   Future<void>loadDoctorInfo()async{
-  await  Provider.of<DoctorProvider>(context, listen: false).getDoctInfo(1);
+  await  Provider.of<DoctorProvider>(context, listen: false).getDoctInfo();
+ iswishlist= await Provider.of<DoctorProvider>(context, listen: false).doctorWishlist();
   setState(() {
     loading=false;
   });
@@ -42,7 +43,7 @@ class _DoctorInfoScreenState extends State<DoctorInfoScreen> {
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
     var doctorProvider=Provider.of<DoctorProvider>(context, listen: true);
-    return Scaffold(
+    return loading?Center(child: CircularProgressIndicator.adaptive(),):Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
@@ -55,20 +56,28 @@ class _DoctorInfoScreenState extends State<DoctorInfoScreen> {
             children: [
               IconButton(
                 onPressed: ()async {
-                 await  doctorProvider.addItemToWishlist(doctorProvider.doctorInfo.singleDoctor.id);
-                 if(doctorProvider.addToWishlist==200){
+
+                 if(!iswishlist){
+                   await  doctorProvider.addItemToWishlist(doctorProvider.doctorInfo.singleDoctor.id);
                    DialogMessages.SuccessMessage(context, "This Docter Added To Wishlist");
+                   setState(() {
+                     iswishlist=true;
+                   });
                  }else{
-                   DialogMessages.ErrorMessage(context, "This Docter Has Been Added Before To Wishlist");
+                   DialogMessages.ErrorMessage(context, "This Docter Has Been Removed from Wishlist");
+                   doctorProvider.deleteItemToWishlist();
+                   setState(() {
+                     iswishlist=false;
+                   });
                  }
                 },
-                icon: Icon(Icons.bookmark_outline_outlined),
+                icon:Icon(iswishlist?Icons.bookmark:Icons.bookmark_outline_outlined),
               )
             ],
           )
         ],
       ),
-      body:loading?Center(child: CircularProgressIndicator.adaptive(),): FadedSlideAnimation(
+      body: FadedSlideAnimation(
         Stack(
           children: [
             Container(

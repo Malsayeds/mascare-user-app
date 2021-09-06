@@ -16,14 +16,22 @@ class DoctorProvider with ChangeNotifier {
   List<DoctorModel>doctors=[];
   late DoctorInfoModel doctorInfo;
  late AvailableTimeModel  times;
+  bool isWishlist=true;
  int type=-1;
  int addToWishlist=0;
+ int Selceted_doctor_id=0;
  List<DoctorModel>searchDoctorList=[];
 late MyAppointmentModel myAppointment;
   late Map<String,dynamic>appointInfo;
   List<AddsDetail>addsList=[];
   int SelectedSpecialistId=0;
   String SelectedSpecialist="";
+  void SetSelectedDoctor(int id){
+    this.Selceted_doctor_id=id;
+    notifyListeners();
+    print(Selceted_doctor_id);
+    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+  }
   void SetSelectedSpecialist(int id,String name){
     this.SelectedSpecialistId=id;
     this.SelectedSpecialist=name;
@@ -77,11 +85,9 @@ late MyAppointmentModel myAppointment;
       print(e);
     }
   }
-  Future<void>addavailable(int doctor_id,String date)async {
-    print("ssssssssssssssssssssssss");
-    var url=Config.base_url+"/single-appointments/${doctor_id}/${date}";
+  Future<void>addavailable(String date)async {
+    var url=Config.base_url+"/single-appointments/${Selceted_doctor_id}/${date}";
     print(url);
-    print("ddddddddddddddddddddddddddddddddddddddddddddd");
     var header=await Config.getHeader();
     print(header);
 
@@ -89,6 +95,7 @@ late MyAppointmentModel myAppointment;
     {
       final response = await http.get(Uri.parse(url),headers: header);
       print(response.body);
+      print("responcceeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
       if(response.statusCode==200 && response.body!=null)
       {
         times=AvailableTimeModel.fromJson(json.decode(response.body));
@@ -102,8 +109,33 @@ late MyAppointmentModel myAppointment;
       print(e);
     }
   }
-  Future<void> getDoctInfo(int doctor_id) async{
-    String url=Config.base_url+"/single-doctors/${doctor_id}";
+  Future<bool>doctorWishlist()async {
+    var url=Config.base_url+"/is-wishlisted/doctor/${Selceted_doctor_id}";
+    print(url);
+    var header=await Config.getHeader();
+    print(header);
+
+    try
+    {
+      final response = await http.get(Uri.parse(url),headers: header);
+      print(response.body);
+      print("responcceeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+      if(response.statusCode==200 && response.body!=null)
+      {
+        print(json.decode(response.body)["is_exists"]);
+        isWishlist=json.decode(response.body)["is_exists"];
+        notifyListeners();
+      }
+      return json.decode(response.body)["is_exists"];
+    }
+    catch(e)
+    {
+      print(e);
+      return false;
+    }
+  }
+  Future<void> getDoctInfo() async{
+    String url=Config.base_url+"/single-doctors/${Selceted_doctor_id}";
     print(url);
    var header= await Config.getHeader();
     try{
@@ -270,6 +302,23 @@ late MyAppointmentModel myAppointment;
       if(responce.body.isNotEmpty)
       {
         addToWishlist=responce.statusCode;
+        notifyListeners();
+      }
+    }
+    catch(e) {
+      print(e.toString());
+    }
+  }
+  Future<void> deleteItemToWishlist() async{
+    String url=Config.base_url+"/doctor-wishlist/${Selceted_doctor_id}";
+    print(url);
+    var header=await Config.getHeader();
+    try{
+      final responce=await http.delete(Uri.parse(url),headers: header);
+      print(responce.body);
+      if(responce.body.isNotEmpty)
+      {
+        print(responce.body);
         notifyListeners();
       }
     }

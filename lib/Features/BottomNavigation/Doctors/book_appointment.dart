@@ -15,8 +15,7 @@ import 'package:provider/provider.dart';
 class BookAppointment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => DoctorProvider(), child: BookAppointmentScreen());
+    return  BookAppointmentScreen();
   }
 }
 
@@ -38,9 +37,9 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
   }
   Future<void>loadDoctorInfo()async{
     var doctorProvider=Provider.of<DoctorProvider>(context, listen: false);
-    await doctorProvider.addavailable(1, DateFormat('yyyy-MM-dd').format(DateTime.now()));
-    await  Provider.of<DoctorProvider>(context, listen: false).getDoctInfo(1);
-    if(doctorProvider.times.availableTimes.length>0);
+    await doctorProvider.addavailable( DateFormat('yyyy-MM-dd').format(DateTime.now()));
+    await  Provider.of<DoctorProvider>(context, listen: false).getDoctInfo();
+    if(doctorProvider.times.availableTimes.length>0)
     {
       setState(() {
         SelectedTime=doctorProvider.times.availableTimes[0];
@@ -184,11 +183,17 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
                           return InkWell(
-                            onTap: (){
-                              doctorProvider.addavailable(1, days[index].apiDate);
+                            onTap: ()async{
+                              await doctorProvider.addavailable(days[index].apiDate);
                               setState(() {
                                 SelectedDate=days[index].apiDate;
                               });
+                              if(doctorProvider.times.availableTimes.length>0)
+                              {
+                                setState(() {
+                                  SelectedTime=doctorProvider.times.availableTimes[0];
+                                });
+                              }
                             },
                             child: Padding(
                               padding: EdgeInsets.only(right: 10),
@@ -251,7 +256,8 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                   Container(
                     height: width / 8,
                     margin: EdgeInsets.only(top: 15),
-                    child: ListView.builder(
+                    child:doctorProvider.times.availableTimes.length==0?Center(child: Text("No Available Time In this Day",style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Colors.black54),),):
+                    ListView.builder(
                         physics: BouncingScrollPhysics(),
                         scrollDirection: Axis.horizontal,
                         itemCount: doctorProvider.times.availableTimes.length,

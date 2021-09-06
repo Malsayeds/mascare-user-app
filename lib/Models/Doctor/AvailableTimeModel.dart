@@ -12,11 +12,11 @@ class AvailableTimeModel {
   AvailableTimeModel({
     required this.doctor,
     required this.availableTimeId,
-    required  this.availableTimes,
+    required this.availableTimes,
   });
 
   Doctor doctor;
-  int availableTimeId;
+  var availableTimeId;
   List<String> availableTimes;
 
   factory AvailableTimeModel.fromJson(Map<String, dynamic> json) => AvailableTimeModel(
@@ -38,16 +38,23 @@ class Doctor {
     required this.bio,
     required this.experience,
     required this.contactNumber,
-    required  this.qualification,
-    required  this.fees,
-    this.detailedAddress,
-    this.about,
-    required  this.createdAt,
-    required this.updatedAt,
-    required this.deletedAt,
-    required  this.userId,
-    required  this.areaId,
-    required  this.user,
+    required this.qualification,
+    required this.fees,
+    required this.detailedAddress,
+    required this.about,
+    required this.createdAt,
+    required  this.updatedAt,
+    this.deletedAt,
+    required this.userId,
+    required this.areaId,
+    required  this.title,
+    required  this.views,
+    required this.isVerified,
+    required this.hasCredentials,
+    required this.approvedCoupons,
+    required this.consultationFees,
+    required  this.inhomeCheckup,
+    required this.user,
   });
 
   int id;
@@ -56,13 +63,20 @@ class Doctor {
   String contactNumber;
   String qualification;
   String fees;
-  dynamic detailedAddress;
-  dynamic about;
+  String detailedAddress;
+  String about;
   DateTime createdAt;
   DateTime updatedAt;
   dynamic deletedAt;
   int userId;
   int areaId;
+  String title;
+  var views;
+  var isVerified;
+  var hasCredentials;
+  var approvedCoupons;
+  String consultationFees;
+  var inhomeCheckup;
   User user;
 
   factory Doctor.fromJson(Map<String, dynamic> json) => Doctor(
@@ -79,6 +93,13 @@ class Doctor {
     deletedAt: json["deleted_at"],
     userId: json["user_id"],
     areaId: json["area_id"],
+    title: json["title"],
+    views: json["views"],
+    isVerified: json["is_verified"],
+    hasCredentials: json["has_credentials"],
+    approvedCoupons: json["approved_coupons"],
+    consultationFees: json["consultation_fees"],
+    inhomeCheckup: json["inhome_checkup"],
     user: User.fromJson(json["user"]),
   );
 
@@ -96,6 +117,13 @@ class Doctor {
     "deleted_at": deletedAt,
     "user_id": userId,
     "area_id": areaId,
+    "title": title,
+    "views": views,
+    "is_verified": isVerified,
+    "has_credentials": hasCredentials,
+    "approved_coupons": approvedCoupons,
+    "consultation_fees": consultationFees,
+    "inhome_checkup": inhomeCheckup,
     "user": user.toJson(),
   };
 }
@@ -105,7 +133,7 @@ class User {
     required this.id,
     required  this.name,
     this.image,
-    required   this.email,
+    required this.email,
   });
 
   int id;
@@ -116,7 +144,7 @@ class User {
   factory User.fromJson(Map<String, dynamic> json) => User(
     id: json["id"],
     name: json["name"],
-    image: json["image"],
+    image: json["image"]??"",
     email: json["email"],
   );
 

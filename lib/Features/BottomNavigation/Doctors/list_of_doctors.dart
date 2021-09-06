@@ -105,7 +105,7 @@ class _DoctorsListScreenState extends State<DoctorsListScreen> {
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context);
     var doctorSpeialistProvider = Provider.of<DoctorProvider>(
-        context, listen: true);
+        context, listen: false);
     return Scaffold(
       body: isLoading ? Center(
         child: CircularProgressIndicator.adaptive(),) : doctorSpeialistProvider
@@ -136,6 +136,7 @@ class _DoctorsListScreenState extends State<DoctorsListScreen> {
                         padding: const EdgeInsets.only(top: 8, bottom: 18.0),
                         child: GestureDetector(
                           onTap: () {
+                            doctorSpeialistProvider.SetSelectedDoctor(doctorSpeialistProvider.doctors[index].id);
                             Navigator.pushNamed(context, PageRoutes.doctorInfo);
                           },
                           child: Row(
